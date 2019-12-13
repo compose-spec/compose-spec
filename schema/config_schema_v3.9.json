@@ -2,16 +2,19 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "id": "config_schema_v3.9.json",
   "type": "object",
+  "description": "The Compose file is a YAML file defining a multi-containers based application.",
   "required": ["version"],
 
   "properties": {
     "version": {
-      "type": "string"
+      "type": "string",
+      "description": "Version of the Compose specification used. Tools not implementing required version MUST reject the configuration file."
     },
 
     "services": {
       "id": "#/properties/services",
       "type": "object",
+      "description": "Service definition contains configuration that is applied to each container started for that service.",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
           "$ref": "#/definitions/service"
