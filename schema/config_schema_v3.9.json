@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft/2019-09/schema",
   "id": "config_schema_v3.9.json",
   "type": "object",
   "description": "The Compose file is a YAML file defining a multi-containers based application.",
@@ -492,7 +492,10 @@
         "external": {
           "type": ["boolean", "object"],
           "properties": {
-            "name": {"type": "string"}
+            "name": {
+              "deprecated": true,
+              "type": "string"
+            }
           },
           "additionalProperties": false
         },
@@ -519,7 +522,10 @@
         "external": {
           "type": ["boolean", "object"],
           "properties": {
-            "name": {"type": "string"}
+            "name": {
+              "deprecated": true,
+              "type": "string"
+            }
           },
           "additionalProperties": false
         },
@@ -564,7 +570,10 @@
         "external": {
           "type": ["boolean", "object"],
           "properties": {
-            "name": {"type": "string"}
+            "name": {
+              "deprecated": true,
+              "type": "string"
+            }
           }
         },
         "labels": {"$ref": "#/definitions/list_or_dict"},
