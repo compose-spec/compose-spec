@@ -5,7 +5,6 @@ by one or more maintainers and merged when acceptable.
 
 The goal of the Compose Specification is to be the simplest cloud and platform agnostic way of defining container based applications. A developer should be able to develop and debug an application on their local system before confidently deploying it to a production platform– cloud or otherwise. The format will be portable across container platforms by providing a high level abstraction for how the containers are built, deployed, networked, and configured.
 
-
 When proposing features as part of the Compose Specification, changes should be focused towards features which enable developers as part of their [inner loop](https://docs.microsoft.com/en-us/dotnet/architecture/containerized-lifecycle/design-develop-containerized-apps/docker-apps-inner-loop-workflow)
  and not focused on operator controls. 
 Some features may benefit the container ecosystem, however, they may not be appropriate for a first class feature in Compose.
@@ -46,21 +45,6 @@ a subsequent commit that uses it.
 
 Remember, you're telling part of the story with the commit message. Don't make
 your chapter weird.
-
-## Applying License Header to New Files
-
-If you submit a contribution that adds a new file, please add the license
-header. You can do so manually or use the `ltag` tool:
-
-```console
-$ go get github.com/kunalkushwaha/ltag
-$ ltag -t ./script/validate/template
-```
-
-The above will add the appropriate license header to Go language source files,
- Makefiles, Dockerfiles, and shell scripts. New templates will need to be added
- if other kinds of files are added. Please consult the
-documentation at https://github.com/kunalkushwaha/ltag
 
 ## Sign your work
 
