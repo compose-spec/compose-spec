@@ -18,11 +18,11 @@ To provide more context on the Compose specification the following section gives
 
 ### Developement tools
 
-Developers can rely on a Compose file to specify a container-based application that will run as local set of containers on a single engine. The Compose implementation in this specific scenario could offer some specific features (local volume  binding, live-reload) to better address specific development needs, but the global application definition and Compose abstraction is the same used for other use cases. Platform features expected by the specification (like configs and secrets) can be mocked by local resources.
+Developers can rely on a Compose file to specify a container-based application that will run as local set of containers on a single engine. The Compose implementation in this scenario could offer some specific features (local volume  binding, live-reload) to better address development needs, but the global application definition and Compose abstraction is the same used for other use cases. Platform features expected by the specification (like configs and secrets) can be mocked by local resources.
 
 ### Kubernetes deployment
 
-Kubernetes container orchestration relies on a set of abstract concepts and related APIs to manage services, deployments and relate lifecycle. This offers flexibility to address many use-cases, but also make the 90% simplest usages pretty complex with hundred-lines yaml files under end-user charge. As demonstrated by projects [Kompose)(https://github.com/kubernetes/kompose) and [Compose on kubernete](https://github.com/docker/compose-on-kubernetes) the simpler Compose model can be translated into Kubernetes API payloads to cover most usages, and let user rely on the extact same compose file for local development.
+Kubernetes container orchestration relies on a set of abstract concepts and related APIs to manage networking services, contianer deployments and relate lifecycle. This offers flexibility to address many use-cases, but also make the 90% simplest usages pretty complex with hundred-lines yaml files under end-user charge. As demonstrated by projects [Kompose)(https://github.com/kubernetes/kompose) and [Compose on kubernete](https://github.com/docker/compose-on-kubernetes) the simpler Compose model can be translated into Kubernetes API payloads to cover most usages, and let user rely on the extact same compose file for local development.
 
 ### Cloud providers
 
