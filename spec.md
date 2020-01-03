@@ -33,6 +33,85 @@ A [Secrets](#Secrets) is a specific flavour of configuration data for sensible d
 Distinction within Volumes, Configs and Secret allows to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
 
 
+### Illustration sample
+
+The following sample illustrates Compose specification concepts with a concrete sample application. The sample is non-normative.
+
+Consider an application split into a frontend web application and a backend service.
+
+Frontend is configured at runtime with http configuration file managed by infrastucture, providing external domain name, and https server certificate injected from platform's secured secret store. 
+
+Backend stores data in a persistent volume. 
+
+Both services communicate together on an isolated back-tier network, while webapp is also connected to a front-tier network and expose port 443 to external usage. 
+
+```                                            
+(External user) --> 443 [frontend network]
+                            |            
+                  +--------------------+     
+                  |  frontend service  |...ro...<HTTP configuration>
+                  |      "webapp"      |...ro...<server certificate> #secured
+                  +--------------------+ 
+                            |            
+                        [backend network]   
+                            |            
+                  +--------------------+    
+                  |  backend service   |  r+w   ___________________
+                  |     "database"     |=======( persistent volume )
+                  +--------------------+        \_________________/ 
+```
+
+
+so we have :
+- 2 services, backed by docker images `webapp` and `database`
+- 1 secret (https certificate), injected in fronted
+- 1 configuration (HTTP), injected in frontend
+- 1 persistent volume, attached to the backend
+- 2 networks
+
+```yaml
+version: "3"
+services:
+  frontend:
+    image: awesome/webapp
+    ports:
+      - "443:8043"
+    networks:
+      - front-tier
+      - back-tier
+    configs:
+      - httpd-config
+    secrets:
+      - server-certificate
+
+  backend:
+    image: awesome/database
+    volumes:
+     - db-data:/etc/data
+    networks:
+      - back-tier
+
+volumes:
+  db-data:
+    driver: flocker
+    driver_opts:
+      size: "10GiB"
+  
+config:
+  httpd-config:
+    external: true
+
+secrets:
+  server-certificate:
+    external: true
+
+networks:
+  front-tier:
+  back-tier:
+```
+
+This sample illustrate the distinction between volumes, configs and secrets. While all of them are all exposed to service containers as mounted files or directories, only a volume can be configured for read+write access - secrets and config are read-only. Volume configuration allows you to select a volume driver and pass driver options to tweak volume management according to the actual infrastructure. Configs an Secrets rely on platform services, and are declared `external` as not being managed as part of the application: Compose implementation will use platform-specific lookup mechanism to retrieve runtime values.
+
 
 ## Services
 
