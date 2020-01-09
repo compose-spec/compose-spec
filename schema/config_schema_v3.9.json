@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft/2019-09/schema",
   "id": "config_schema_v3.9.json",
   "type": "object",
+  "title": "Compose Specification",
   "description": "The Compose file is a YAML file defining a multi-containers based application.",
   "required": ["version"],
 
@@ -14,7 +15,6 @@
     "services": {
       "id": "#/properties/services",
       "type": "object",
-      "description": "Service definition contains configuration that is applied to each container started for that service.",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
           "$ref": "#/definitions/service"
