@@ -69,7 +69,7 @@ so we have :
 - 1 persistent volume, attached to the backend
 - 2 networks
 
-```yaml
+```yml
 version: "3"
 services:
   frontend:
@@ -154,7 +154,7 @@ dollar sign. This also prevents Compose from interpolating a value, so a `$$`
 allows you to refer to environment variables that you don't want processed by
 Compose.
 
-```yaml
+```yml
 web:
   build: .
   command: "$$VAR_NOT_INTERPOLATED_BY_COMPOSE"
@@ -247,7 +247,7 @@ already been defined in Docker, either by running the `docker config create`
 command or by another stack deployment. If the external config does not exist,
 the stack deployment fails with a `config not found` error.
 
-```yaml
+```yml
 version: "3"
 services:
   redis:
@@ -283,7 +283,7 @@ container, sets the mode to `0440` (group-readable) and sets the user and group
 to `103`. The `redis` service does not have access to the `my_other_config`
 config.
 
-```yaml
+```yml
 version: "3"
 services:
   redis:
@@ -306,7 +306,7 @@ Defining a config does not imply granting a service access to it.
 
 `container_name` specify a custom container name, rather than a generated default name.
 
-```yaml
+```yml
 container_name: my-web-container
 ```
 
@@ -329,7 +329,7 @@ subdirectory in the Docker data directory, which defaults to `C:\ProgramData\Doc
 on Windows. The following example loads the credential spec from a file named
 `C:\ProgramData\Docker\CredentialSpecs\my-credential-spec.json`:
 
-```yaml
+```yml
 credential_spec:
   file: my-credential-spec.json
 ```
@@ -342,7 +342,7 @@ the daemon's host. A registry value with the given name must be located in:
 The following example load the credential spec from a value named `my-credential-spec`
 in the registry:
 
-```yaml
+```yml
 credential_spec:
   registry: my-credential-spec
 ```  
@@ -368,15 +368,15 @@ configs:
 `depends_on` express dependency between services, Service dependencies cause the following
 behaviors:
 
-- Compose implementation MUST start services in dependency order. In the following
-  example, `db` and `redis` are started before `web`. 
+- Compose implementation MUST create services in dependency order. In the following
+  example, `db` and `redis` are created before `web`. 
 
-- Compose implementation MUST stop services in dependency order. In the following
-  example, `web` is stopped before `db` and `redis`.
+- Compose implementation MUST remove services in dependency order. In the following
+  example, `web` is removed before `db` and `redis`.
 
 Simple example:
 
-```yaml
+```yml
 version: "3"
 services:
   web:
@@ -397,7 +397,7 @@ starting a dependent service, only guarantee they have been started.
 
 `devices` defines a list of device mappings for created containers. 
 
-```yaml
+```yml
 devices:
   - "/dev/ttyUSB0:/dev/ttyUSB0"
 ```
@@ -406,11 +406,11 @@ devices:
 
 `dns` define custom DNS servers to set on container network interface configuration. Can be a single value or a list.
 
-```yaml
+```yml
 dns: 8.8.8.8
 ```
 
-```yaml
+```yml
 dns:
   - 8.8.8.8
   - 9.9.9.9
@@ -420,11 +420,11 @@ dns:
 
 `dns` define custom DNS search domainsto set on container network interface configuration. Can be a single value or a list.
 
-```yaml
+```yml
 dns_search: example.com
 ``` 
 
-```yaml
+```yml
 dns_search:
   - dc1.example.com
   - dc2.example.com
@@ -440,14 +440,14 @@ dns_search:
 **and** clears out any default command on the image - meaning that if there's a `CMD` instruction 
 in the Dockerfile, it is ignored..
 
-```yaml
+```yml
 entrypoint: /code/entrypoint.sh
 ```
 
 The entrypoint can also be a list, in a manner similar to
 [Dockerfile](https://docs.docker.com/engine/reference/builder/#cmd):
 
-```yaml
+```yml
 entrypoint:
     - php
     - -d
@@ -462,7 +462,7 @@ entrypoint:
 `env_file` add environment variables to the container based on file content. 
 
 
-```yaml
+```yml
 env_file: .env
 ```
 
@@ -470,7 +470,7 @@ env_file: .env
 For the same variable specified in file `a.env` and assigned a different value in file 
 `b.env`, if `b.env` is listed below (after), then the value from `b.env` stands. 
 
-```yaml
+```yml
 env_file:
   - ./a.env
   - ./b.env
@@ -485,8 +485,695 @@ empty or undefined.
 
 #### Env_file format
 
+Each line in an env file to be in `VAR=VAL` format. Lines beginning with `#` are treated as comments and 
+are ignored. Blank lines are also ignored.
+
+The value of `VAL` is used as raw string and not modified at all. If the value is surrounded by quotes 
+(as is often the case of shell variables), the quotes MUST be **included** in the value passed to containers
+created by Compose implementation.
+
+```bash
+# Set Rails/Rack environment
+RACK_ENV=development
+VAR="quoted"
+```
 
 
+### environment
+
+`environment` define environment variables set into container. `environment` can use either an array or a 
+map. Any boolean values; true, false, yes no, MUST be enclosed in quotes to ensure
+they are not converted to True or False by the YML parser.
+
+Environment variables can be declare by a single key (no value ot equal sign). In such case Compose 
+implementation SHOULD rely on some user interaction to resolve value.
+
+Map syntax:
+```yml
+environment:
+  RACK_ENV: development
+  SHOW: 'true'
+  USER_INPUT:
+```
+
+Array syntax:
+```yml
+environment:
+  - RACK_ENV=development
+  - SHOW=true
+  - USER_INPUT
+```
+
+### expose
+
+`expose` define ports the Compose implementation MUST expose from container. Such port SHOULD not be 
+published to the host machine - they'll only be accessible to linked services. Only the internal port 
+can be specified.
+
+```yml
+expose:
+ - "3000"
+ - "8000"
+```
+
+### external_links
+
+`external_links` link service containers to services managed outside this Compose application.
+`external_links` define the name of an existing service to retrieve by platform lookup mechanism.
+An alias can be specified in the form `SERVICE:ALIAS`.
+
+```yaml
+external_links:
+ - redis
+ - database:mysql
+ - database:postgresql
+```
+
+### extra_hosts
+
+`extra_hosts` add hostname mappings on container network interface configuration (`/etc/hosts`). 
+Values MUST set hostname and IP address for additional hosts in for form `HOSTNAME:IP`.
+
+```yml
+extra_hosts:
+ - "somehost:162.242.195.82"
+ - "otherhost:50.31.209.229"
+```
+
+Compose implementation MUST create matching entry with the ip address and hostname in container's 
+`/etc/hosts`:
+
+```
+162.242.195.82  somehost
+50.31.209.229   otherhost
+```
+
+### healthcheck
+
+`healthcheck` declare a check that's run to determine whether or not containers for this
+service are "healthy". This override 
+[HEALTHCHECK Dockerfile instruction](https://docs.docker.com/engine/reference/builder/#healthcheck)
+set by service Docker image.
+
+
+```yml
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost"]
+  interval: 1m30s
+  timeout: 10s
+  retries: 3
+  start_period: 40s
+```
+
+`interval`, `timeout` and `start_period` are specified as durations in the form `[value unit]+`. 
+The supported units are `us`, `ms`, `s`, `m` and `h`.
+
+`test` define the command the Compose implementation will run to check container health. It can be 
+either a string or a list. If it's a list, the first item must be either `NONE`, `CMD` or `CMD-SHELL`. 
+If it's a string, it's equivalent to specifying `CMD-SHELL` followed by that string.
+
+```yml
+# Hit the local web app
+test: ["CMD", "curl", "-f", "http://localhost"]
+```
+
+Using `CMD-SHELL` will run command configured as a string within container shell (`/bin/sh`). 
+Both forms below are equivalent:
+
+```yml
+test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
+```
+
+```yml
+test: curl -f https://localhost || exit 1
+```
+
+`NONE` disable healthcheck, and is mostly usefull to override Healthcheck set by image and disable
+it. Alternatively Healthcheck set by the image can be disabled by setting `disable: true`:
+
+```yml
+healthcheck:
+  disable: true
+```
+
+### image
+
+`image` specify the image to start the container from. Can either be a repository/tag, a digested 
+reference or a partial image ID.
+
+```yml
+    image: redis
+    image: redis:5
+    image: redis@sha356:0ed5d5928d4737458944eb604cc8509e245c3e19d02ad83935398bc4b991aac7
+    image: library/redis
+    image: docker.io/library/redis
+    image: my_private.registry:5000/redis
+    image: a4bc65fd
+```    
+
+If the image does not exist on platform, Compose implementation MUST attempt to pull it. Compose 
+Implementation with Build support MAY offer alternative option for end-user to control precedence of
+pull over building image from source, but pulling image MUST be the default behaviour.
+
+`image` MAY be omitted from a Compose file as long as a `build` section is declared. Compose Implementation 
+without Build support MUST fail when `image` is missing from Compose file.
+
+### init
+
+`init` run an init process (PID 1) inside the container that forwards signals and reaps processes.
+Set this option to `true` to enable this feature for the service.
+
+```yml
+version: "3"
+services:
+  web:
+    image: alpine:latest
+    init: true
+```
+
+The init binary that is used is platform specific.
+
+### isolation
+
+`isolation` specify a container’s isolation technology. Supported values are platform-specific.
+
+### labels
+
+`labels` add metadata to containers. You can use either an array or a map.
+
+It's recommended that you use reverse-DNS notation to prevent your labels from conflicting with 
+those used by other software.
+
+```yml
+labels:
+  com.example.description: "Accounting webapp"
+  com.example.department: "Finance"
+  com.example.label-with-empty-value: ""
+```
+
+```yml
+labels:
+  - "com.example.description=Accounting webapp"
+  - "com.example.department=Finance"
+  - "com.example.label-with-empty-value"
+```
+
+Compose Implementation MUST create container with canonical labels:
+
+- `com.docker.compose.project` set on all resources created by Docmpose implementation to the user project name
+- `com.docker.compose.service` set on service containers with service name as defined in the Compose file
+- `com.docker.compose.network` set on networks with network name as defined in the Compose file
+- `com.docker.compose.volume` set on volumes with volume name as defined in the Compose file
+
+Such labels MUST NOT be overriden if specified by Compose file. An attempt to do so SHOULD result in a warning.
+
+### links
+
+`links` define a network link to containers in another service. Either specify both the service name and
+a link alias (`SERVICE:ALIAS`), or just the service name.
+
+```yml
+web:
+  links:
+   - db
+   - db:database
+   - redis
+```
+
+Containers for the linked service are reachable at a hostname identical to the alias, or the service name 
+if no alias was specified.
+
+Links are not required to enable services to communicate - when no specific network configuration is set, 
+any service MUST be able to reach any other service at that service’s name on `default` network. If services
+do declare networks they are attached to, `links` won't override network configuration and services not
+attached to a shared network won't be able to communicate. Compose Implementation MAY NOT warn user about this
+configuration mismatch.
+
+Links also express implicit dependency between services in the same way as
+[depends_on](#depends_on), so they determine the order of service startup.
+
+### logging
+
+`logging` define the logging configuration for the service.
+
+```yml
+logging:
+  driver: syslog
+  options:
+    syslog-address: "tcp://192.168.0.42:123"
+```
+
+The `driver` name specifies a logging driver for the service's containers. The default and available values 
+are platform specific. Options for the logging driver can be set by `options` as key-value pairs.
+
+
+### network_mode
+
+`network_mode` set service containers network mode. Available values are platform specific, but Compose 
+implementation MUST support :
+
+- `none` which disable networking on container
+- `host` which give container raw access to host's network interface
+- specific syntax `service:name` 
+
+```yml
+    network_mode: "host"
+    network_mode: "none"
+    network_mode: "service:[service name]"
+```
+
+### networks
+
+`networks` do define the Networks service container are attached to, referencing entries under the
+[top-level `networks` key](#networks).
+
+```yml
+services:
+  some-service:
+    networks:
+     - some-network
+     - other-network
+```
+
+#### aliases
+
+`aliases` declare alternative hostnames for this service on the network. Other containers on the same 
+network can use either the service name or this alias to connect to one of the service's containers.
+
+Since `aliases` is network-scoped, the same service can have different aliases on different networks.
+
+> **Note**: A network-wide alias can be shared by multiple containers, and even by multiple services. 
+If it is, then exactly which container the name resolves to is not guaranteed.
+
+The general format is shown here.
+
+```yml
+services:
+  some-service:
+    networks:
+      some-network:
+        aliases:
+         - alias1
+         - alias3
+      other-network:
+        aliases:
+         - alias2
+```
+
+In the example below, service `frontend` will be able to reach `backed` service at
+the hostname `backed` or `database` on the `back-tier` network, and service `monitoring` 
+will be able to reach same `backend` service at `db` or `mysql` on the `admin` network. 
+
+```yml
+version: "3"
+
+services:
+  frontend:
+    image: awesome/webapp
+    networks:
+      - front-tier
+      - back-tier
+
+  monitoring:
+    image: awesome/monitoring
+    networks:
+      - admin
+
+  backend:
+    image: awesome/backend
+    networks:
+      back-tier:
+        aliases:
+          - database
+      admin:
+        aliases:
+          - mysql
+
+networks:
+  front-tier:
+  back-tier:
+  admin:
+```
+
+#### ipv4_address, ipv6_address
+
+Specify a static IP address for containers for this service when joining the network.
+
+The corresponding network configuration in the [top-level networks section](#networks) MUST have an
+`ipam` block with subnet configurations covering each static address.
+
+```yml
+version: "3"
+
+services:
+  frontend:
+    image: awesome/webapp
+    networks:
+      front-tier:
+        ipv4_address: 172.16.238.10
+        ipv6_address: 2001:3984:3989::10
+
+networks:
+  front-tier:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.238.0/24"
+        - subnet: "2001:3984:3989::/64"
+```
+
+### pid
+
+`pid` sets the PID mode for container created by Compose implemetnation.  
+Supported values are platform specific
+
+### ports
+
+Expose container ports.
+
+> **Note**: Port mapping is incompatible with `network_mode: host`
+
+#### Short syntax
+
+Shor syntax is a coma separated string to set host IP, host port and container port.
+Host IP if not set will bind to all network interfaces. port can be either a single 
+value or a range.
+
+Either specify both ports (`HOST:CONTAINER`), or just the container
+port (an ephemeral host port is chosen).
+
+`HOST:CONTAINER` SHOULD always be specified as a (quoted) string, to avoid conflicts 
+with [yaml base-60 float](https://yaml.org/type/float.html).
+
+```yml
+ports:
+ - "3000"
+ - "3000-3005"
+ - "8000:8000"
+ - "9090-9091:8080-8081"
+ - "49100:22"
+ - "127.0.0.1:8001:8001"
+ - "127.0.0.1:5000-5010:5000-5010"
+ - "6060:6060/udp"
+```
+
+#### Long syntax
+
+The long form syntax allows the configuration of additional fields that can't be
+expressed in the short form.
+
+- `target`: the port inside the container
+- `published`: the publicly exposed port
+- `protocol`: the port protocol (`tcp` or `udp`)
+- `mode`: `host` for publishing a host port on each node, or `ingress` for a port to be load balanced.
+
+```yaml
+ports:
+  - target: 80
+    published: 8080
+    protocol: tcp
+    mode: host
+```
+
+### restart
+
+`restart` do define the policy platform will apply on container termination.
+
+- `no` is the default restart policy, and it does not restart a container under any circumstance. 
+- `always` policy always restarts container until removal. 
+- `on-failure` policy restarts a container if the exit code indicates an on-failure error.
+- `unless-stopped` policy restarts a container without consideratoin for exit code, but will stop 
+restarting when container is stopped by explicit user command.
+
+```yml
+    restart: "no"
+    restart: always
+    restart: on-failure
+    restart: unless-stopped
+```
+
+### secrets
+
+`secrets` grant access to sensitive data defined by [secrets](secrets) on a per-service basis. Two 
+different syntax variants are supported.
+
+> **Note**: The secret MUST exist or be
+> [defined in the top-level `secrets` configuration](#secrets)
+> of this Compose file.
+
+
+#### Short syntax
+
+The short syntax variant only specifies the secret name. This grants the
+container access to the secret and mounts it at `/run/secrets/<secret_name>`
+within the container. The source name and destination mountpoint are both set
+to the secret name.
+
+The following example uses the short syntax to grant the `frontend` service
+access to the `server-certificate` secret. The value of `server-certificate` is set 
+to the contents of the file `./server.cert`.
+
+```yaml
+version: "3"
+services:
+  frontend:
+    image: awesome/webapp
+    secrets:
+      - server-certificate
+secrets:
+  server-certificate:
+    file: ./server.cert
+```
+
+#### Long syntax
+
+The long syntax provides more granularity in how the secret is created within
+the service's task containers.
+
+- `source`: The name of the secret as it exists in Docker.
+- `target`: The name of the file to be mounted in `/run/secrets/` in the
+  service's task containers. Defaults to `source` if not specified.
+- `uid` and `gid`: The numeric UID or GID that owns the file within
+  `/run/secrets/` in the service's task containers. Both default to `0` if not
+  specified.
+- `mode`: The permissions for the file to be mounted in `/run/secrets/`
+  in the service's task containers, in octal notation. For instance, `0444`
+  represents world-readable. The default in Docker 1.13.1 is `0000`, but is
+  be `0444` in newer versions. Secrets cannot be writable because they are mounted
+  in a temporary filesystem, so if you set the writable bit, it is ignored. The
+  executable bit can be set. If you aren't familiar with UNIX file permission
+  modes, you may find this
+  [permissions calculator](http://permissions-calculator.org/){: target="_blank" class="_" }
+  useful.
+
+The following example sets name of the `server-certificate` to `server.crt` within the
+container, sets the mode to `0440` (group-readable) and sets the user and group
+to `103`. The value of `server-certificate` is provided by platform by Lookup and not
+directly managed by Compose implementation.
+
+```yml
+version: "3"
+services:
+  frontend:
+    image: awesome/webapp
+    secrets:
+      - source: server-certificate
+        target: server.cert
+        uid: '103'
+        gid: '103'
+        mode: 0440
+secrets:
+  server-certificate:
+    external: true
+```
+
+You can grant a service access to multiple secrets and you can mix long and
+short syntax. Defining a secret does not imply granting a service access to it.
+
+### security_opt
+
+`security_opt` override the default labeling scheme for each container.
+
+```yml
+security_opt:
+  - label:user:USER
+  - label:role:ROLE
+```
+
+### stop_grace_period
+
+`stop_grace_period` specify how long to wait when attempting to stop a container if it doesn't
+handle SIGTERM (or whatever stop signal has been specified with
+[`stop_signal`](#stopsignal)), before sending SIGKILL. Specified
+as a [duration](#specifying-durations).
+
+```yml
+    stop_grace_period: 1s
+    stop_grace_period: 1m30s
+```    
+
+Default value is 10 seconds for the container to exit before sending SIGKILL.
+
+### stop_signal
+
+`stop_signal` sets an alternative signal to stop the container. By default, container is stopped by
+Compose Implementation by sending SIGTERM. Setting an alternative signal using `stop_signal` causes
+ Compose Implementation to send that signal instead.
+
+```yml
+stop_signal: SIGUSR1
+```
+
+### sysctls
+
+`sysctls` define kernel parameters to set in the container. `sysctls` can use either an array or a map.
+
+```yml
+sysctls:
+  net.core.somaxconn: 1024
+  net.ipv4.tcp_syncookies: 0
+```
+
+```yml
+sysctls:
+  - net.core.somaxconn=1024
+  - net.ipv4.tcp_syncookies=0
+```
+
+You can only use sysctls that are namespaced in the kernel. Docker does not
+support changing sysctls inside a container that also modify the host system.
+For an overview of supported sysctls, refer to [configure namespaced kernel
+parameters (sysctls) at runtime](https://docs.docker.com/engine/reference/commandline/run/#configure-namespaced-kernel-parameters-sysctls-at-runtime).
+
+
+### tmpfs
+
+`tmpfs` mount a temporary file system inside the container. Can be a single value or a list.
+
+```yml
+tmpfs: /run
+```
+
+```yml
+tmpfs:
+  - /run
+  - /tmp
+```
+
+### ulimits
+
+`ulimits` override the default ulimits for a container. You can either specify a single limit as an integer or soft/hard limits as a mapping.
+
+```yml
+ulimits:
+  nproc: 65535
+  nofile:
+    soft: 20000
+    hard: 40000
+```
+
+### userns_mode
+
+`userns_mode` allow to set user namespace for service. Supported values are platform specific and might depend on platform configuration
+
+```yml
+userns_mode: "host"
+```
+
+### volumes
+
+`volumes` define Mount host paths or named volumes into service containers.
+
+You can mount a host path as part of a definition for a single service, and
+there is no need to define it in the top level `volumes` key.
+
+But, if you want to reuse a volume across multiple services, then define a named
+volume in the [top-level `volumes` key](#volumes), as the containers backing a service 
+can be deployed on distinct nodes, and this may be a different node each time the service is updated.
+
+This example shows a named volume (`db-data`) being used by the `backed` service,
+and a bind mount defined for a single service 
+
+```yaml
+version: "{{ site.compose_file_v3 }}"
+services:
+  backend:
+    image: awesome/backend
+    volumes:
+      - type: volume
+        source: db-data
+        target: /data
+        volume:
+          nocopy: true
+      - type: bind
+        source: /var/run/postgres/postgres.sock
+        target: /var/run/postgres/postgres.sock
+
+volumes:
+  db-data:
+```
+
+
+#### Short syntax
+
+Short syntax uses a single string with coma separated values to specify a volume mount
+(`VOLUME:CONTAINER_PATH`), or an access mode (`VOLUME:CONTAINER:ACCESS_MODE`).
+
+`ACCESS_MODE` can be set read-only by `ro` or read and write by `rw` (default)
+
+You can mount a relative path on the host, that expands relative to
+the directory of the Compose configuration file being used. Relative paths
+should always begin with `.` or `..`.
+
+#### Long syntax
+
+The long form syntax allows the configuration of additional fields that can't be
+expressed in the short form.
+
+- `type`: the mount type `volume`, `bind`, `tmpfs` or `npipe`
+- `source`: the source of the mount, a path on the host for a bind mount, or the
+  name of a volume defined in the
+  [top-level `volumes` key](#volumes). Not applicable for a tmpfs mount.
+- `target`: the path in the container where the volume is mounted
+- `read_only`: flag to set the volume as read-only
+- `bind`: configure additional bind options
+  - `propagation`: the propagation mode used for the bind
+- `volume`: configure additional volume options
+  - `nocopy`: flag to disable copying of data from a container when a volume is created
+- `tmpfs`: configure additional tmpfs options
+  - `size`: the size for the tmpfs mount in bytes
+- `consistency`: the consistency requirements of the mount. Available values are platform specific
+
+
+### domainname
+
+### hostname
+
+### ipc
+
+### mac\_address
+
+### privileged
+
+### read\_only
+### shm\_size
+
+a byte value as a string in a format
+that looks like this:
+
+    2b
+    1024kb
+    2048k
+    300m
+    1gb
+
+The supported units are `b`, `k`, `m` and `g`, and their alternative notation `kb`,
+`mb` and `gb`.
+
+### stdin\_open
+### tty
+### user
+### working\_dir
 
 
 
