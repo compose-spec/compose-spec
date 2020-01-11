@@ -22,7 +22,7 @@ Developers can rely on a Compose file to specify a container-based application t
 
 ### Kubernetes deployment
 
-Kubernetes container orchestration relies on a set of abstract concepts and related APIs to manage networking services, contianer deployments and relate lifecycle. This offers flexibility to address many use-cases, but also make the 90% simplest usages pretty complex with hundred-lines yaml files under end-user charge. As demonstrated by projects [Kompose)(https://github.com/kubernetes/kompose) and [Compose on kubernete](https://github.com/docker/compose-on-kubernetes) the simpler Compose model can be translated into Kubernetes API payloads to cover most usages, and let user rely on the extact same compose file for local development.
+Kubernetes container orchestration relies on a set of abstract concepts and related APIs to manage networking services, contianer deployments and relate lifecycle. This offers flexibility to address many use-cases, but also make the 90% simplest usages pretty complex with hundred-lines yaml files under end-user charge. As demonstrated by projects [Kompose](https://github.com/kubernetes/kompose) and [Compose on kubernetes](https://github.com/docker/compose-on-kubernetes) the simpler Compose model can be translated into Kubernetes API payloads to cover most usages, and let user rely on the extact same compose file for local development.
 
 ### Cloud providers
 
