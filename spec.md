@@ -20,15 +20,15 @@ Implementations MAY ignore attributes used in a configuration file that are not 
 
 The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
 
-Computing components of an application are defined as [Services](#Services-top-level-elements), which is an abstract concept implemented on platforms by running containers with using the same container image and configuration but replicated on one or more times.
+Computing components of an application are defined as [Services](#Services-top-level-element), which is an abstract concept implemented on platforms by running containers with using the same container image and configuration but replicated on one or more times.
 
-Services communicate with each other through [Networks](#Networks-top-level-elements). Those, within the specification, are just an abstraction of platform capability to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and MAY be partially implemented on some platforms.
+Services communicate with each other through [Networks](#Networks-top-level-element). Those, within the specification, are just an abstraction of platform capability to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and MAY be partially implemented on some platforms.
 
-Services store and share persistent data into [Volumes](#Volumes-top-level-elements). The specification describes such a persistent data as a high-level filesystem mount with global options, actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platform.
+Services store and share persistent data into [Volumes](#Volumes-top-level-element). The specification describes such a persistent data as a high-level filesystem mount with global options, actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platform.
 
-Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](Configs-top-level-elements). From a Service container point of view Configs are very comparable to Volumes, in that they are files mounted into the container, but the actual definition involves distinct platform resources and services, which are abstracted by this type.
+Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](Configs-top-level-element). From a Service container point of view Configs are very comparable to Volumes, in that they are files mounted into the container, but the actual definition involves distinct platform resources and services, which are abstracted by this type.
 
-A [Secrets](#Secrets-top-level-elements) is a specific flavour of configuration data for sensible data that SHOULD not be exposed without security considerations. They are exposed to services as files mounted into their containers but the platform-specific resources to provide sensible data are specific enough to deserve a distinct concept and definition within the Compose specification.
+A [Secrets](#Secrets-top-level-element) is a specific flavour of configuration data for sensible data that SHOULD not be exposed without security considerations. They are exposed to services as files mounted into their containers but the platform-specific resources to provide sensible data are specific enough to deserve a distinct concept and definition within the Compose specification.
 
 Distinction within Volumes, Configs and Secret allows to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
 
@@ -120,11 +120,11 @@ This sample illustrate the distinction between volumes, configs and secrets. Whi
 
 The Compose file is a [YAML](http://yaml.org/) file defining
 [version](#version) (REQUIRED),
-[services](#service-top-level-elements) (REQUIRED),
-[networks](#network-top-level-elements),
-[volumes](#volume-top-level-elements),
-[configs](#configs-top-level-elements) and
-[secrets](#secrets-top-level-elements).
+[services](#service-top-level-element) (REQUIRED),
+[networks](#network-top-level-element),
+[volumes](#volume-top-level-element),
+[configs](#configs-top-level-element) and
+[secrets](#secrets-top-level-element).
 The default path for a Compose file is `./docker-compose.yml
 
 Multiple Compose file can be combined together to define application model. Combination of yaml files MUST be implemented by appending/overriding yaml elements based on compose file order set by user. Simple attributes an Maps get overriden by latest compose file, lists get merged by appending.
@@ -232,7 +232,7 @@ command: bundle exec thin -p 3000
 configuration. Two different syntax variants are supported.
 
 Compose implementation MUST report an error if config doesn't exist on platform or isn't defined in the 
-[`configs`](#configs-top-level-elements) section of this Compose file.
+[`configs`](#configs-top-level-element) section of this Compose file.
 
 #### Short syntax
 
@@ -545,7 +545,7 @@ expose:
 `external_links` define the name of an existing service to retrieve by platform lookup mechanism.
 An alias can be specified in the form `SERVICE:ALIAS`.
 
-```yaml
+```yml
 external_links:
  - redis
  - database:mysql
@@ -749,7 +749,7 @@ implementation MUST support :
 ### networks
 
 `networks` do define the Networks service container are attached to, referencing entries under the
-[top-level `networks` key](#networks-top-level-elements).
+[top-level `networks` key](#networks-top-level-element).
 
 ```yml
 services:
@@ -891,7 +891,7 @@ expressed in the short form.
 - `protocol`: the port protocol (`tcp` or `udp`)
 - `mode`: `host` for publishing a host port on each node, or `ingress` for a port to be load balanced.
 
-```yaml
+```yml
 ports:
   - target: 80
     published: 8080
@@ -922,7 +922,7 @@ restarting when container is stopped by explicit user command.
 different syntax variants are supported.
 
 Compose implementation MUST report error if secret doesn't exist on platform or isn't defined in the
-[`secrets`](#secrets-top-level-elements) section of this Compose file.
+[`secrets`](#secrets-top-level-element) section of this Compose file.
 
 
 #### Short syntax
@@ -936,7 +936,7 @@ The following example uses the short syntax to grant the `frontend` service
 access to the `server-certificate` secret. The value of `server-certificate` is set 
 to the contents of the file `./server.cert`.
 
-```yaml
+```yml
 version: "3"
 services:
   frontend:
@@ -1091,13 +1091,13 @@ You can mount a host path as part of a definition for a single service, and
 there is no need to define it in the top level `volumes` key.
 
 But, if you want to reuse a volume across multiple services, then define a named
-volume in the [top-level `volumes` key](#volumes-top-level-elements), as the containers backing a service 
+volume in the [top-level `volumes` key](#volumes-top-level-element), as the containers backing a service 
 can be deployed on distinct nodes, and this may be a different node each time the service is updated.
 
 This example shows a named volume (`db-data`) being used by the `backed` service,
 and a bind mount defined for a single service 
 
-```yaml
+```yml
 version: "{{ site.compose_file_v3 }}"
 services:
   backend:
@@ -1136,7 +1136,7 @@ expressed in the short form.
 - `type`: the mount type `volume`, `bind`, `tmpfs` or `npipe`
 - `source`: the source of the mount, a path on the host for a bind mount, or the
   name of a volume defined in the
-  [top-level `volumes` key](#volumes-top-level-elements). Not applicable for a tmpfs mount.
+  [top-level `volumes` key](#volumes-top-level-element). Not applicable for a tmpfs mount.
 - `target`: the path in the container where the volume is mounted
 - `read_only`: flag to set the volume as read-only
 - `bind`: configure additional bind options
@@ -1210,9 +1210,197 @@ The supported units are `b`, `k`, `m` and `g`, and their alternative notation `k
 
 ## Networks top level element
 
-Networks are communication channels between services managed by the platform. The networking model exposed to a service is limited to a simple IP connection with target services and external resources, while the Network definition allows to fine-tune the actual implementation provided by the platform.
+Networks are the layer that allow services to communicate with each other. The networking model exposed to a service is limited to a simple IP connection with target services and external resources, while the Network definition allows to fine-tune the actual implementation provided by the platform.
 
-*TODO* describe configuration attributes 
+Networks can be created by specifying the network name under a top level `networks` section.
+Services can connect to networks by specifying the network name under the service [`networks`](#networks) subsection
+
+In the following example during runtime, networks `front-tier` and `back-tier` will be created and the `frontend` service 
+connect to the`front-tier` network and the `back-tier` network
+
+```yml
+version: "3"
+services:
+  frontend:
+    image: awesome/webapp
+    networks:
+      - front-tier
+      - back-tier
+
+networks:
+  front-tier:
+  back-tier:
+```
+
+### driver
+
+Specify which driver should be used for this network. Compose implementation MUST return an error if the driver is not available.
+
+```yml
+driver: overlay
+```
+
+Default and available values are platform specific. Compose specification do only define two specific values: `none` and `host`
+- `host` use the host's networking stack
+- `none` disable networking
+
+#### host or none
+
+The syntax for using built-in networks such as `host` and `none` is a little different, as such networks implicitely exists outside
+the scope of Compose implementation. To use them one MUST define an external network with the name `host` or `none` and an alias that Compose implementation can use (`hostnet` or `nonet` in the following examples), then grant the service access to that network 
+using the alias.
+
+```yml
+version: "3"
+services:
+  web:
+    networks:
+      hostnet: {}
+
+networks:
+  hostnet:
+    external: true
+    name: host
+```
+
+```yml
+services:
+  web:
+    ...
+    networks:
+      nonet: {}
+
+networks:
+  nonet:
+    external: true
+    name: none
+```
+
+### driver_opts
+
+`driver_opts` specify a list of options as key-value pairs to pass to the driver for this network. Those options are 
+driver-dependent - consult the driver's documentation for more information. Optional.
+
+```yml
+driver_opts:
+  foo: "bar"
+  baz: 1
+```
+
+### attachable
+
+If `attachable` is set to `true`, then standalone containers can attach to this network, in addition to services. 
+If a standalone container attaches to an overlay network, it can communicate with services and standalone containers 
+that are also attached to the network.
+
+```yml
+networks:
+  mynet1:
+    driver: overlay
+    attachable: true
+```
+
+### enable_ipv6
+
+`enable_ipv6` enable IPv6 networking on this network.
+
+### ipam
+
+`ipam` specify custom IPAM config. This is an object with several properties, each of which is optional:
+
+-   `driver`: Custom IPAM driver, instead of the default.
+-   `config`: A list with zero or more configuration elements, each containing:
+    - `subnet`: Subnet in CIDR format that represents a network segment
+
+A full example:
+
+```yml
+ipam:
+  driver: default
+  config:
+    - subnet: 172.28.0.0/16
+```
+
+
+### internal
+
+By default, Compose implementation provide external connectivity to networks. `internal` when set to `true` allow to 
+create an externally isolated network.
+
+### labels
+
+Add metadata to containers using Labels. Can use either an array or a dictionary.
+
+It's recommended that you use reverse-DNS notation to prevent your labels from
+conflicting with those used by other software.
+
+```yml
+labels:
+  com.example.description: "Financial transaction network"
+  com.example.department: "Finance"
+  com.example.label-with-empty-value: ""
+```
+
+```yml
+labels:
+  - "com.example.description=Financial transaction network"
+  - "com.example.department=Finance"
+  - "com.example.label-with-empty-value"
+```
+
+Compose implementation MUST set `com.docker.compose.project` and `com.docker.compose.network` labels.
+
+
+### external
+
+If set to `true`, `external` specifies that this network has been created outside of Compose implementaion. The later 
+does not attempt to create it, and raises an error if it doesn't exist.
+
+In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network called 
+`{project_name}_outside`, Compose implementation lookup platform for an existing network simply called `outside` and 
+connect the `proxy` service's containers to it.
+
+```yml
+version: "3"
+
+services:
+  proxy:
+    image: awesome/proxy
+    networks:
+      - outside
+      - default
+  app:
+    image: awesome/app
+    networks:
+      - default
+
+networks:
+  outside:
+    external: true
+```
+
+### name
+
+`name` set a custom name for this network. The name field can be used to reference networks which contain special characters. 
+The name is used as is and will **not** be scoped with the project name.
+
+```yml
+version: "3"
+networks:
+  network1:
+    name: my-app-net
+```
+
+It can also be used in conjunction with the `external` property to define the platform network Compose implementation should 
+retrieve, typically by using a parameter so the Compose file don't need to hard-code runtime specific values:
+
+```yml
+version: "3"
+networks:
+  network1:
+    external: true
+    name: "${NETWORK_ID}"
+```
 
 ## Volumes top level element
 
@@ -1312,7 +1500,7 @@ labels:
 `name` set a custom name for this volume. The name field can be used to reference volumes that contain special 
 characters. The name is used as is and will **not** be scoped with the stack name.
 
-```yaml
+```yml
 version: "3"
 volumes:
   data:
@@ -1362,7 +1550,7 @@ and `my_second_config` MUST already exists on Platform and value will be obtaine
 In this example, `server-http_config` is created as `<project_name>_http_config` when the application is deployed,
 by registering content of the `httpd.conf` as configuration data.
 
-```yaml
+```yml
 configs:
   http_config:
     file: ./httpd.conf
@@ -1370,7 +1558,7 @@ configs:
 
 Alternatively, `http_config` can be declared as external, doing so Compose implementation will lookup `server-certificate` to expose configuration data to relevant services.
 
-```yaml
+```yml
 configs:
   http_config:
     external: true
@@ -1381,7 +1569,7 @@ example modifies the previous one to lookup for config using a parameter `HTTP_C
 so the actual lookup key will be set at deployment time by [interpolation](#interpolation) of
 variables, but exposed to containers as hard-coded ID `http_config`.
 
-```yaml
+```yml
 configs:
   http_config:
     external: true
@@ -1409,7 +1597,7 @@ application. The source of the secret is either `file` or `external`.
 In this example, `server-certificate` is created as `<project_name>_server-certificate` when the application is deployed,
 by registering content of the `server.cert` as a platform secret.
 
-```yaml
+```yml
 secrets:
   server-certificate:
     file: ./server.cert
@@ -1417,7 +1605,7 @@ secrets:
 
 Alternatively, `server-certificate` can be declared as external, doing so Compose implementation will lookup `server-certificate` to expose secret to relevant services.
 
-```yaml
+```yml
 secrets:
   server-certificate:
     external: true
@@ -1428,7 +1616,7 @@ example modifies the previous one to lookup for secret using a parameter `CERTIF
 so the actual lookup key will be set at deployment time by [interpolation](#interpolation) of
 variables, but exposed to containers as hard-coded ID `server-certificate`.
 
-```yaml
+```yml
 secrets:
   server-certificate:
     external: true
