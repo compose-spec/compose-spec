@@ -6,6 +6,8 @@ The purpose of this document is to set out the highest level of guidance for Com
 
 Guard rails/guidance need to be in place for three types of changes: vision, scope and spec. We expect frequent changes to the spec as users contribute, infrequent changes to scope as we assess new features and very rare changes to the overall vision. 
 
+<img src="vision_pyramid.png" width="256">
+
 For contributors with higher level or more fundamental changes or adding features, this document should act as guidance as to whether the Compose specification is the right place for these changes. This can also as a result act as a guiding document to allow people to assess if this project is something they wish to contribute towards and help maintainers with a high level source of the truth to reference when something is out of scope.
 
 # Background
