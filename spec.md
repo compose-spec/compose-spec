@@ -1221,7 +1221,126 @@ Networks are communication channels between services managed by the platform. Th
 Volumes are persistent data stored implemented by the platform. The Compose specification offers a neutral abstraction for services to mount volumes, and configuration parameters to allocate them on infrastructure.
 
 
-*TODO* describe configuration attributes 
+`volumes` section allows to configure named volumes that can be reused across multiple services, and are
+easily retrieved and inspected using the docker command line or API. Here's an example of a two-service setup where a database's data directory is shared with another service as a volume so that it can be periodically backed up:
+
+```yml
+version: "3"
+
+services:
+  backend:
+    image: awesome/database
+    volumes:
+     - db-data:/etc/data  
+
+  backup:
+    image: backup-service
+    volumes:
+      - db-data:/var/lib/backup/data
+
+volumes:
+  db-data:
+```
+
+An entry under the top-level `volumes` key can be empty, in which case it uses the default configuration by the platform. Optionally, you can configure it with the following keys:
+
+### driver
+
+Specify which volume driver should be used for this volume. Default and available values are platform specific. If the driver is not available, the Compose implementation MUST return an error and stop application deployment.
+
+```yml
+driver: foobar
+```
+
+### driver_opts
+
+Specify a list of options as key-value pairs to pass to the driver for this volume. Those options are driver-dependent. Consult the driver's documentation for more information. 
+
+```yml
+volumes:
+  example:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.40.0.199,nolock,soft,rw"
+      device: ":/docker/example"
+```
+
+### external
+
+If set to `true`, specifies that this volume has been created on platform outside Compose control. Compose implementation MUST NOT attempt to create it, and MUST raises an error if it doesn't exist.
+
+In the example below, instead of attempting to create a volume called
+`{project_name}_data`, Compose looks for an existing volume simply
+called `data` and mount it into the `db` service's containers.
+
+```yml
+version: "3"
+
+services:
+  backend:
+    image: awesome/database
+    volumes:
+     - db-data:/etc/data  
+
+volumes:
+  db-data:
+    external: true
+```
+
+
+### labels
+
+`labels` are used to add metadata to volumes. You can use either an array or a dictionary.
+
+It's recommended that you use reverse-DNS notation to prevent your labels from
+conflicting with those used by other software.
+
+```yml
+labels:
+  com.example.description: "Database volume"
+  com.example.department: "IT/Ops"
+  com.example.label-with-empty-value: ""
+```
+
+```yml
+labels:
+  - "com.example.description=Database volume"
+  - "com.example.department=IT/Ops"
+  - "com.example.label-with-empty-value"
+```
+
+### name
+
+`name` set a custom name for this volume. The name field can be used to reference volumes that contain special 
+characters. The name is used as is and will **not** be scoped with the stack name.
+
+```yaml
+version: "3"
+volumes:
+  data:
+    name: 'my-app-data'
+```
+
+It can also be used in conjunction with the `external` property. Doing so the name of the volume used to lookup for
+actual volume on platform is set separately from the name used to refer to it within the Compose file:
+
+```yml
+volumes:
+  db-data:
+    external:
+      name: actual-name-of-volume
+```
+
+This make it possible to make this lookup name a parameter of a Compose file, so that the model ID for volume is 
+hard-coded but the actual volume ID on platform is set at runtime during deployment:
+
+```yml
+volumes:
+  db-data:
+    external:
+      name: ${DATABASE_VOLUME}
+```
+
 
 
 ## Configs
