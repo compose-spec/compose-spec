@@ -32,6 +32,9 @@ A [Secrets](#Secrets) is a specific flavour of configuration data for sensible d
 
 Distinction within Volumes, Configs and Secret allows to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
 
+A **Project** is an individual deployment of an application specification on a platform. Project name is used to group
+resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. Compose implementation creating resources on platform MUST prefix resource names by project and
+set label `com.docker.compose.project`.
 
 ### Illustration sample
 
@@ -686,7 +689,8 @@ Compose Implementation MUST create container with canonical labels:
 - `com.docker.compose.network` set on networks with network name as defined in the Compose file
 - `com.docker.compose.volume` set on volumes with volume name as defined in the Compose file
 
-Such labels MUST NOT be overriden if specified by Compose file. An attempt to do so SHOULD result in a warning.
+`com.docker.compose` label prefix is reserved. Such labels MUST NOT be overriden if specified by Compose file. 
+An attempt to do so SHOULD result in an error.
 
 ### links
 
@@ -1224,10 +1228,94 @@ Volumes are persistent data stored implemented by the platform. The Compose spec
 
 Configs allow services to adapt their behaviour without the need to rebuild a Docker image. Configs are comparable to Volumes from a service point of view as they are mounted into service's containers filesystem. The actual implementation detail to get configuration provided by the platform can be set from the Configuration definition. 
 
-*TODO* describe configuration attributes 
+The top-level `configs` declaration defines or references
+configuration data that can be granted to the services in this
+application. The source of the config is either `file` or `external`.
+
+- `file`: The config is created with the contents of the file at the specified path.
+- `external`: If set to true, specifies that this config has already been created. Compose implementation does not 
+   attempt to create it, and if it does not exist, an error occurs.
+- `name`: The name of config object on Platform to lookup. This field can be used to
+   reference configs that contain special characters. The name is used as is
+   and will **not** be scoped with the project name.
+
+In this example, `http_config` is created (as `<project_name>_http_config)`when the application is deployed,
+and `my_second_config` MUST already exists on Platform and value will be obtained by lookup.
+
+In this example, `server-http_config` is created as `<project_name>_http_config` when the application is deployed,
+by registering content of the `httpd.conf` as configuration data.
+
+```yaml
+configs:
+  http_config:
+    file: ./httpd.conf
+```
+
+Alternatively, `http_config` can be declared as external, doing so Compose implementation will lookup `server-certificate` to expose configuration data to relevant services.
+
+```yaml
+configs:
+  http_config:
+    external: true
+```
+
+External configs lookup can also use a distinct key by specifying a `name`. The following
+example modifies the previous one to lookup for config using a parameter `HTTP_CONFIG_KEY`. Doing
+so the actual lookup key will be set at deployment time by [interpolation](#interpolation) of
+variables, but exposed to containers as hard-coded ID `http_config`.
+
+```yaml
+configs:
+  http_config:
+    external: true
+    name: '${HTTP_CONFIG_KEY}'
+```
+
+Compose file need to explicitly grant access to the configs to relevant services in the application.
+
+
 
 ## Secrets
 
 Secrets are a flavour of Configs focussing on sensitive data, with specific constraint for this usage. As the platform implementation may significally differ from Configs, dedicated Secrets section allows to configure the related resources.
 
-*TODO* describe configuration attributes 
+The top-level `secrets` declaration defines or references sensitive data that can be granted to the services in this
+application. The source of the secret is either `file` or `external`.
+
+- `file`: The secret is created with the contents of the file at the specified path.
+- `external`: If set to true, specifies that this secret has already been created. Compose implementation does 
+   not attempt to create it, and if it does not exist, an error occurs.
+- `name`: The name of the secret object in Docker. This field can be used to
+   reference secrets that contain special characters. The name is used as is
+   and will **not** be scoped with the project name.
+
+In this example, `server-certificate` is created as `<project_name>_server-certificate` when the application is deployed,
+by registering content of the `server.cert` as a platform secret.
+
+```yaml
+secrets:
+  server-certificate:
+    file: ./server.cert
+```
+
+Alternatively, `server-certificate` can be declared as external, doing so Compose implementation will lookup `server-certificate` to expose secret to relevant services.
+
+```yaml
+secrets:
+  server-certificate:
+    external: true
+```
+
+External secrets lookup can also use a distinct key by specifying a `name`. The following
+example modifies the previous one to lookup for secret using a parameter `CERTIFICATE_KEY`. Doing
+so the actual lookup key will be set at deployment time by [interpolation](#interpolation) of
+variables, but exposed to containers as hard-coded ID `server-certificate`.
+
+```yaml
+secrets:
+  server-certificate:
+    external: true
+    name: '${CERTIFICATE_KEY}'
+```
+
+Compose file need to explicitly grant access to the secrets to relevant services in the application.
