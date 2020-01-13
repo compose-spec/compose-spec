@@ -3,21 +3,40 @@
 Contributions should be made via pull requests. Pull requests will be reviewed
 by one or more maintainers and merged when acceptable.
 
-The goal of the Compose Specification is to be the simplest cloud and platform agnostic way of defining container based applications. A developer should be able to develop and debug an application on their local system before confidently deploying it to a production platform– cloud or otherwise. The format will be portable across container platforms by providing a high level abstraction for how the containers are built, deployed, networked, and configured.
+The goal of the Compose Specification is to be the simplest cloud and platform 
+agnostic way of defining container based applications. A developer should be able 
+to develop and debug an application on their local system before confidently deploying 
+it to a production platform– cloud or otherwise. The format will be portable across 
+container platforms by providing a high level abstraction for how the containers are 
+built, deployed, networked, and configured.
 
-When proposing features as part of the Compose Specification, changes should be focused towards features which enable developers as part of their [inner loop](https://docs.microsoft.com/en-us/dotnet/architecture/containerized-lifecycle/design-develop-containerized-apps/docker-apps-inner-loop-workflow)
+When proposing features as part of the Compose Specification, changes should be focused 
+towards features which enable developers as part of their [inner loop](https://docs.microsoft.com/en-us/dotnet/architecture/containerized-lifecycle/design-develop-containerized-apps/docker-apps-inner-loop-workflow)
  and not focused on operator controls. 
-Some features may benefit the container ecosystem, however, they may not be appropriate for a first class feature in Compose.
+Some features may benefit the container ecosystem, however, they may not be appropriate 
+for a first class feature in Compose.
 
 ## Successful Changes
 
-We ask that before contributing, please make the effort to ensure you have read the Compose Vision to ensure that your change is in keeping with the objectives of Compose. You can coordinate with the maintainers of the project before submitting large proposals or high impact PRs, this will prevent you from doing extra work that may or may not be merged.
+We ask that before contributing, please make the effort to ensure you have read the 
+Compose Vision to ensure that your change is in keeping with the objectives of Compose. 
+You can coordinate with the maintainers of the project before submitting large proposals 
+or high impact PRs, this will prevent you from doing extra work that may or may not be merged.
 PRs that are just submitted without any prior communication will likely be summarily closed.
 
-While pull requests are the methodology for submitting changes, changes are much more likely to be accepted if they are accompanied by a full justification of what developer problem you are solving. Often times, it helps to first state the problem before presenting solutions.
+While pull requests are the methodology for submitting changes, changes are much more 
+likely to be accepted if they are accompanied by a full justification of what developer 
+problem you are solving. Often times, it helps to first state the problem before presenting 
+solutions.
 
-Typically, the best methods of accomplishing this are to submit an issue, stating the problem. This issue can include a problem statement and a checklist with requirements. If solutions are proposed, alternatives should be listed and eliminated. Even if the criteria for elimination of a solution is frivolous, say so.
-Larger changes typically work best with design documents, these are items which may change the scope or vision for Compose. These should be accompanied with a more detailed overview of the proposal, providing context to the justfication at the time the feature was conceived and can inform future documentation contributions.
+Typically, the best methods of accomplishing this are to submit an issue, stating the 
+problem. This issue can include a problem statement and a checklist with requirements. 
+If solutions are proposed, alternatives should be listed and eliminated. Even if the 
+criteria for elimination of a solution is frivolous, say so.
+Larger changes typically work best with design documents, these are items which may 
+change the scope or vision for Compose. These should be accompanied with a more detailed 
+overview of the proposal, providing context to the justfication at the time the feature 
+was conceived and can inform future documentation contributions.
 
 ## Commit Messages
 
