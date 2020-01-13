@@ -350,8 +350,9 @@ credential_spec:
 #### Example gMSA configuration
 When configuring a gMSA credential spec for a service, you only need
 to specify a credential spec with `config`, as shown in the following example:
-```
-version: "3.8"
+
+```yml
+version: "3"
 services:
   myservice:
     image: myimage:latest
@@ -1147,34 +1148,60 @@ expressed in the short form.
 
 ### domainname
 
+`domainname` allows to declare a custom domain name to use for service container. MUST be a valid RFC 1123 hostname.
+
 ### hostname
+
+`hostname` allows to declare a custom host name to use for service container. MUST be a valid RFC 1123 hostname.
 
 ### ipc
 
-### mac\_address
+`ipc` allows to configure the IPC isolation mode set by service container.
+
+### mac_address
+
+`mac_address` allows to set a MAC address for service container.
 
 ### privileged
 
-### read\_only
-### shm\_size
+`privileged` configure service container to run with elevated privileged. Support and actual impacts are platform-specific.
 
-a byte value as a string in a format
-that looks like this:
+### read_only
 
+`read_only` configure service container to be created with a read-only filesystem.
+
+### shm_size
+
+`shm_size` allows to configure the size of the shared memory (`/dev/shm`) allowed by service container.
+
+Value express a byte value as a string in `{amount}{byte unit} :
+
+```
     2b
     1024kb
     2048k
     300m
     1gb
+```
 
 The supported units are `b`, `k`, `m` and `g`, and their alternative notation `kb`,
 `mb` and `gb`.
 
-### stdin\_open
-### tty
-### user
-### working\_dir
+### stdin_open
 
+`stdin_open` configure sevice container to run with an alocated stdin
+
+### tty
+
+`tty` configure sevice container to run with a TTY.
+
+### user
+
+`user` override the user set to run container process  by image (i.e. Dockerfile `USER`)
+
+### working_dir
+
+`working_dir` override the working directory set to run container process by image (i.e. Dockerfile `WORKDIR`)
 
 
 
