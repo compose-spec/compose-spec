@@ -25,7 +25,7 @@ All developer tools should reduce the number of boring, mundane and repetitive t
 We are not building a tool to compete with Helm Charts or Kube YAML, but a specification format to embrace common patterns and a high level definition for container-based applications. Helm or other tools could then rely on this format to make their user experiences simpler and portable, while still providing more advanced capabilities for specific scenarios. A set of libraries and a reference implementation will be provided in order to enable tools to more easily be built on top of the specification, facilitate easy experimentation, and provide of validation of implementations.
 
 The format wants to be a living specification that evolves over time and provides a way for tool builders to experiment with new ideas.
-In Scope
+## In Scope
 The purpose of this section is to set out the areas of functionality that Compose is set to target. 
 The scope should be seen as a whitelist. It can be changed if all maintainers of the project agree on the change.
 
