@@ -1506,9 +1506,10 @@ service:
 
 This section is informative. At the time of writing, the following prefixes are known to exist:
 
-| prefix | vendor/organization |
-|--------|---------------------|
-| docker | Docker              |        
+| prefix     | vendor/organization |
+|------------|---------------------|
+| docker     | Docker              |
+| kubernetes | Kubernetes          |       
 
 
 ### Using extensions as fragments
