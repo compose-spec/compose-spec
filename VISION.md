@@ -8,7 +8,7 @@ Guard rails and guidance need to be in place for three types of changes: vision,
 
 <img src="vision_pyramid.png" width="256">
 
-For contributors with higher level or more fundamental changes or adding features, this document should act as guidance as to whether the Compose specification is the right place for these changes. This can also as a result act as a guiding document to allow people to assess if this project is something they wish to contribute towards and help maintainers with a high level source of the truth to reference when something is out of scope.
+For contributors adding features or making more fundamental changes, this document should act as guidance as to whether the Compose specification is the right place for these. It can also act as a guide to allow people to assess if this project is something they wish to contribute towards and help maintainers with. The document should also be seen as a high level source of the truth to reference when something is out of scope.
 
 # Background
 
