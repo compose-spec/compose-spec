@@ -4,7 +4,7 @@
 
 The purpose of this document is to set out the highest level of guidance for Compose as an open source specification. The objective is to inform contributor partners about the highest level goals of Compose and what sorts of feature areas we believe would fit with the future of Compose. 
 
-Guard rails/guidance need to be in place for three types of changes: vision, scope and spec. We expect frequent changes to the spec as users contribute, infrequent changes to scope as we assess new features and very rare changes to the overall vision. 
+Guard rails and guidance need to be in place for three types of changes: vision, scope and spec. We expect frequent changes to the spec as users contribute, infrequent changes to scope as we assess new features and very rare changes to the overall vision. 
 
 <img src="vision_pyramid.png" width="256">
 
