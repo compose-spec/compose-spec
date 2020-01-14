@@ -93,7 +93,8 @@
                 "target": {"type": "string"},
                 "shm_size": {"type": ["integer", "string"]}
               },
-              "additionalProperties": false
+              "additionalProperties": false,
+              "patternProperties": {"^x-": {}}
             }
           ]
         },
@@ -119,7 +120,9 @@
                   "uid": {"type": "string"},
                   "gid": {"type": "string"},
                   "mode": {"type": "number"}
-                }
+                },
+                "additionalProperties": false,
+                "patternProperties": {"^x-": {}}
               }
             ]
           }
@@ -132,7 +135,8 @@
             "file": {"type": "string"},
             "registry": {"type": "string"}
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}
         },
         "depends_on": {"$ref": "#/definitions/list_of_strings"},
         "devices": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
@@ -180,7 +184,8 @@
                   }
                 }
             },
-            "additionalProperties": false
+            "additionalProperties": false,
+            "patternProperties": {"^x-": {}}
         },
 
         "mac_address": {"type": "string"},
@@ -201,7 +206,8 @@
                         "ipv4_address": {"type": "string"},
                         "ipv6_address": {"type": "string"}
                       },
-                      "additionalProperties": false
+                      "additionalProperties": false,
+                      "patternProperties": {"^x-": {}}
                     },
                     {"type": "null"}
                   ]
@@ -227,7 +233,8 @@
                   "published": {"type": "integer"},
                   "protocol": {"type": "string"}
                 },
-                "additionalProperties": false
+                "additionalProperties": false,
+                "patternProperties": {"^x-": {}}
               }
             ]
           },
@@ -252,7 +259,9 @@
                   "uid": {"type": "string"},
                   "gid": {"type": "string"},
                   "mode": {"type": "number"}
-                }
+                },
+                "additionalProperties": false,
+                "patternProperties": {"^x-": {}}
               }
             ]
           }
@@ -276,7 +285,8 @@
                     "soft": {"type": "integer"}
                   },
                   "required": ["soft", "hard"],
-                  "additionalProperties": false
+                  "additionalProperties": false,
+                  "patternProperties": {"^x-": {}}
                 }
               ]
             }
@@ -302,13 +312,17 @@
                     "type": "object",
                     "properties": {
                       "propagation": {"type": "string"}
-                    }
+                    },
+                    "additionalProperties": false,
+                    "patternProperties": {"^x-": {}}
                   },
                   "volume": {
                     "type": "object",
                     "properties": {
                       "nocopy": {"type": "boolean"}
-                    }
+                    },
+                    "additionalProperties": false,
+                    "patternProperties": {"^x-": {}}
                   },
                   "tmpfs": {
                     "type": "object",
@@ -317,10 +331,13 @@
                         "type": "integer",
                         "minimum": 0
                       }
-                    }
+                    },
+                    "additionalProperties": false,
+                    "patternProperties": {"^x-": {}}
                   }
                 },
-                "additionalProperties": false
+                "additionalProperties": false,
+                "patternProperties": {"^x-": {}}
               }
             ],
             "uniqueItems": true
@@ -335,7 +352,6 @@
     "healthcheck": {
       "id": "#/definitions/healthcheck",
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "disable": {"type": "boolean"},
         "interval": {"type": "string", "format": "duration"},
@@ -348,7 +364,9 @@
         },
         "timeout": {"type": "string", "format": "duration"},
         "start_period": {"type": "string", "format": "duration"}
-      }
+      },
+      "additionalProperties": false,
+      "patternProperties": {"^x-": {}}      
     },
     "deployment": {
       "id": "#/definitions/deployment",
@@ -370,7 +388,8 @@
               "start-first", "stop-first"
             ]}
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}     
         },
         "update_config": {
           "type": "object",
@@ -384,7 +403,8 @@
               "start-first", "stop-first"
             ]}
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}     
         },
         "resources": {
           "type": "object",
@@ -395,7 +415,8 @@
                 "cpus": {"type": "string"},
                 "memory": {"type": "string"}
               },
-              "additionalProperties": false
+              "additionalProperties": false,
+              "patternProperties": {"^x-": {}}     
             },
             "reservations": {
               "type": "object",
@@ -404,10 +425,12 @@
                 "memory": {"type": "string"},
                 "generic_resources": {"$ref": "#/definitions/generic_resources"}
               },
-              "additionalProperties": false
+              "additionalProperties": false,
+              "patternProperties": {"^x-": {}}     
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}     
         },
         "restart_policy": {
           "type": "object",
@@ -417,7 +440,8 @@
             "max_attempts": {"type": "integer"},
             "window": {"type": "string", "format": "duration"}
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}     
         },
         "placement": {
           "type": "object",
@@ -430,15 +454,18 @@
                 "properties": {
                   "spread": {"type": "string"}
                 },
-                "additionalProperties": false
+                "additionalProperties": false,
+                "patternProperties": {"^x-": {}}     
               }
             },
             "max_replicas_per_node": {"type": "integer"}
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}     
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "patternProperties": {"^x-": {}}     
     },
 
     "generic_resources": {
@@ -453,10 +480,12 @@
               "kind": {"type": "string"},
               "value": {"type": "number"}
             },
-            "additionalProperties": false
+            "additionalProperties": false,
+            "patternProperties": {"^x-": {}}     
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "patternProperties": {"^x-": {}}     
       }
     },
 
@@ -483,11 +512,13 @@
                 "properties": {
                   "subnet": {"type": "string"}
                 },
-                "additionalProperties": false
+                "additionalProperties": false,
+                "patternProperties": {"^x-": {}}     
               }
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}     
         },
         "external": {
           "type": ["boolean", "object"],
@@ -497,14 +528,15 @@
               "type": "string"
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}     
         },
         "internal": {"type": "boolean"},
         "attachable": {"type": "boolean"},
         "labels": {"$ref": "#/definitions/list_or_dict"}
       },
-      "patternProperties": {"^x-": {}},
-      "additionalProperties": false
+      "additionalProperties": false,
+      "patternProperties": {"^x-": {}}     
     },
 
     "volume": {
@@ -527,7 +559,8 @@
               "type": "string"
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}     
         },
         "labels": {"$ref": "#/definitions/list_or_dict"}
       },
@@ -557,8 +590,8 @@
         },
         "template_driver": {"type": "string"}
       },
-      "patternProperties": {"^x-": {}},
-      "additionalProperties": false
+      "additionalProperties": false,
+      "patternProperties": {"^x-": {}}     
     },
 
     "config": {
@@ -579,8 +612,8 @@
         "labels": {"$ref": "#/definitions/list_or_dict"},
         "template_driver": {"type": "string"}
       },
-      "patternProperties": {"^x-": {}},
-      "additionalProperties": false
+      "additionalProperties": false,
+      "patternProperties": {"^x-": {}}     
     },
 
     "string_or_list": {
