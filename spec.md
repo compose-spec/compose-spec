@@ -231,7 +231,7 @@ command: bundle exec thin -p 3000
 `configs` grant access to configs on a per-service basis using the per-service `configs`
 configuration. Two different syntax variants are supported.
 
-Compose implementation MUST report an error if config isn't defined in the 
+Compose implementation MUST report an error if config doesn't exist on platform or isn't defined in the 
 [`configs`](#configs-top-level-elements) section of this Compose file.
 
 #### Short syntax
@@ -921,7 +921,7 @@ restarting when container is stopped by explicit user command.
 `secrets` grant access to sensitive data defined by [secrets](secrets) on a per-service basis. Two 
 different syntax variants are supported.
 
-Compose implementation MUST report error if secret isn't defined in the
+Compose implementation MUST report error if secret doesn't exist on platform or isn't defined in the
 [`secrets`](#secrets-top-level-elements) section of this Compose file.
 
 
