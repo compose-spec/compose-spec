@@ -20,15 +20,15 @@ Implementations MAY ignore attributes used in a configuration file that are not 
 
 The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
 
-Computing components of an application are defined as [Services](#Services), which is an abstract concept implemented on platforms by running containers with using the same container image and configuration but replicated on one or more times.
+Computing components of an application are defined as [Services](#Services-top-level-elements), which is an abstract concept implemented on platforms by running containers with using the same container image and configuration but replicated on one or more times.
 
-Services communicate with each other through [Networks](#Networks). Those, within the specification, are just an abstraction of platform capability to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and MAY be partially implemented on some platforms.
+Services communicate with each other through [Networks](#Networks-top-level-elements). Those, within the specification, are just an abstraction of platform capability to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and MAY be partially implemented on some platforms.
 
-Services store and share persistent data into [Volumes](#Volumes). The specification describes such a persistent data as a high-level filesystem mount with global options, actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platform.
+Services store and share persistent data into [Volumes](#Volumes-top-level-elements). The specification describes such a persistent data as a high-level filesystem mount with global options, actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platform.
 
-Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](Configs). From a Service container point of view Configs are very comparable to Volumes, in that they are files mounted into the container, but the actual definition involves distinct platform resources and services, which are abstracted by this type.
+Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](Configs-top-level-elements). From a Service container point of view Configs are very comparable to Volumes, in that they are files mounted into the container, but the actual definition involves distinct platform resources and services, which are abstracted by this type.
 
-A [Secrets](#Secrets) is a specific flavour of configuration data for sensible data that SHOULD not be exposed without security considerations. They are exposed to services as files mounted into their containers but the platform-specific resources to provide sensible data are specific enough to deserve a distinct concept and definition within the Compose specification.
+A [Secrets](#Secrets-top-level-elements) is a specific flavour of configuration data for sensible data that SHOULD not be exposed without security considerations. They are exposed to services as files mounted into their containers but the platform-specific resources to provide sensible data are specific enough to deserve a distinct concept and definition within the Compose specification.
 
 Distinction within Volumes, Configs and Secret allows to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
 
@@ -120,11 +120,11 @@ This sample illustrate the distinction between volumes, configs and secrets. Whi
 
 The Compose file is a [YAML](http://yaml.org/) file defining
 [version](#version) (REQUIRED),
-[services](#service) (REQUIRED),
-[networks](#network),
-[volumes](#volume),
-[configs](#configs) and
-[secrets](#secrets).
+[services](#service-top-level-elements) (REQUIRED),
+[networks](#network-top-level-elements),
+[volumes](#volume-top-level-elements),
+[configs](#configs-top-level-elements) and
+[secrets](#secrets-top-level-elements).
 The default path for a Compose file is `./docker-compose.yml
 
 Multiple Compose file can be combined together to define application model. Combination of yaml files MUST be implemented by appending/overriding yaml elements based on compose file order set by user. Simple attributes an Maps get overriden by latest compose file, lists get merged by appending.
@@ -167,7 +167,7 @@ If Compose implementation can't resolve a substitution variable and no default v
 
 As any values in a Compose file can be interpolated with variable substitution, including compact string notation for complex elements, interpolation MUST be applied _before_ merge on a per-file-basis.
 
-## Services
+## Services top level element
 
 A Service is an abstract definition of a computing resource within an application which can be scaled/replaced independently from other components. Services are actually backed by a set of containers, run by the platform according to replication requirements and placement constraints. Being backed by containers, Services are defined by a Docker image and set of runtime arguments. All containers within a service are identically created from those arguments.
 
@@ -231,9 +231,8 @@ command: bundle exec thin -p 3000
 `configs` grant access to configs on a per-service basis using the per-service `configs`
 configuration. Two different syntax variants are supported.
 
-> **Note**: The config must already exist or be
-> [defined in the top-level `configs` configuration](#configs)
-> of this Compose file.
+Compose implementation MUST report an error if config isn't defined in the 
+[`configs`](#configs-top-level-elements) section of this Compose file.
 
 #### Short syntax
 
@@ -750,7 +749,7 @@ implementation MUST support :
 ### networks
 
 `networks` do define the Networks service container are attached to, referencing entries under the
-[top-level `networks` key](#networks).
+[top-level `networks` key](#networks-top-level-elements).
 
 ```yml
 services:
@@ -922,9 +921,8 @@ restarting when container is stopped by explicit user command.
 `secrets` grant access to sensitive data defined by [secrets](secrets) on a per-service basis. Two 
 different syntax variants are supported.
 
-> **Note**: The secret MUST exist or be
-> [defined in the top-level `secrets` configuration](#secrets)
-> of this Compose file.
+Compose implementation MUST report error if secret isn't defined in the
+[`secrets`](#secrets-top-level-elements) section of this Compose file.
 
 
 #### Short syntax
@@ -1093,7 +1091,7 @@ You can mount a host path as part of a definition for a single service, and
 there is no need to define it in the top level `volumes` key.
 
 But, if you want to reuse a volume across multiple services, then define a named
-volume in the [top-level `volumes` key](#volumes), as the containers backing a service 
+volume in the [top-level `volumes` key](#volumes-top-level-elements), as the containers backing a service 
 can be deployed on distinct nodes, and this may be a different node each time the service is updated.
 
 This example shows a named volume (`db-data`) being used by the `backed` service,
@@ -1138,7 +1136,7 @@ expressed in the short form.
 - `type`: the mount type `volume`, `bind`, `tmpfs` or `npipe`
 - `source`: the source of the mount, a path on the host for a bind mount, or the
   name of a volume defined in the
-  [top-level `volumes` key](#volumes). Not applicable for a tmpfs mount.
+  [top-level `volumes` key](#volumes-top-level-elements). Not applicable for a tmpfs mount.
 - `target`: the path in the container where the volume is mounted
 - `read_only`: flag to set the volume as read-only
 - `bind`: configure additional bind options
@@ -1210,13 +1208,13 @@ The supported units are `b`, `k`, `m` and `g`, and their alternative notation `k
 
 
 
-## Networks
+## Networks top level element
 
 Networks are communication channels between services managed by the platform. The networking model exposed to a service is limited to a simple IP connection with target services and external resources, while the Network definition allows to fine-tune the actual implementation provided by the platform.
 
 *TODO* describe configuration attributes 
 
-## Volumes
+## Volumes top level element
 
 Volumes are persistent data stored implemented by the platform. The Compose specification offers a neutral abstraction for services to mount volumes, and configuration parameters to allocate them on infrastructure.
 
@@ -1343,7 +1341,7 @@ volumes:
 
 
 
-## Configs
+## Configs top level element
 
 Configs allow services to adapt their behaviour without the need to rebuild a Docker image. Configs are comparable to Volumes from a service point of view as they are mounted into service's containers filesystem. The actual implementation detail to get configuration provided by the platform can be set from the Configuration definition. 
 
@@ -1394,7 +1392,7 @@ Compose file need to explicitly grant access to the configs to relevant services
 
 
 
-## Secrets
+## Secrets top level element
 
 Secrets are a flavour of Configs focussing on sensitive data, with specific constraint for this usage. As the platform implementation may significally differ from Configs, dedicated Secrets section allows to configure the related resources.
 
