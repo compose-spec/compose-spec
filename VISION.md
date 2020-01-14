@@ -12,7 +12,7 @@ For contributors adding features or making more fundamental changes, this docume
 
 # Background
 
-Today among developers, Compose is a widely adopted format with over 650k compose files on Github and beloved by it’s users as a way to define multi-container applications. Finding a way to further enable the use of Compose with multiple vendors, such as cloud providers, and giving interested vendors and our users a way to input into the future of Compose would benefit the wider community of new and existing users. To achieve this, Docker separated the Compose format specification out of the Docker code base a standalone specification.
+Today among developers, Compose is a widely adopted format with over 650k Compose files on Github (as of January 2020) and beloved by its users as a way to define multi-container applications. Finding a way to further enable the use of Compose with multiple vendors, such as cloud providers, and giving interested vendors and our users a way to input into the future of Compose would benefit the wider community of new and existing users. To achieve this, Docker separated the Compose format specification out of the Docker code base as a standalone specification.
 
 Compose is already adopted in the broader community as a good format for declaring container applications. Notably AWS have adopted v2 of the format as a way to define applications for their ECS platform and the Kompose project converts Compose files to Kubernetes YAML. Allowing them and others to contribute to the specification, thus giving them ownership of it, will ensure more platforms support the Compose format and it will mitigate platform provider risk for adopting the format.
 
