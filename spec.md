@@ -1436,3 +1436,99 @@ secrets:
 ```
 
 Compose file need to explicitly grant access to the secrets to relevant services in the application.
+
+
+
+## Fragments
+
+It is possible to re-use configuration fragments using [YAML anchors](http://www.yaml.org/spec/1.2/spec.html#id2765878). 
+
+```yml
+volumes:
+  db-data: &default-volume 
+    driver: default
+  metrics:
+    *default-volume
+```
+In previous sample, an _anchor_ is created as `default-volume` based on `db-data` volume specification. It is later reused by _alias_ `*default-volume` to define `metrics` volume. Same logic can apply to any element in Compose file. Anchor resolution MUST take place
+before [variables interpolation](#interpolation), so variables can't be used to set anchors or aliasses.
+
+It is also possible to partially override values set by anchor reference using the 
+[YAML merge type](http://yaml.org/type/merge.html). In following example, `metrics` volume specification uses alias
+to avoid repeition but override `name` attribute:
+
+```yml
+version: '3'
+
+services:
+  backend:
+    image: awesome/database
+    volumes: 
+      - db-data
+      - metrics
+volumes:
+  db-data: &default-volume 
+    driver: default
+    name: "data"
+  metrics:
+    << : *default-volume
+    name: "metrics"
+```
+
+## Extension
+
+Special extensions fields can be of any format as long as they are located at the root of your Compose file, or first level element, and their name start with the `x-` character sequence.
+
+```yml
+version: '3'
+x-custom:
+  foo:
+    - bar
+    - zot
+```
+
+The contents of such fields are unspecified by Compose specification, and can be used to enable custom features. Compose implementation to encounter an unknown extension field MUST NOT fail, but COUDL warn about unknown field. 
+
+For platform extensions, it is highly recommended to prefix extension by platform/vendor name, the same way browsers add
+support for [custom CSS features](https://www.w3.org/TR/2011/REC-CSS2-20110607/syndata.html#vendor-keywords)
+
+```yml
+service:
+  backend:
+    deploy:
+      placement:  
+        x-aws-role: "arn:aws:iam::XXXXXXXXXXXX:role/foo"
+        x-aws-region:   "eu-west-3"
+        x-azure-region: "france-central"
+```
+
+### Informative Historical Notes
+
+This section is informative. At the time of writing, the following prefixes are known to exist:
+
+| prefix | vendor/organization |
+|--------|---------------------|
+| docker | Docker              |        
+
+
+### Using extensions as fragments
+
+With the support for extension fields, Compose file can be written as follows to improve readability of reused fragments:
+
+```yml
+version: '3'
+x-logging:
+  &default-logging
+  options:
+    max-size: '12m'
+    max-file: '5'
+  driver: json-file
+
+services:
+  frontend:
+    image: awesome/webapp
+    logging: *default-logging
+  backend:
+    image: awesome/database
+    logging: *default-logging
+```
