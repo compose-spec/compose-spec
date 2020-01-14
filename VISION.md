@@ -26,7 +26,7 @@ We are not building a tool to compete with Helm Charts or Kube YAML, but a speci
 
 The format wants to be a living specification that evolves over time and provides a way for tool builders to experiment with new ideas.
 In Scope
-The purpose of this section is to set out the areas of functionally that Compose is set to target. 
+The purpose of this section is to set out the areas of functionality that Compose is set to target. 
 The scope should be seen as a whitelist. It can be changed if all maintainers of the project agree on the change.
 
 There are four areas of the specification:
