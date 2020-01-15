@@ -20,21 +20,21 @@ Implementations MAY ignore attributes used in a configuration file that are not 
 
 The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
 
-Computing components of an application are defined as [Services](#Services-top-level-element), which is an abstract concept implemented on platforms by running containers with using the same container image and configuration but replicated on one or more times.
+Computing components of an application are defined as [Services](#Services-top-level-element). A Service an abstract concept implemented on platforms by running the same container image (and configuration) one or more times.
 
-Services communicate with each other through [Networks](#Networks-top-level-element). Those, within the specification, are just an abstraction of platform capability to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and MAY be partially implemented on some platforms.
+Services communicate with each other through [Networks](#Networks-top-level-element). In this specification, a Network is an platform capability abstraction to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and MAY be partially implemented on some platforms.
 
-Services store and share persistent data into [Volumes](#Volumes-top-level-element). The specification describes such a persistent data as a high-level filesystem mount with global options, actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platform.
+Services store and share persistent data into [Volumes](#Volumes-top-level-element). The specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platform.
 
-Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](Configs-top-level-element). From a Service container point of view Configs are very comparable to Volumes, in that they are files mounted into the container, but the actual definition involves distinct platform resources and services, which are abstracted by this type.
+Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](Configs-top-level-element). From a Service container point of view, Configs are comparable to Volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
 
-A [Secrets](#Secrets-top-level-element) is a specific flavour of configuration data for sensible data that SHOULD not be exposed without security considerations. They are exposed to services as files mounted into their containers but the platform-specific resources to provide sensible data are specific enough to deserve a distinct concept and definition within the Compose specification.
+A [Secret](#Secrets-top-level-element) is a specific flavour of configuration data for sensitive data that SHOULD NOT be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
 
-Distinction within Volumes, Configs and Secret allows to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
+Distinction within Volumes, Configs and Secret allows implementations to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
 
-A **Project** is an individual deployment of an application specification on a platform. Project name is used to group
+A **Project** is an individual deployment of an application specification on a platform. A project's name is used to group
 resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. Compose implementation creating resources on platform MUST prefix resource names by project and
-set label `com.docker.compose.project`.
+set the label `com.docker.compose.project`.
 
 ### Illustration sample
 
