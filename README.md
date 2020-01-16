@@ -10,7 +10,7 @@ multi-container platform-agnostic applications. The specification can be found
 
 Additional documentation about how this group operates:
 * [Governance](GOVERNANCE.md)
-* [Contribution Guidelines](GUIDELINES.md)
+* [Contribution Guidelines](CONTRIBUTING.md)
 * [Implementations](#Implementations)
 * [Releases](https://github.com/docker/compose-spec/releases)
 
