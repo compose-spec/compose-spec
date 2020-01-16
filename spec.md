@@ -16,7 +16,7 @@ The specification format follows [Semantic Versioning](https://semver.org), whic
 Implementations MAY ignore attributes used in a configuration file that are not supported by the declared version, whenever then are valid for a more recent version. If they do, a warning message MUST inform user. 
 
 
-## Application model
+## The Compose application model
 
 The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
 
@@ -36,17 +36,17 @@ A **Project** is an individual deployment of an application specification on a p
 resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. Compose implementation creating resources on platform MUST prefix resource names by project and
 set the label `com.docker.compose.project`.
 
-### Illustration sample
+### Illustrative example
 
-The following sample illustrates Compose specification concepts with a concrete sample application. The sample is non-normative.
+The following example illustrates Compose specification concepts with a concrete example application. The example is non-normative.
 
 Consider an application split into a frontend web application and a backend service.
 
-Frontend is configured at runtime with http configuration file managed by infrastucture, providing external domain name, and https server certificate injected from platform's secured secret store. 
+The frontend is configured at runtime with HTTP configuration file managed by infrastructure, providing an external domain name, and HTTPS server certificate injected by the platform's secured secret store. 
 
-Backend stores data in a persistent volume. 
+The backend stores data in a persistent volume. 
 
-Both services communicate together on an isolated back-tier network, while webapp is also connected to a front-tier network and expose port 443 to external usage. 
+Both services communicate with each otehr on an isolated back-tier network, while frontend is also connected to a front-tier network and exposes port 443 for external usage. 
 
 ```                                            
 (External user) --> 443 [frontend network]
@@ -66,9 +66,9 @@ Both services communicate together on an isolated back-tier network, while webap
 
 
 so we have :
-- 2 services, backed by docker images `webapp` and `database`
-- 1 secret (https certificate), injected in fronted
-- 1 configuration (HTTP), injected in frontend
+- 2 services, backed by Docker images `webapp` and `database`
+- 1 secret (HTTPS certificate), injected into the frontend
+- 1 configuration (HTTP), injected into the frontend
 - 1 persistent volume, attached to the backend
 - 2 networks
 
@@ -130,22 +130,23 @@ The Compose file is a [YAML](http://yaml.org/) file defining
 [volumes](#volume-top-level-element),
 [configs](#configs-top-level-element) and
 [secrets](#secrets-top-level-element).
-The default path for a Compose file is `./docker-compose.yml
+The default path for a Compose file is `./docker-compose.yml` (preferred) or `./docker-compose.yaml`
 
-Multiple Compose file can be combined together to define application model. Combination of yaml files MUST be 
-implemented by appending/overriding yaml elements based on compose file order set by user. Simple attributes 
-and Maps get overridden by the latest compose file, lists get merged by appending. Relative paths MUST be 
-resolved based on the **first** compose file parent folder, whenever complimentary files being merged might
-be hosted on distinct folders.
+Multiple Compose files can be combined together to define the application model. The combination of YAML files 
+MUST be implemented by appending/overriding YAML elements based on Compose file order set by the user. Simple 
+attributes and maps get overridden by the highest order Compose file, lists get merged by appending. Relative 
+paths MUST be resolved based on the **first** Compose file's parent folder, whenever complimentary files being 
+merged are hosted in other folders.
 
-As some Compose file elements can both be expressed as single strings or complex object, merge MUST apply to
+As some Compose file elements can both be expressed as single strings or complex objects, merges MUST apply to
 the expanded form.
 
 ## Interpolation
 
-Values in a Compose file can be set by variables, and interpolated at runtime. Compose file uses a Bash-like syntax `${VARIABLE}`
+Values in a Compose file can be set by variables, and interpolated at runtime. Compose files use a Bash-like 
+syntax `${VARIABLE}`
 
-Both `$VARIABLE` and `${VARIABLE}` syntax are supported. Default values can be define inline using typical shell syntax:
+Both `$VARIABLE` and `${VARIABLE}` syntax are supported. Default values can be defined inline using typical shell syntax:
 
 - `${VARIABLE:-default}` evaluates to `default` if `VARIABLE` is unset or
   empty in the environment.
@@ -173,35 +174,48 @@ web:
   command: "$$VAR_NOT_INTERPOLATED_BY_COMPOSE"
 ```
 
-If Compose implementation can't resolve a substitution variable and no default value is defined, it MUST warn user and substitute variable by an empty string.
+If the Compose implementation can't resolve a substituted variable and no default value is defined, it MUST warn 
+the user and substitute the variable with an empty string.
 
-As any values in a Compose file can be interpolated with variable substitution, including compact string notation for complex elements, interpolation MUST be applied _before_ merge on a per-file-basis.
+As any values in a Compose file can be interpolated with variable substitution, including compact string notation 
+for complex elements, interpolation MUST be applied _before_ merge on a per-file-basis.
 
-## Services top level element
+## Services top-level element
 
-A Service is an abstract definition of a computing resource within an application which can be scaled/replaced independently from other components. Services are actually backed by a set of containers, run by the platform according to replication requirements and placement constraints. Being backed by containers, Services are defined by a Docker image and set of runtime arguments. All containers within a service are identically created from those arguments.
+A Service is an abstract definition of a computing resource within an application which can be scaled/replaced 
+independently from other components. Services are actually backed by a set of containers, run by the platform 
+according to replication requirements and placement constraints. Being backed by containers, Services are defined 
+by a Docker image and set of runtime arguments. All containers within a service are identically created with these 
+arguments.
 
-Service also includes a Build section, defining how to create the Docker image for a service. Support by Compose implementations to build docker images according to this service definition is OPTIONAL. If not implemented the Build section SHOULD be ignored and the Compose file MUST still be considered valid. 
+A Compose file MUST declare a `services` root element as a map or service names to service definitions. A service 
+definition contains configuration that is applied to each container started for that service.
+
+Each service MAY also include a Build section, which defines how to create the Docker image for the service. 
+Compose implementations MAY support building docker images using this service definition. If not implemented 
+the Build section SHOULD be ignored and the Compose file MUST still be considered valid. 
 
 Build support is an OPTIONAL aspect of the Compose specification, and is described in detail [here](build.md)
 
-Service define runtime constraints and requirement to run service's containers. The Deploy section do group those and allow plaform to adjust deployment strategy to best match containers needs with available resources.
+Each Service defines runtime constraints and requirements to run its containers. The `deploy` section group 
+these constraints and allow the plaform to adjust the deployment strategy to best match containers needs with
+available resources.
 
-Deploy support is an OPTIONAL aspect of the Compose specification, and is described in detail [here](deploy.md). If not implemented the Deploy section SHOULD be ignored and the Compose file MUST still be considered valid. 
-
-A Compose file MUST declare a `services` root element as a map or service names to service definitions. A service definition contains configuration that is applied to each container started for that service.
+Deploy support is an OPTIONAL aspect of the Compose specification, and is described in detail [here](deploy.md). If 
+not implemented the Deploy section SHOULD be ignored and the Compose file MUST still be considered valid. 
 
 ### deploy
 
-`deploy` specify configuration related to the deployment and running of services, as defined [here](deploy.md). 
+`deploy` specifies the configuration for the deployment and running of services, as defined [here](deploy.md). 
 
 ### build
 
-`build`	specify the build process to create container image from source, as defined [here](build.md)
+`build`	specifies the build configuration for creating container image from source, as defined [here](build.md)
 
 ### cap_add
 
-`cap_add`	allows to add container [capabilities](http://man7.org/linux/man-pages/man7/capabilities.7.html).
+`cap_add`	specifies additional container [capabilities](http://man7.org/linux/man-pages/man7/capabilities.7.html) 
+as strings.
 
 ```
 cap_add:
@@ -210,7 +224,8 @@ cap_add:
 
 ### cap_drop
 
-`cap_drop` allows to drop container [capabilities](http://man7.org/linux/man-pages/man7/capabilities.7.html) as strings. 
+`cap_drop` specifies container [capabilities](http://man7.org/linux/man-pages/man7/capabilities.7.html) to drop 
+as strings. 
 ```
 cap_drop:
   - NET_ADMIN
@@ -226,7 +241,7 @@ cgroup_parent: m-executor-abcd
 ```
 
 ### command
-`command` override the the default command declared by container image (i.e. by Dockerfile's `CMD`).
+`command` override the the default command declared by the container image (i.e. by Dockerfile's `CMD`).
 ```
 command: bundle exec thin -p 3000
 ```
@@ -241,7 +256,7 @@ command: bundle exec thin -p 3000
 `configs` grant access to configs on a per-service basis using the per-service `configs`
 configuration. Two different syntax variants are supported.
 
-Compose implementation MUST report an error if config doesn't exist on platform or isn't defined in the 
+Compose implementations MUST report an error if config doesn't exist on platform or isn't defined in the 
 [`configs`](#configs-top-level-element) section of this Compose file.
 
 #### Short syntax
@@ -255,9 +270,8 @@ The following example uses the short syntax to grant the `redis` service
 access to the `my_config` and `my_other_config` configs. The value of
 `my_config` is set to the contents of the file `./my_config.txt`, and
 `my_other_config` is defined as an external resource, which means that it has
-already been defined in Docker, either by running the `docker config create`
-command or by another stack deployment. If the external config does not exist,
-the stack deployment fails with a `config not found` error.
+already been defined in the platform. If the external config does not exist,
+the deployment MUST fail.
 
 ```yml
 version: "3"
@@ -275,20 +289,14 @@ configs:
 
 The long syntax provides more granularity in how the config is created within the service's task containers.
 
-- `source`: The name of the config as it exists in Docker.
+- `source`: The name of the config as it exists in the platform.
 - `target`: The path and name of the file to be mounted in the service's
   task containers. Defaults to `/<source>` if not specified.
 - `uid` and `gid`: The numeric UID or GID that owns the mounted config file
-  within the service's task containers. Both default to `0` on Linux if not
-  specified. Not supported on Windows.
+  within the service's task containers. Default value when not specified is USER running container.
 - `mode`: The permissions for the file that is mounted within the service's
-  task containers, in octal notation. For instance, `0444`
-  represents world-readable. The default is `0444`. Configs cannot be writable
-  because they are mounted in a temporary filesystem, so if you set the writable
-  bit, it is ignored. The executable bit can be set. If you aren't familiar with
-  UNIX file permission modes, you may find this
-  [permissions calculator](http://permissions-calculator.org/){: target="_blank" class="_" }
-  useful.
+  task containers, in octal notation. Default value is world-readable (`0444`). 
+  Writable bit MUST be ignored. The executable bit can be set. 
 
 The following example sets the name of `my_config` to `redis_config` within the
 container, sets the mode to `0440` (group-readable) and sets the user and group
@@ -312,34 +320,28 @@ configs:
 ```
 
 You can grant a service access to multiple configs and you can mix long and short syntax. 
-Defining a config does not imply granting a service access to it.
+
 
 ### container_name
 
-`container_name` specify a custom container name, rather than a generated default name.
+`container_name` specifies a custom container name, rather than a generated default name.
 
 ```yml
 container_name: my-web-container
 ```
 
-Because Docker container names must be unique, Compose implementation cannot scale a service beyond
-1 container if Compose file specify a container_name. Attempting to do so MUST results in
-an error.
+Compose implementation MUST NOT scale a service beyond 1 container if the Compose file specifies a 
+`container_name`. Attempting to do so MUST result in an error.
 
 ### credential_spec
 
-`credential_spec` configures the credential spec for managed service account. 
+`credential_spec` configures the credential spec for a managed service account. 
 
-Compose implementation to support services using Windows containers MUST support `file:` and `registry:` protocols on credential_spec. 
-Compose implementation MAY also support additional protocols for custom use-cases
-
+Compose implementations that support services using Windows containers MUST support `file:` and 
+`registry:` protocols for credential_spec. Compose implementations MAY also support additional 
+protocols for custom use-cases.
 
 The `credential_spec` must be in the format `file://<filename>` or `registry://<value-name>`.
-
-When using `file:`, the referenced file must be present in the `CredentialSpecs`
-subdirectory in the Docker data directory, which defaults to `C:\ProgramData\Docker\`
-on Windows. The following example loads the credential spec from a file named
-`C:\ProgramData\Docker\CredentialSpecs\my-credential-spec.json`:
 
 ```yml
 credential_spec:
@@ -351,7 +353,7 @@ the daemon's host. A registry value with the given name must be located in:
 
     HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Virtualization\Containers\CredentialSpecs
 
-The following example load the credential spec from a value named `my-credential-spec`
+The following example loads the credential spec from a value named `my-credential-spec`
 in the registry:
 
 ```yml
@@ -378,13 +380,13 @@ configs:
 
 ### depends_on
 
-`depends_on` express dependency between services, Service dependencies cause the following
+`depends_on` expresses a startup and shutdown dependencies between services, Service dependencies cause the following
 behaviors:
 
-- Compose implementation MUST create services in dependency order. In the following
+- Compose implementations MUST create services in dependency order. In the following
   example, `db` and `redis` are created before `web`. 
 
-- Compose implementation MUST remove services in dependency order. In the following
+- Compose implementations MUST remove services in dependency order. In the following
   example, `web` is removed before `db` and `redis`.
 
 Simple example:
@@ -403,8 +405,10 @@ services:
     image: postgres
 ```
 
-Compose implementation MAY NOT wait for dependency services to be "ready" before
-starting a dependent service, only guarantee they have been started. 
+Compose implementations MUST guarantee dependency services have been started before
+starting a dependent service. 
+Compose implementations MAY wait for dependency services to be "ready" before
+starting a dependent service. 
 
 ### devices
 
@@ -417,7 +421,7 @@ devices:
 
 ### dns
 
-`dns` define custom DNS servers to set on container network interface configuration. Can be a single value or a list.
+`dns` defines custom DNS servers to set on the container network interface configuration. Can be a single value or a list.
 
 ```yml
 dns: 8.8.8.8
@@ -431,7 +435,7 @@ dns:
 
 ### dns_search
 
-`dns` define custom DNS search domains to set on container network interface configuration. Can be a single value or a list.
+`dns` defines custom DNS search domains to set on container network interface configuration. Can be a single value or a list.
 
 ```yml
 dns_search: example.com
@@ -449,9 +453,9 @@ dns_search:
 
 ### entrypoint
 
-`entrypoint` override the default entrypoint or docker image (i.e. `ENTRYPOINT` set by Dockerfile) 
-**and** clears out any default command on the image - meaning that if there's a `CMD` instruction 
-in the Dockerfile, it is ignored..
+`entrypoint` overrides the default entrypoint for the Docker image (i.e. `ENTRYPOINT` set by Dockerfile).
+Compose implementations MUST clears out any default command on the Docker image - both `ENTRYPOINT` and `CMD` instruction 
+in the Dockerfile - when `entrypoint` is configured by a Compose file.
 
 ```yml
 entrypoint: /code/entrypoint.sh
@@ -472,16 +476,15 @@ entrypoint:
 
 ### env_file
 
-`env_file` add environment variables to the container based on file content. 
+`env_file` adds environment variables to the container based on file content. 
 
 
 ```yml
 env_file: .env
 ```
 
-`env_file` can also be a list. The files in the list are processed from the top down. 
-For the same variable specified in file `a.env` and assigned a different value in file 
-`b.env`, if `b.env` is listed below (after), then the value from `b.env` stands. 
+`env_file` can also be a list. The files in the list MUST be processed from the top down. For the same variable 
+specified in two env files, the value from last file in the list MUST stand. 
 
 ```yml
 env_file:
@@ -489,8 +492,8 @@ env_file:
   - ./b.env
 ```
 
-Relative path MUST be resolved from the Compose file parent folder. As absolute paths prevent the Compose 
-file to be portable, Compose implementation SHOULD warn user when such a path is used to set `env_file`.
+Relative path MUST be resolved from the Compose file's parent folder. As absolute paths prevent the Compose 
+file from being portable, Compose implementations SHOULD warn users when such a path is used to set `env_file`.
 
 Environment variables declared in the [environment](#environment) section
 _override_ these values &ndash; this holds true even if those values are
@@ -498,15 +501,15 @@ empty or undefined.
 
 #### Env_file format
 
-Each line in an env file to be in `VAR[=[VAL]]` format. Lines beginning with `#` are treated as comments and 
-are ignored. Blank lines are also ignored. 
+Each line in an env file MUST be in `VAR[=[VAL]]` format. Lines beginning with `#` MUST be ignored. 
+Blank lines MUST also be ignored. 
 
-The value of `VAL` is used as raw string and not modified at all. If the value is surrounded by quotes 
-(as is often the case of shell variables), the quotes MUST be **included** in the value passed to containers
-created by Compose implementation. 
+The value of `VAL` is used as a raw string and not modified at all. If the value is surrounded by quotes 
+(as is often the case for shell variables), the quotes MUST be **included** in the value passed to containers
+created by the Compose implementation. 
 
-`VAL` MAY be ommitted, in such case variable value is empty string. 
-`=VAL` MAY be ommitted, in such case variable is **unset**
+`VAL` MAY be omitted, in such cases the variable value is empty string. 
+`=VAL` MAY be omitted, in such cases the variable is **unset**
 
 ```bash
 # Set Rails/Rack environment
@@ -516,13 +519,13 @@ VAR="quoted"
 
 ### environment
 
-`environment` defines environment variables set into container. `environment` can use either an array or a 
+`environment` defines environment variables set in the container. `environment` can use either an array or a 
 map. Any boolean values; true, false, yes no, MUST be enclosed in quotes to ensure
-they are not converted to True or False by the YML parser.
+they are not converted to True or False by the YAML parser.
 
-Environment variables can be declared by a single key (no value ot equal sign). In such a case Compose 
-implementation SHOULD rely on some user interaction to resolve value, otherwise variable is unset and
-will be removed from service container environment.
+Environment variables MAY be declared by a single key (no value to equals sign). In such a case Compose 
+implementations SHOULD rely on some user interaction to resolve the value. If they do not, the variable 
+is unset and will be removed from the service container environment.
 
 Map syntax:
 ```yml
@@ -544,9 +547,9 @@ When both `env_file` and `environment` are set for a service, values set by `env
 
 ### expose
 
-`expose` define ports the Compose implementation MUST expose from container. Such port SHOULD not be 
-published to the host machine - they'll only be accessible to linked services. Only the internal port 
-can be specified.
+`expose` defines the ports that Compose implementations MUST expose from container. These ports MUST be 
+accessible to linked services and SHOULD NOT be published to the host machine. Only the internal container
+ports can be specified.
 
 ```yml
 expose:
@@ -569,7 +572,7 @@ external_links:
 
 ### extra_hosts
 
-`extra_hosts` add hostname mappings on container network interface configuration (`/etc/hosts`). 
+`extra_hosts` adds hostname mappings on container network interface configuration (`/etc/hosts`). 
 Values MUST set hostname and IP address for additional hosts for form `HOSTNAME:IP`.
 
 ```yml
@@ -578,7 +581,7 @@ extra_hosts:
  - "otherhost:50.31.209.229"
 ```
 
-Compose implementation MUST create matching entry with the ip address and hostname in container's 
+Compose implementations MUST create matching entry with the ip address and hostname in container's 
 `/etc/hosts`:
 
 ```
@@ -588,7 +591,7 @@ Compose implementation MUST create matching entry with the ip address and hostna
 
 ### healthcheck
 
-`healthcheck` declare a check that's run to determine whether or not containers for this
+`healthcheck` declares a check that's run to determine whether or not containers for this
 service are "healthy". This override 
 [HEALTHCHECK Dockerfile instruction](https://docs.docker.com/engine/reference/builder/#healthcheck)
 set by service Docker image.
@@ -636,7 +639,7 @@ healthcheck:
 
 ### image
 
-`image` specify the image to start the container from. Can either be a repository/tag, a digested 
+`image` specifies the image to start the container from. Can either be a repository/tag, a digested 
 reference or a partial image ID.
 
 ```yml
@@ -649,11 +652,11 @@ reference or a partial image ID.
     image: a4bc65fd
 ```    
 
-If the image does not exist on the platform, Compose implementation MUST attempt to pull it. Compose 
-Implementation with Build support MAY offer alternative options for end-user to control precedence of
+If the image does not exist on the platform, Compose implementations MUST attempt to pull it. Compose 
+Implementations with Build support MAY offer alternative options for end-user to control precedence of
 pull over building image from source, but pulling image MUST be the default behaviour.
 
-`image` MAY be omitted from a Compose file as long as a `build` section is declared. Compose Implementation 
+`image` MAY be omitted from a Compose file as long as a `build` section is declared. Compose Implementations 
 without Build support MUST fail when `image` is missing from the Compose file.
 
 ### init
@@ -673,7 +676,7 @@ The init binary that is used is platform specific.
 
 ### isolation
 
-`isolation` specify a container’s isolation technology. Supported values are platform-specific.
+`isolation` specifies a container’s isolation technology. Supported values are platform-specific.
 
 ### labels
 
@@ -696,19 +699,17 @@ labels:
   - "com.example.label-with-empty-value"
 ```
 
-Compose Implementation MUST create container with canonical labels:
+Compose Implementations MUST create containers with canonical labels:
 
 - `com.docker.compose.project` set on all resources created by Compose implementation to the user project name
 - `com.docker.compose.service` set on service containers with service name as defined in the Compose file
-- `com.docker.compose.network` set on networks with network name as defined in the Compose file
-- `com.docker.compose.volume` set on volumes with volume name as defined in the Compose file
 
 `com.docker.compose` label prefix is reserved. Such labels MUST NOT be overridden if specified by Compose file. 
 An attempt to do so SHOULD result in an error.
 
 ### links
 
-`links` define a network link to containers in another service. Either specify both the service name and
+`links` defines a network link to containers in another service. Either specify both the service name and
 a link alias (`SERVICE:ALIAS`), or just the service name.
 
 ```yml
@@ -725,7 +726,7 @@ if no alias was specified.
 Links are not required to enable services to communicate - when no specific network configuration is set, 
 any service MUST be able to reach any other service at that service’s name on `default` network. If services
 do declare networks they are attached to, `links` won't override network configuration and services not
-attached to a shared network won't be able to communicate. Compose Implementation MAY NOT warn user about this
+attached to a shared network won't be able to communicate. Compose Implementations MAY NOT warn user about this
 configuration mismatch.
 
 Links also express implicit dependency between services in the same way as
@@ -749,7 +750,7 @@ are platform specific. Options for the logging driver can be set by `options` as
 ### network_mode
 
 `network_mode` set service containers network mode. Available values are platform specific, but Compose 
-implementation MUST support :
+implementations MUST support :
 
 - `none` which disable networking on container
 - `host` which give container raw access to host's network interface
@@ -763,7 +764,7 @@ implementation MUST support :
 
 ### networks
 
-`networks` do define the Networks service container are attached to, referencing entries under the
+`networks` defines the Networks service containers are attached to, referencing entries under the
 [top-level `networks` key](#networks-top-level-element).
 
 ```yml
@@ -776,7 +777,7 @@ services:
 
 #### aliases
 
-`aliases` declare alternative hostnames for this service on the network. Other containers on the same 
+`aliases` declares alternative hostnames for this service on the network. Other containers on the same 
 network can use either the service name or this alias to connect to one of the service's containers.
 
 Since `aliases` are network-scoped, the same service can have different aliases on different networks.
@@ -868,7 +869,7 @@ Supported values are platform specific
 
 ### ports
 
-Expose container ports.
+Exposes container ports.
 
 > **Note**: Port mapping is incompatible with `network_mode: host`
 
@@ -900,8 +901,8 @@ ports:
  - "6060:6060/udp"
 ```
 
-> **Note**: Host IP mapping MAY not be supported on platform, in such case Compose Implementation SHOULD reject
-the Compose file or at least inform user.
+> **Note**: Host IP mapping MAY not be supported on platform, in such case Compose Implementations SHOULD reject
+the Compose file or at least MUST inform user they will ignore Host IP.
 
 #### Long syntax
 
@@ -929,7 +930,7 @@ ports:
 - `always` policy always restarts container until removal. 
 - `on-failure` policy restarts a container if the exit code indicates an on-failure error.
 - `unless-stopped` policy restarts a container without consideration for exit code, but will stop 
-restarting when the service is stopped by explicit user command.
+   restarting when the service is stopped by explicit user command.
 
 ```yml
     restart: "no"
@@ -940,7 +941,7 @@ restarting when the service is stopped by explicit user command.
 
 ### secrets
 
-`secrets` grant access to sensitive data defined by [secrets](secrets) on a per-service basis. Two 
+`secrets` grants access to sensitive data defined by [secrets](secrets) on a per-service basis. Two 
 different syntax variants are supported.
 
 Compose implementation MUST report error if secret doesn't exist on platform or isn't defined in the
@@ -975,26 +976,20 @@ secrets:
 The long syntax provides more granularity in how the secret is created within
 the service's task containers.
 
-- `source`: The name of the secret as it exists in Docker.
+- `source`: The name of the secret as it exists on platform.
 - `target`: The name of the file to be mounted in `/run/secrets/` in the
   service's task containers. Defaults to `source` if not specified.
 - `uid` and `gid`: The numeric UID or GID that owns the file within
-  `/run/secrets/` in the service's task containers. Both default to `0` if not
-  specified.
+  `/run/secrets/` in the service's task containers. Default value is USER running container.
 - `mode`: The permissions for the file to be mounted in `/run/secrets/`
-  in the service's task containers, in octal notation. For instance, `0444`
-  represents world-readable. The default in Docker 1.13.1 is `0000`, but is
-  be `0444` in newer versions. Secrets cannot be writable because they are mounted
-  in a temporary filesystem, so if you set the writable bit, it is ignored. The
-  executable bit can be set. If you aren't familiar with UNIX file permission
-  modes, you may find this
-  [permissions calculator](http://permissions-calculator.org/){: target="_blank" class="_" }
-  useful.
+  in the service's task containers, in octal notation. 
+  Default value is world-readable permissions (mode `0444`). 
+  The writable bit MUST be ignored if set. The executable bit can be set. 
 
 The following example sets the name of the `server-certificate` secret file to `server.crt` 
 within the container, sets the mode to `0440` (group-readable) and sets the user and group
 to `103`. The value of `server-certificate` is provided by platform by Lookup and not
-directly managed by Compose implementation.
+directly managed by the Compose implementation.
 
 ```yml
 version: "3"
@@ -1042,8 +1037,8 @@ Default value is 10 seconds for the container to exit before sending SIGKILL.
 ### stop_signal
 
 `stop_signal` sets an alternative signal to stop the container. By default, container is stopped by
-Compose Implementation by sending SIGTERM. Setting an alternative signal using `stop_signal` causes
- Compose Implementation to send that signal instead.
+the Compose Implementation by sending SIGTERM. Setting an alternative signal using `stop_signal` causes
+the Compose Implementation to send that signal instead.
 
 ```yml
 stop_signal: SIGUSR1
@@ -1051,7 +1046,7 @@ stop_signal: SIGUSR1
 
 ### sysctls
 
-`sysctls` define kernel parameters to set in the container. `sysctls` can use either an array or a map.
+`sysctls` defines kernel parameters to set in the container. `sysctls` can use either an array or a map.
 
 ```yml
 sysctls:
@@ -1073,7 +1068,7 @@ parameters (sysctls) at runtime](https://docs.docker.com/engine/reference/comman
 
 ### tmpfs
 
-`tmpfs` mount a temporary file system inside the container. Can be a single value or a list.
+`tmpfs` mounts a temporary file system inside the container. Can be a single value or a list.
 
 ```yml
 tmpfs: /run
@@ -1087,7 +1082,7 @@ tmpfs:
 
 ### ulimits
 
-`ulimits` override the default ulimits for a container. You can either specify a single limit as an integer or 
+`ulimits` overrides the default ulimits for a container. You can either specify a single limit as an integer or 
 soft/hard limits as a mapping.
 
 ```yml
@@ -1109,14 +1104,13 @@ userns_mode: "host"
 
 ### volumes
 
-`volumes` define Mount host paths or named volumes into service containers.
+`volumes` defines Mount host paths or named volumes into service containers.
 
-You can mount a host path as part of a definition for a single service, and
+A host path can be used as part of a definition for a single service, and
 there is no need to define it in the top level `volumes` key.
 
-But, if you want to reuse a volume across multiple services, then define a named
-volume in the [top-level `volumes` key](#volumes-top-level-element), as the containers backing a service 
-can be deployed on distinct nodes, and this may be a different node each time the service is updated.
+To reuse a volume across multiple services, a named
+volume MUST be declared in the [top-level `volumes` key](#volumes-top-level-element).
 
 This example shows a named volume (`db-data`) being used by the `backed` service,
 and a bind mount defined for a single service 
@@ -1260,7 +1254,7 @@ networks:
 
 ### driver
 
-Specify which driver should be used for this network. Compose implementation MUST return an error if the driver is not available.
+`driver` specifies which driver should be used for this network. Compose implementation MUST return an error if the driver is not available.
 
 ```yml
 driver: overlay
@@ -1305,7 +1299,7 @@ networks:
 
 ### driver_opts
 
-`driver_opts` specify a list of options as key-value pairs to pass to the driver for this network. Those options are 
+`driver_opts` specifies a list of options as key-value pairs to pass to the driver for this network. Those options are 
 driver-dependent - consult the driver's documentation for more information. Optional.
 
 ```yml
@@ -1316,8 +1310,8 @@ driver_opts:
 
 ### attachable
 
-If `attachable` is set to `true`, then standalone containers can attach to this network, in addition to services. 
-If a standalone container attaches to an overlay network, it can communicate with services and standalone containers 
+If `attachable` is set to `true`, then standalone containers MUST be able attach to this network, in addition to services. 
+If a standalone container attaches to network, it can communicate with services and standalone containers 
 that are also attached to the network.
 
 ```yml
@@ -1351,7 +1345,7 @@ ipam:
 
 ### internal
 
-By default, Compose implementation provides external connectivity to networks. `internal` when set to `true` allow to 
+By default, Compose implementations MUST provides external connectivity to networks. `internal` when set to `true` allow to 
 create an externally isolated network.
 
 ### labels
@@ -1380,7 +1374,7 @@ Compose implementation MUST set `com.docker.compose.project` and `com.docker.com
 
 ### external
 
-If set to `true`, `external` specifies that this network has been created outside of Compose implementation. The latter 
+If set to `true`, `external` specifies that this network has been created outside of the Compose implementation. The latter 
 does not attempt to create it, and raises an error if it doesn't exist.
 
 In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network called 
@@ -1467,7 +1461,7 @@ driver: foobar
 
 ### driver_opts
 
-Specify a list of options as key-value pairs to pass to the driver for this volume. Those options are driver-dependent. Consult the driver's documentation for more information. 
+`driver_opts` specifies a list of options as key-value pairs to pass to the driver for this volume. Those options are driver-dependent. 
 
 ```yml
 volumes:
@@ -1562,6 +1556,15 @@ volumes:
 ## Configs top level element
 
 Configs allow services to adapt their behaviour without the need to rebuild a Docker image. Configs are comparable to Volumes from a service point of view as they are mounted into service's containers filesystem. The actual implementation detail to get configuration provided by the platform can be set from the Configuration definition. 
+
+When granted accessto a config, the config content is mounted as a file in the container. The location of the mount point within the container defaults to `/<config-name>` in Linux containers and `C:\<config-name>` in Windows containers.
+
+By default, the config MUST be owned by the user running the container command but can be overriden by service configuration.
+By default, the config MUST have world-readable permissions (mode 0444), unless service is configured to override this.
+
+Services can only access configs when explicitly granted by a [`configs`](#configs) subsection.
+
+
 
 The top-level `configs` declaration defines or references
 configuration data that can be granted to the services in this
