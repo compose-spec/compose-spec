@@ -11,10 +11,9 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 A top-level version property is required by the specification. Version MUST be 3.x or later, legacy docker-compose 1.x and 2.x are not included as part of this specification. Implementations MAY accept such legacy formats for compatibility purposes.
 
-The specification format follows [Semantic Versioning](https://semver.org), which means that the file format is backward compatible within a major version set. As the specification evolves, minor versions MAY introduce new elements and MAY deprecate others for removal in the next major version. Implementations MUST support features until they are removed in the next major release.
+The specification format follows [Semantic Versioning](https://semver.org), which means that the file format is backward compatible within a major version set. As the specification evolves, minor versions MAY introduce new elements and MAY deprecate others for removal in the next major version. 
 
-Implementations MAY ignore attributes used in a configuration file that are not supported by the declared version, whenever then are valid for a more recent version. If they do, a warning message MUST inform user. 
-
+Implementations MAY ignore attributes used in a configuration file that are not supported by the declared version, whenever then are valid for a more recent version. If they do, a warning message MUST inform the user. 
 
 ## The Compose application model
 
@@ -42,11 +41,11 @@ The following example illustrates Compose specification concepts with a concrete
 
 Consider an application split into a frontend web application and a backend service.
 
-The frontend is configured at runtime with HTTP configuration file managed by infrastructure, providing an external domain name, and HTTPS server certificate injected by the platform's secured secret store. 
+The frontend is configured at runtime with an HTTP configuration file managed by infrastructure, providing an external domain name, and an HTTPS server certificate injected by the platform's secured secret store. 
 
 The backend stores data in a persistent volume. 
 
-Both services communicate with each otehr on an isolated back-tier network, while frontend is also connected to a front-tier network and exposes port 443 for external usage. 
+Both services communicate with each other on an isolated back-tier network, while frontend is also connected to a front-tier network and exposes port 443 for external usage. 
 
 ```                                            
 (External user) --> 443 [frontend network]
@@ -65,8 +64,8 @@ Both services communicate with each otehr on an isolated back-tier network, whil
 ```
 
 
-so we have :
-- 2 services, backed by Docker images `webapp` and `database`
+so we have:
+- 2 services, backed by Docker images: `webapp` and `database`
 - 1 secret (HTTPS certificate), injected into the frontend
 - 1 configuration (HTTP), injected into the frontend
 - 1 persistent volume, attached to the backend
@@ -113,12 +112,12 @@ networks:
   back-tier:
 ```
 
-This sample illustrates the distinction between volumes, configs and secrets. While all of them are all exposed 
+This example illustrates the distinction between volumes, configs and secrets. While all of them are all exposed 
 to service containers as mounted files or directories, only a volume can be configured for read+write access - 
-secrets and config are read-only. Volume configuration allows you to select a volume driver and pass driver options 
+secrets and configs are read-only. The volume configuration allows you to select a volume driver and pass driver options 
 to tweak volume management according to the actual infrastructure. Configs and Secrets rely on platform services, 
-and are declared `external` as not being managed as part of the application: Compose implementation will use 
-platform-specific lookup mechanism to retrieve runtime values.
+and are declared `external` as they are not managed as part of the application lifecycle: the Compose implementation 
+will use a platform-specific lookup mechanism to retrieve runtime values.
 
 
 ## Compose file 
@@ -130,7 +129,7 @@ The Compose file is a [YAML](http://yaml.org/) file defining
 [volumes](#volume-top-level-element),
 [configs](#configs-top-level-element) and
 [secrets](#secrets-top-level-element).
-The default path for a Compose file is `./docker-compose.yml` (preferred) or `./docker-compose.yaml`
+The default path for a Compose file is `./docker-compose.yml` (preferred) or `./docker-compose.yaml`.
 
 Multiple Compose files can be combined together to define the application model. The combination of YAML files 
 MUST be implemented by appending/overriding YAML elements based on Compose file order set by the user. Simple 
@@ -147,7 +146,7 @@ Values in a Compose file can be set by variables, and interpolated at runtime. C
 syntax `${VARIABLE}`
 
 Both `$VARIABLE` and `${VARIABLE}` syntax are supported. Default values can be defined inline using typical shell syntax:
-
+latest
 - `${VARIABLE:-default}` evaluates to `default` if `VARIABLE` is unset or
   empty in the environment.
 - `${VARIABLE-default}` evaluates to `default` only if `VARIABLE` is unset
@@ -189,7 +188,7 @@ by a Docker image and set of runtime arguments. All containers within a service 
 arguments.
 
 A Compose file MUST declare a `services` root element as a map or service names to service definitions. A service 
-definition contains configuration that is applied to each container started for that service.
+definition contains the configuration that is applied to each container started for that service.
 
 Each service MAY also include a Build section, which defines how to create the Docker image for the service. 
 Compose implementations MAY support building docker images using this service definition. If not implemented 
@@ -206,11 +205,11 @@ not implemented the Deploy section SHOULD be ignored and the Compose file MUST s
 
 ### deploy
 
-`deploy` specifies the configuration for the deployment and running of services, as defined [here](deploy.md). 
+`deploy` specifies the configuration for the deployment and lifecycle of services, as defined [here](deploy.md). 
 
 ### build
 
-`build`	specifies the build configuration for creating container image from source, as defined [here](build.md)
+`build`	specifies the build configuration for creating container image from source, as defined [here](build.md).
 
 ### cap_add
 
@@ -248,7 +247,7 @@ command: bundle exec thin -p 3000
 
 The command can also be a list, in a manner similar to [Dockerfile](https://docs.docker.com/engine/reference/builder/#cmd):
 ```
-command: bundle exec thin -p 3000
+command: [ "bundle", "exec", "thin", "-p", "3000" ]
 ```
 
 ### configs
@@ -294,7 +293,7 @@ The long syntax provides more granularity in how the config is created within th
   task containers. Defaults to `/<source>` if not specified.
 - `uid` and `gid`: The numeric UID or GID that owns the mounted config file
   within the service's task containers. Default value when not specified is USER running container.
-- `mode`: The permissions for the file that is mounted within the service's
+- `mode`: The [permissions](http://permissions-calculator.org/) for the file that is mounted within the service's
   task containers, in octal notation. Default value is world-readable (`0444`). 
   Writable bit MUST be ignored. The executable bit can be set. 
 
@@ -484,7 +483,7 @@ env_file: .env
 ```
 
 `env_file` can also be a list. The files in the list MUST be processed from the top down. For the same variable 
-specified in two env files, the value from last file in the list MUST stand. 
+specified in two env files, the value from the last file in the list MUST stand. 
 
 ```yml
 env_file:
@@ -509,7 +508,7 @@ The value of `VAL` is used as a raw string and not modified at all. If the value
 created by the Compose implementation. 
 
 `VAL` MAY be omitted, in such cases the variable value is empty string. 
-`=VAL` MAY be omitted, in such cases the variable is **unset**
+`=VAL` MAY be omitted, in such cases the variable is **unset**.
 
 ```bash
 # Set Rails/Rack environment
@@ -520,7 +519,7 @@ VAR="quoted"
 ### environment
 
 `environment` defines environment variables set in the container. `environment` can use either an array or a 
-map. Any boolean values; true, false, yes no, MUST be enclosed in quotes to ensure
+map. Any boolean values; true, false, yes, no, MUST be enclosed in quotes to ensure
 they are not converted to True or False by the YAML parser.
 
 Environment variables MAY be declared by a single key (no value to equals sign). In such a case Compose 
@@ -981,7 +980,7 @@ the service's task containers.
   service's task containers. Defaults to `source` if not specified.
 - `uid` and `gid`: The numeric UID or GID that owns the file within
   `/run/secrets/` in the service's task containers. Default value is USER running container.
-- `mode`: The permissions for the file to be mounted in `/run/secrets/`
+- `mode`: The [permissions](http://permissions-calculator.org/) for the file to be mounted in `/run/secrets/`
   in the service's task containers, in octal notation. 
   Default value is world-readable permissions (mode `0444`). 
   The writable bit MUST be ignored if set. The executable bit can be set. 
@@ -1107,7 +1106,7 @@ userns_mode: "host"
 `volumes` defines Mount host paths or named volumes into service containers.
 
 A host path can be used as part of a definition for a single service, and
-there is no need to define it in the top level `volumes` key.
+there is no need to define it in the top-level `volumes` key.
 
 To reuse a volume across multiple services, a named
 volume MUST be declared in the [top-level `volumes` key](#volumes-top-level-element).
@@ -1228,11 +1227,11 @@ The supported units are `b`, `k`, `m` and `g`, and their alternative notation `k
 
 
 
-## Networks top level element
+## Networks top-level element
 
 Networks are the layer that allow services to communicate with each other. The networking model exposed to a service is limited to a simple IP connection with target services and external resources, while the Network definition allows to fine-tune the actual implementation provided by the platform.
 
-Networks can be created by specifying the network name under a top level `networks` section.
+Networks can be created by specifying the network name under a top-level `networks` section.
 Services can connect to networks by specifying the network name under the service [`networks`](#networks) subsection
 
 In the following example during runtime, networks `front-tier` and `back-tier` will be created and the `frontend` service 
@@ -1423,7 +1422,7 @@ networks:
     name: "${NETWORK_ID}"
 ```
 
-## Volumes top level element
+## Volumes top-level element
 
 Volumes are persistent data stored implemented by the platform. The Compose specification offers a neutral abstraction for services to mount volumes, and configuration parameters to allocate them on infrastructure.
 
@@ -1553,7 +1552,7 @@ volumes:
 
 
 
-## Configs top level element
+## Configs top-level element
 
 Configs allow services to adapt their behaviour without the need to rebuild a Docker image. Configs are comparable to Volumes from a service point of view as they are mounted into service's containers filesystem. The actual implementation detail to get configuration provided by the platform can be set from the Configuration definition. 
 
@@ -1612,7 +1611,7 @@ configs:
 Compose file need to explicitly grant access to the configs to relevant services in the application.
 
 
-## Secrets top level element
+## Secrets top-level element
 
 Secrets are a flavour of Configs focussing on sensitive data, with specific constraint for this usage. As the platform implementation may significally differ from Configs, dedicated Secrets section allows to configure the related resources.
 
