@@ -30,7 +30,7 @@ Compose implementation with Build support SHOULD offer an option to push built i
 Compose implementation MAY offer a mechanism to compute an `Image` attribute for service when not explicitly declared in yaml file. In such a case, the resulting Compose configuration is considered to have a valid `Image` attribute, whenever the actual raw yaml file doesn't explicitly declare one.
 
 
-## Illustration sample
+## Illustrative sample
 
 The following sample illustrates Compose specification concepts with a concrete sample application. The sample is non-normative.
 
@@ -59,6 +59,147 @@ When used to build service images from source, such a Compose file will create t
 
 
 On push, both `awesome/webapp` and `awesome/database` docker images are pushed to (default) registry. `custom` service image is skipped as no `Image` attribute is set and user is warned about this missing attribute.
+
+## Build definition
+
+The `build` element define configuration options that are applied by Compose implementations to build Docker image from source.
+`build` can be specified either as a string containing a path to the build context or a detailled structure:
+
+```yml
+version: "3"
+services:
+  webapp:
+    build: ./dir
+```
+
+Using this string syntax, only the build context can be configured as a relative path to the Compose file's parent folder. 
+This path MUST be a directory and contain a `Dockerfile`.
+
+
+Alternatively `build` can be an object with fields defined as follow
+
+### context (REQUIRED)
+
+`context` defines either a path to a directory containing a Dockerfile, or a url to a git repository.
+
+When the value supplied is a relative path, it MUST be interpreted as relative to the location of the Compose file. 
+Compose implementations MUST warn user about absolute path used to define build context as those prevent Compose file 
+for being portable.
+
+```yml
+build:
+  context: ./dir
+```
+
+### dockerfile
+
+`dockerfile` allows to set an alternate Dockerfile. A relative path MUST be resolved from the build context.
+Compose implementations MUST warn user about absolute path used to define Dockerfile as those prevent Compose file 
+for being portable.
+
+
+```yml
+build:
+  context: .
+  dockerfile: webapp.Dockerfile
+```
+
+### args
+
+`args` define build arguments, i.e. Dockerfile `ARG` values.
+
+Using following Dockerfile:
+```Dockerfile
+ARG GIT_COMMIT
+RUN echo "Based on commit: $GIT_COMMIT"
+```
+
+`args` can be set in Compose file under the `build` key to define `GIT_COMMIT`. `args` can be set a mapping or a list:
+
+```yml
+build:
+  context: .
+  args:    
+    GIT_COMMIT: cdc3b19
+```
+
+```yml
+build:
+  context: .
+  args:
+    - GIT_COMMIT=cdc3b19
+```
+
+Value can be omited when specifying a build argument, in which case its value at build time MUST be obtained by user interaction,
+otherwise build arg won't be set when building the Docker image.
+
+```yml
+args:
+  - GIT_COMMIT
+```
+
+### cache_from
+
+`cache_from` defines a list of images that the Image builder SHOULD uses for cache resolution.
+
+```yml
+build:
+  context: .
+  cache_from:
+    - alpine:latest
+    - corp/web_app:3.14
+```
+
+### labels
+
+`labels` add metadata to the resulting image. `labrls` can be set either as an array or a map.
+
+reverse-DNS notation SHOULD be used to prevent labels from conflicting with those used by other software.
+
+```yml
+build:
+  context: .
+  labels:
+    com.example.description: "Accounting webapp"
+    com.example.department: "Finance"
+    com.example.label-with-empty-value: ""
+```
+
+```yml
+build:
+  context: .
+  labels:
+    - "com.example.description=Accounting webapp"
+    - "com.example.department=Finance"
+    - "com.example.label-with-empty-value"
+```
+
+### shm_size
+
+`shm_size` set the size of the shared memory (`/dev/shm` partition on Linux) allocated for building Docker image. Specify
+as an integer value representing the number of bytes or as a string expressing a [byte value](spec.md#specifying-byte-values).
+
+```yml
+build:
+  context: .
+  shm_size: '2gb'
+```
+
+```yaml
+build:
+  context: .
+  shm_size: 10000000
+```
+
+### target
+
+`target` defines the stage to build as defined inside a multi-stage `Dockerfile`.
+
+```yml
+build:
+  context: .
+  target: prod
+```
 
 
 ## Implementations

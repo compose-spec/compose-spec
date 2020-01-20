@@ -1199,20 +1199,8 @@ expressed in the short form.
 
 ### shm_size
 
-`shm_size` allows to configure the size of the shared memory (`/dev/shm`) allowed by service container.
-
-Value express a byte value as a string in `{amount}{byte unit} :
-
-```
-    2b
-    1024kb
-    2048k
-    300m
-    1gb
-```
-
-The supported units are `b`, `k`, `m` and `g`, and their alternative notation `kb`,
-`mb` and `gb`.
+`shm_size` allows to configure the size of the shared memory (`/dev/shm` partition on Linux) allowed by service container.
+Specified as a [byte value](#specifying-byte-values)
 
 ### stdin_open
 
@@ -1757,4 +1745,17 @@ services:
   backend:
     image: awesome/database
     logging: *default-logging
+```
+
+### specifying-byte-values
+
+Value express a byte value as a string in `{amount}{byte unit} format:
+The supported units are `b` (bytes), `k` or `kb` (kilo bytes), `m` or `mb` (mega bytes) and `g` or `gb` (giga bytes).
+
+```
+    2b
+    1024kb
+    2048k
+    300m
+    1gb
 ```
