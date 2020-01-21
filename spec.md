@@ -1175,36 +1175,36 @@ expressed in the short form.
 
 ### domainname
 
-`domainname` allows to declare a custom domain name to use for service container. MUST be a valid RFC 1123 hostname.
+`domainname` declares a custom domain name to use for the service container. MUST be a valid RFC 1123 hostname.
 
 ### hostname
 
-`hostname` allows to declare a custom host name to use for service container. MUST be a valid RFC 1123 hostname.
+`hostname` declares a custom host name to use for the service container. MUST be a valid RFC 1123 hostname.
 
 ### ipc
 
-`ipc` allows to configure the IPC isolation mode set by service container.
+`ipc` configures the IPC isolation mode set by service container.
 
 ### mac_address
 
-`mac_address` allows to set a MAC address for service container.
+`mac_address` sets a MAC address for service container.
 
 ### privileged
 
-`privileged` configure service container to run with elevated privileges. Support and actual impacts are platform-specific.
+`privileged` configures the service container to run with elevated privileges. Support and actual impacts are platform-specific.
 
 ### read_only
 
-`read_only` configure service container to be created with a read-only filesystem.
+`read_only` configures service container to be created with a read-only filesystem.
 
 ### shm_size
 
-`shm_size` allows to configure the size of the shared memory (`/dev/shm` partition on Linux) allowed by service container.
-Specified as a [byte value](#specifying-byte-values)
+`shm_size` configures the size of the shared memory (`/dev/shm` partition on Linux) allowed by the service container.
+Specified as a [byte value](#specifying-byte-values).
 
 ### stdin_open
 
-`stdin_open` configure service container to run with an allocated stdin
+`stdin_open` configures service containers to run with an allocated stdin.
 
 ### tty
 
@@ -1212,24 +1212,27 @@ Specified as a [byte value](#specifying-byte-values)
 
 ### user
 
-`user` override the user set to run container process  by image (i.e. Dockerfile `USER`)
+`user` overrides the user used to run the container process. Default is that set by image (i.e. Dockerfile `USER`),
+if not set, `root`.
 
 ### working_dir
 
-`working_dir` override the working directory set to run container process by image (i.e. Dockerfile `WORKDIR`)
+`working_dir` overrides the container's working directory from that specified by image (i.e. Dockerfile `WORKDIR`).
 
 
 
 
 ## Networks top-level element
 
-Networks are the layer that allow services to communicate with each other. The networking model exposed to a service is limited to a simple IP connection with target services and external resources, while the Network definition allows to fine-tune the actual implementation provided by the platform.
+Networks are the layer that allow services to communicate with each other. The networking model exposed to a service 
+is limited to a simple IP connection with target services and external resources, while the Network definition allows 
+fine-tuning the actual implementation provided by the platform.
 
 Networks can be created by specifying the network name under a top-level `networks` section.
 Services can connect to networks by specifying the network name under the service [`networks`](#networks) subsection
 
-In the following example during runtime, networks `front-tier` and `back-tier` will be created and the `frontend` service 
-connect to the`front-tier` network and the `back-tier` network
+In the following example, at runtime, networks `front-tier` and `back-tier` will be created and the `frontend` service 
+connected to the `front-tier` network and the `back-tier` network.
 
 ```yml
 version: "3"
@@ -1247,22 +1250,24 @@ networks:
 
 ### driver
 
-`driver` specifies which driver should be used for this network. Compose implementation MUST return an error if the driver is not available.
+`driver` specifies which driver should be used for this network. Compose implementations MUST return an error if the 
+driver is not available on the platform.
 
 ```yml
 driver: overlay
 ```
 
-Default and available values are platform specific. Compose specification do only define two specific values: 
+Default and available values are platform specific. Compose specification MUST support the following specific drivers: 
 `none` and `host`
 - `host` use the host's networking stack
 - `none` disable networking
 
 #### host or none
 
-The syntax for using built-in networks such as `host` and `none` is a little different, as such networks implicitly exists outside
-the scope of Compose implementation. To use them one MUST define an external network with the name `host` or `none` and an alias that Compose implementation can use (`hostnet` or `nonet` in the following examples), then grant the service access to that network 
-using the alias.
+The syntax for using built-in networks such as `host` and `none` is different, as such networks implicitly exists outside
+the scope of the Compose implementation. To use them one MUST define an external network with the name `host` or `none` and 
+an alias that the Compose implementation can use (`hostnet` or `nonet` in the following examples), then grant the service
+access to that network using its alias.
 
 ```yml
 version: "3"
@@ -1292,7 +1297,7 @@ networks:
 
 ### driver_opts
 
-`driver_opts` specifies a list of options as key-value pairs to pass to the driver for this network. Those options are 
+`driver_opts` specifies a list of options as key-value pairs to pass to the driver for this network. These options are 
 driver-dependent - consult the driver's documentation for more information. Optional.
 
 ```yml
@@ -1303,8 +1308,8 @@ driver_opts:
 
 ### attachable
 
-If `attachable` is set to `true`, then standalone containers MUST be able attach to this network, in addition to services. 
-If a standalone container attaches to network, it can communicate with services and standalone containers 
+If `attachable` is set to `true`, then standalone containers SHOULD be able attach to this network, in addition to services. 
+If a standalone container attaches to the network, it can communicate with services and other standalone containers 
 that are also attached to the network.
 
 ```yml
@@ -1320,7 +1325,7 @@ networks:
 
 ### ipam
 
-`ipam` specify custom IPAM config. This is an object with several properties, each of which is optional:
+`ipam` specifies custom a IPAM configuration. This is an object with several properties, each of which is optional:
 
 -   `driver`: Custom IPAM driver, instead of the default.
 -   `config`: A list with zero or more configuration elements, each containing:
@@ -1345,8 +1350,7 @@ create an externally isolated network.
 
 Add metadata to containers using Labels. Can use either an array or a dictionary.
 
-It's recommended that you use reverse-DNS notation to prevent your labels from
-conflicting with those used by other software.
+Users SHOULD use reverse-DNS notation to prevent labels from conflicting with those used by other software.
 
 ```yml
 labels:
@@ -1362,17 +1366,17 @@ labels:
   - "com.example.label-with-empty-value"
 ```
 
-Compose implementation MUST set `com.docker.compose.project` and `com.docker.compose.network` labels.
+Compose implementations MUST set `com.docker.compose.project` and `com.docker.compose.network` labels.
 
 
 ### external
 
-If set to `true`, `external` specifies that this network has been created outside of the Compose implementation. The latter 
-does not attempt to create it, and raises an error if it doesn't exist.
+If set to `true`, `external` specifies that this network’s lifecycle is maintained outside of that of the application.
+Compose Implementations SHOULD NOT attempt to create these networks, and raises an error if one doesn't exist.
 
 In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network called 
-`{project_name}_outside`, Compose implementation lookup platform for an existing network simply called `outside` and 
-connect the `proxy` service's containers to it.
+`{project_name}_outside`, Compose implementations SHOULD interrogate the platform for an existing network simply 
+called `outside` and connect the `proxy` service's containers to it.
 
 ```yml
 version: "3"
@@ -1395,7 +1399,7 @@ networks:
 
 ### name
 
-`name` set a custom name for this network. The name field can be used to reference networks which contain special characters. 
+`name` sets a custom name for this network. The name field can be used to reference networks which contain special characters. 
 The name is used as is and will **not** be scoped with the project name.
 
 ```yml
@@ -1405,8 +1409,8 @@ networks:
     name: my-app-net
 ```
 
-It can also be used in conjunction with the `external` property to define the platform network Compose implementation should 
-retrieve, typically by using a parameter so the Compose file don't need to hard-code runtime specific values:
+It can also be used in conjunction with the `external` property to define the platform network that the Compose implementation 
+should retrieve, typically by using a parameter so the Compose file doesn't need to hard-code runtime specific values:
 
 ```yml
 version: "3"
