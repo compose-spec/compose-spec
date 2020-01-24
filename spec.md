@@ -19,11 +19,11 @@ Implementations MAY ignore attributes used in a configuration file that are not 
 
 The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
 
-Computing components of an application are defined as [Services](#Services-top-level-element). A Service an abstract concept implemented on platforms by running the same container image (and configuration) one or more times.
+Computing components of an application are defined as [Services](#Services-top-level-element). A Service is an abstract concept implemented on platforms by running the same container image (and configuration) one or more times.
 
-Services communicate with each other through [Networks](#Networks-top-level-element). In this specification, a Network is an platform capability abstraction to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and MAY be partially implemented on some platforms.
+Services communicate with each other through [Networks](#Networks-top-level-element). In this specification, a Network is a platform capability abstraction to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and MAY be partially implemented on some platforms.
 
-Services store and share persistent data into [Volumes](#Volumes-top-level-element). The specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platform.
+Services store and share persistent data into [Volumes](#Volumes-top-level-element). The specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platforms.
 
 Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](Configs-top-level-element). From a Service container point of view, Configs are comparable to Volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
 
@@ -32,7 +32,7 @@ A [Secret](#Secrets-top-level-element) is a specific flavour of configuration da
 Distinction within Volumes, Configs and Secret allows implementations to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
 
 A **Project** is an individual deployment of an application specification on a platform. A project's name is used to group
-resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. Compose implementation creating resources on platform MUST prefix resource names by project and
+resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. A Compose implementation creating resources on a platform MUST prefix resource names by project and
 set the label `com.docker.compose.project`.
 
 ### Illustrative example
@@ -233,14 +233,14 @@ cap_drop:
 
 ### cgroup_parent
 
-`cgroup_parent` Specify an OPTIONAL parent [cgroup](http://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
+`cgroup_parent` specifies an OPTIONAL parent [cgroup](http://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
 
 ```
 cgroup_parent: m-executor-abcd
 ```
 
 ### command
-`command` override the the default command declared by the container image (i.e. by Dockerfile's `CMD`).
+`command` overrides the the default command declared by the container image (i.e. by Dockerfile's `CMD`).
 ```
 command: bundle exec thin -p 3000
 ```
@@ -281,6 +281,8 @@ services:
       - my_config
 configs:
   my_config:
+    file: ./my_config.txt
+  my_other_config:
     external: true
 ```
 
@@ -453,8 +455,9 @@ dns_search:
 ### entrypoint
 
 `entrypoint` overrides the default entrypoint for the Docker image (i.e. `ENTRYPOINT` set by Dockerfile).
-Compose implementations MUST clears out any default command on the Docker image - both `ENTRYPOINT` and `CMD` instruction 
-in the Dockerfile - when `entrypoint` is configured by a Compose file.
+Compose implementations MUST clear out any default command on the Docker image - both `ENTRYPOINT` and `CMD` instruction 
+in the Dockerfile - when `entrypoint` is configured by a Compose file. If [`command](#command) is also set, 
+it is used as parameter to `entrypoint` as a replacement for Docker image's `CMD`
 
 ```yml
 entrypoint: /code/entrypoint.sh
@@ -495,7 +498,7 @@ Relative path MUST be resolved from the Compose file's parent folder. As absolut
 file from being portable, Compose implementations SHOULD warn users when such a path is used to set `env_file`.
 
 Environment variables declared in the [environment](#environment) section
-_override_ these values &ndash; this holds true even if those values are
+MUST override these values &ndash; this holds true even if those values are
 empty or undefined.
 
 #### Env_file format
@@ -581,7 +584,7 @@ extra_hosts:
 ```
 
 Compose implementations MUST create matching entry with the IP address and hostname in the container's network 
-configuration, which means for for Linux `/etc/hosts` will get extra lines:
+configuration, which means for Linux `/etc/hosts` will get extra lines:
 
 ```
 162.242.195.82  somehost
@@ -605,8 +608,7 @@ healthcheck:
   start_period: 40s
 ```
 
-`interval`, `timeout` and `start_period` are specified as durations in the form of `[value unit]+`. 
-The supported units are `us` (microseconds), `ms` (milliseconds), `s` (seconds), `m` (minutes) and `h` (hours).
+`interval`, `timeout` and `start_period` are [specified as durations](#specifying-durations).
 
 `test` defines the command the Compose implementation will run to check container health. It can be 
 either a string or a list. If it's a list, the first item must be either `NONE`, `CMD` or `CMD-SHELL`. 
@@ -617,8 +619,8 @@ If it's a string, it's equivalent to specifying `CMD-SHELL` followed by that str
 test: ["CMD", "curl", "-f", "http://localhost"]
 ```
 
-Using `CMD-SHELL` will run the command configured as a string using the container's shell (`/bin/sh`). 
-Both forms below are equivalent:
+Using `CMD-SHELL` will run the command configured as a string using the container's default shell 
+(`/bin/sh` for Linux). Both forms below are equivalent:
 
 ```yml
 test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
@@ -1099,7 +1101,7 @@ ulimits:
 
 ### userns_mode
 
-`userns_mode` s to set user namespace for service. Supported values are platform specific and MAY depend 
+`userns_mode` sets the user namespace for the service. Supported values are platform specific and MAY depend 
 on platform configuration
 
 ```yml
@@ -1374,9 +1376,9 @@ Compose implementations MUST set `com.docker.compose.project` and `com.docker.co
 If set to `true`, `external` specifies that this network’s lifecycle is maintained outside of that of the application.
 Compose Implementations SHOULD NOT attempt to create these networks, and raises an error if one doesn't exist.
 
-In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network called 
-`{project_name}_outside`, Compose implementations SHOULD interrogate the platform for an existing network simply 
-called `outside` and connect the `proxy` service's containers to it.
+In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network, Compose 
+implementations SHOULD interrogate the platform for an existing network simply called `outside` and connect the 
+`proxy` service's containers to it.
 
 ```yml
 version: "3"
@@ -1422,11 +1424,13 @@ networks:
 
 ## Volumes top-level element
 
-Volumes are persistent data stored implemented by the platform. The Compose specification offers a neutral abstraction for services to mount volumes, and configuration parameters to allocate them on infrastructure.
+Volumes are persistent data stores implemented by the platform. The Compose specification offers a neutral abstraction 
+for services to mount volumes, and configuration parameters to allocate them on infrastructure.
 
 
-`volumes` section allows to configure named volumes that can be reused across multiple services, and are
-easily retrieved and inspected using the docker command line or API. Here's an example of a two-service setup where a database's data directory is shared with another service as a volume so that it can be periodically backed up:
+The `volumes` section allows the configuration of named volumes that can be reused across multiple services. Here's 
+an example of a two-service setup where a database's data directory is shared with another service as a volume so 
+that it can be periodically backed up:
 
 ```yml
 version: "3"
@@ -1446,7 +1450,8 @@ volumes:
   db-data:
 ```
 
-An entry under the top-level `volumes` key can be empty, in which case it uses the default configuration by the platform. Optionally, you can configure it with the following keys:
+An entry under the top-level `volumes` key can be empty, in which case it uses the platform's default configuration for
+creating a volume. Optionally, you can configure it with the following keys:
 
 ### driver
 
@@ -1471,8 +1476,9 @@ volumes:
 
 ### external
 
-If set to `true`, `external` specifies that this volume has been created on platform outside Compose control. Compose 
-implementation MUST NOT attempt to create it, and MUST raises an error if it doesn't exist.
+If set to `true`, `external` specifies that this volume already exist on the platform and its lifecycle is managed outside 
+of that of the application. Compose implementations MUST NOT attempt to create these volumes, and MUST return an error they 
+do not exist.
 
 In the example below, instead of attempting to create a volume called
 `{project_name}_data`, Compose looks for an existing volume simply
@@ -1751,9 +1757,9 @@ services:
     logging: *default-logging
 ```
 
-### specifying-byte-values
+### specifying- byte values
 
-Value express a byte value as a string in `{amount}{byte unit} format:
+Value express a byte value as a string in `{amount}{byte unit}` format:
 The supported units are `b` (bytes), `k` or `kb` (kilo bytes), `m` or `mb` (mega bytes) and `g` or `gb` (giga bytes).
 
 ```
@@ -1762,4 +1768,16 @@ The supported units are `b` (bytes), `k` or `kb` (kilo bytes), `m` or `mb` (mega
     2048k
     300m
     1gb
+```
+### specifying durations
+
+Value express a duration as a string in thte in the form of `{value}{unit}`. 
+The supported units are `us` (microseconds), `ms` (milliseconds), `s` (seconds), `m` (minutes) and `h` (hours).
+Value can can combine mutiple values and using without separator.
+
+```
+  10ms
+  40s
+  1m30s
+  1h5m30s20ms
 ```
