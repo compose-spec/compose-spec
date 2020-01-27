@@ -56,8 +56,8 @@ Both services communicate with each other on an isolated back-tier network, whil
                   +--------------------+        \_________________/
 ```
 
-so we have:
 
+The example application is composed of the following parts:
 - 2 services, backed by Docker images: `webapp` and `database`
 - 1 secret (HTTPS certificate), injected into the frontend
 - 1 configuration (HTTP), injected into the frontend
@@ -101,13 +101,14 @@ secrets:
     external: true
 
 networks:
-  front-tier:
-  back-tier:
+  # The presence of these objects is sufficient to define them
+  front-tier: {}
+  back-tier: {}
 ```
 
 This example illustrates the distinction between volumes, configs and secrets. While all of them are all exposed
-to service containers as mounted files or directories, only a volume can be configured for read+write access -
-secrets and configs are read-only. The volume configuration allows you to select a volume driver and pass driver options
+to service containers as mounted files or directories, only a volume can be configured for read+write access.
+Secrets and configs are read-only. The volume configuration allows you to select a volume driver and pass driver options
 to tweak volume management according to the actual infrastructure. Configs and Secrets rely on platform services,
 and are declared `external` as they are not managed as part of the application lifecycle: the Compose implementation
 will use a platform-specific lookup mechanism to retrieve runtime values.
@@ -145,13 +146,14 @@ Implementations MAY ignore attributes used in a configuration file that are not 
 ## Services top-level element
 
 A Service is an abstract definition of a computing resource within an application which can be scaled/replaced
-independently from other components. Services are actually backed by a set of containers, run by the platform
+independently from other components. Services are backed by a set of containers, run by the platform
 according to replication requirements and placement constraints. Being backed by containers, Services are defined
 by a Docker image and set of runtime arguments. All containers within a service are identically created with these
 arguments.
 
-A Compose file MUST declare a `services` root element as a map or service names to service definitions. A service
-definition contains the configuration that is applied to each container started for that service.
+A Compose file MUST declare a `services` root element as a map whose keys are string representations of service names,
+and whose values are service definitions. A service  definition contains the configuration that is applied to each
+container started for that service.
 
 Each service MAY also include a Build section, which defines how to create the Docker image for the service.
 Compose implementations MAY support building docker images using this service definition. If not implemented
@@ -159,8 +161,8 @@ the Build section SHOULD be ignored and the Compose file MUST still be considere
 
 Build support is an OPTIONAL aspect of the Compose specification, and is described in detail [here](build.md)
 
-Each Service defines runtime constraints and requirements to run its containers. The `deploy` section group
-these constraints and allow the plaform to adjust the deployment strategy to best match containers needs with
+Each Service defines runtime constraints and requirements to run its containers. The `deploy` section groups 
+these constraints and allows the platform to adjust the deployment strategy to best match containers' needs with
 available resources.
 
 Deploy support is an OPTIONAL aspect of the Compose specification, and is described in detail [here](deploy.md). If
@@ -225,11 +227,14 @@ configuration. Two different syntax variants are supported.
 Compose implementations MUST report an error if config doesn't exist on platform or isn't defined in the
 [`configs`](#configs-top-level-element) section of this Compose file.
 
+There are two syntaxes defined for configs. To remain compliant to this specification, an implementation
+MUST support both syntaxes. Implementations MUST allow use of both short and long syntaxes within the same document.
+
 #### Short syntax
 
 The short syntax variant only specifies the config name. This grants the
 container access to the config and mounts it at `/<config_name>`
-within the container. The source name and destination mountpoint are both set
+within the container. The source name and destination mount point are both set
 to the config name.
 
 The following example uses the short syntax to grant the `redis` service
@@ -287,17 +292,17 @@ configs:
     external: true
 ```
 
-You can grant a service access to multiple configs and you can mix long and short syntax.
+You can grant a service access to multiple configs, and you can mix long and short syntax.
 
 ### container_name
 
-`container_name` specifies a custom container name, rather than a generated default name.
+`container_name` is a string that specifies a custom container name, rather than a generated default name.
 
 ```yml
 container_name: my-web-container
 ```
 
-Compose implementation MUST NOT scale a service beyond 1 container if the Compose file specifies a
+Compose implementation MUST NOT scale a service beyond one container if the Compose file specifies a 
 `container_name`. Attempting to do so MUST result in an error.
 
 ### credential_spec
