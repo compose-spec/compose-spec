@@ -15,6 +15,9 @@ The specification format follows [Semantic Versioning](https://semver.org), whic
 
 Implementations MAY ignore attributes used in a configuration file that are not supported by the declared version, whenever then are valid for a more recent version. If they do, a warning message MUST inform the user. 
 
+Version can be set by short notation with only major version `3`. In such case Compose Implementations
+MUST use the latest supported minor version of the specification for this major version.
+
 ## The Compose application model
 
 The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
