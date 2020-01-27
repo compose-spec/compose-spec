@@ -9,11 +9,21 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 ## Version
 
-A top-level version property is required by the specification. Version MUST be 3.x or later, legacy docker-compose 1.x and 2.x are not included as part of this specification. Implementations MAY accept such legacy formats for compatibility purposes.
+We want the Compose specification to evolve in a dynamic ecosystem, and not force users to take care of the exact version of the
+specification they refer to when they write a Compose file, or the highets version of the specification supported by their tools.
+For this purpose, we define loose parsing rules for Compose implementations:
 
-The specification format follows [Semantic Versioning](https://semver.org), which means that the file format is backward compatible within a major version set. As the specification evolves, minor versions MAY introduce new elements and MAY deprecate others for removal in the next major version. 
+An OPTIONAL top-level `version` property MAY be included in a Compose file. A Compose implementation SHOULD NOT use this version to select
+an exact schema to validate the Compose file, but prefer the most recent schema at the time it has been designed. 
 
-Implementations MAY ignore attributes used in a configuration file that are not supported by the declared version, whenever then are valid for a more recent version. If they do, a warning message MUST inform the user. 
+Compose implementations MUST validate they can fully parse the Compose file. If some fields are unknown, typically because the 
+Compose file was written with fields defined by a newer version of the specification, Compose implementations MUST warn the user. 
+Compose implementations SHOULD fail with error but MAY offer options to ignore unknown fields.
+
+Unless explicitly noted by the specification, all fields in a Compose file are OPTIONAL. Compose implementations MAY not support 
+some of them whenever they are defined by the specification. In such case Compose implementation MUST warn users when a Compose 
+file use such unsupported fields, and MAY offer options to ignore them.
+
 
 ## The Compose application model
 
@@ -915,10 +925,10 @@ the Compose file and MUST inform the user they will ignore the specified host IP
 The long form syntax allows the configuration of additional fields that can't be
 expressed in the short form.
 
-- `target`: the container port
-- `published`: the publicly exposed port
-- `protocol`: the port protocol (`tcp` or `udp`), unspecified means any protocol
-- `mode`: `host` for publishing a host port on each node, or `ingress` for a port to be load balanced.
+- `target`: The container port
+- `published`: The publicly exposed port
+- `protocol`: The port protocol (`tcp` or `udp`), unspecified means any protocol
+- `mode: host`: For publishing a host port on each node, or `ingress` for a port to be load balanced.
 
 ```yml
 ports:
