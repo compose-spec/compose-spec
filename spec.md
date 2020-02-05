@@ -605,8 +605,10 @@ healthcheck:
 
 ### image
 
-`image` specifies the image to start the container from. Can either be a repository/tag, a digested
-reference or a partial image ID.
+`image` specifies the image to start the container from. Image MUST follow the Open Container Specification 
+[addressable image format](https://github.com/opencontainers/org/blob/master/docs/docs/introduction/digests.md),
+as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
+
 
 ```yml
     image: redis
@@ -615,8 +617,7 @@ reference or a partial image ID.
     image: library/redis
     image: docker.io/library/redis
     image: my_private.registry:5000/redis
-    image: a4bc65fd
-```
+```    
 
 If the image does not exist on the platform, Compose implementations MUST attempt to pull it. Compose
 implementations with build support MAY offer alternative options for the end user to control precedence of
