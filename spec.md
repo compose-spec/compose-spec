@@ -169,9 +169,14 @@ The Compose file is a [YAML](http://yaml.org/) file defining:
 - [Configs](08-configs.md) 
 - [Secrets](09-secrets.md)
 
-The default path for a Compose file is `compose.yaml` (preferred) or `compose.yml` that is placed in the working directory.
-Compose also supports `docker-compose.yaml` and `docker-compose.yml` for backwards compatibility of earlier versions.
-If both files exist, Compose prefers the canonical `compose.yaml`.
+The Compose file is a [YAML](http://yaml.org/) file defining
+[version](#version) (REQUIRED),
+[services](#service-top-level-element) (REQUIRED),
+[networks](#network-top-level-element),
+[volumes](#volume-top-level-element),
+[configs](#configs-top-level-element) and
+[secrets](#secrets-top-level-element).
+The default path for a Compose file is `./docker-compose.yml` (preferred) or `./docker-compose.yaml`.
 
 You can use [fragments](10-fragments.md) and [extensions](11-extension.md) to keep your Compose file efficient and easy to maintain.
 
