@@ -129,7 +129,9 @@ The Compose file is a [YAML](http://yaml.org/) file defining
 [volumes](#volume-top-level-element),
 [configs](#configs-top-level-element) and
 [secrets](#secrets-top-level-element).
-The default path for a Compose file is `./docker-compose.yml` (preferred) or `./docker-compose.yaml`.
+The default path for a Compose file is `compose.yaml` (preferred) or `compose.yml` in working directory.
+Compose implementations SHOULD also support `docker-compose.yaml` and `docker-compose.yml` for backward compatibility. 
+If both files exist, Compose implementations MUST prefer canonical `compose.yaml` one. 
 
 Multiple Compose files can be combined together to define the application model. The combination of YAML files 
 MUST be implemented by appending/overriding YAML elements based on Compose file order set by the user. Simple 
