@@ -4,7 +4,7 @@ The Compose specification establishes a standard for the definition of
 multi-container platform-agnostic applications. The specification can be found
 [here](spec.md).
 
-![logo](logo.jpg)
+![logo](images/logo.jpg)
 
 ## Table of Contents
 
