@@ -2,6 +2,22 @@
 
 version: 3.9
 
+## Table of Contents
+
+- [Status of this document](#status-of-this-document)
+- [The Compose application model](#the-compose-application-model)
+- [Compose file](#compose-file)
+- [Version top-level element](#version-top-level-element)
+- [Services top-level element](#services-top-level-element)
+- [Networks top-level element](#networks-top-level-element)
+- [Volumes top-level element](#volumes-top-level-element)
+- [Configs top-level element](#configs-top-level-element)
+- [Secrets top-level element](#secrets-top-level-element)
+- [Fragments](#fragments)
+- [Extension](#extension)
+- [Interpolation](#interpolation)
+
+
 ## Status of this document
 
 This document specifies the Compose file format used to define multi-containers applications. Distribution of this document is unlimited.
