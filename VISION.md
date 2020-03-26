@@ -74,7 +74,9 @@ easy experimentation, and provide of validation of implementations.
 
 The format wants to be a living specification that evolves over time and
 provides a way for tool builders to experiment with new ideas.
+
 ## In Scope
+
 The purpose of this section is to set out the areas of functionality that
 Compose is set to target.
 The scope should be seen as a whitelist. It can be changed if all maintainers
@@ -89,28 +91,17 @@ There are four areas of the specification:
 
 **Name**|**Description**|**Area**|**Reason**
 :-----|:-----|:-----|:-----
-Service list|List of services that the developer wishes to deploy or work with 
-|Core|Logical structure of the application
-Internal connectivity |Which services can communicate with each
-other|Core|Logical structure of the application
-External connectivity |Which application services are exposed and
-how|Core|Logical structure of the application
+Service list|List of services that the developer wishes to deploy or work with|Core|Logical structure of the application
+Internal connectivity |Which services can communicate with each other|Core|Logical structure of the application
+External connectivity |Which application services are exposed and how|Core|Logical structure of the application
 Volumes|How and where data is stored|Core|Logical structure of the application
-Labelling|Make parts of application identifiable|Core|Ease of user/structure of
-application 
-Container image build|Allow scripting of container image build|Build|Part of
-developer inner loop
-Container runtime configuration|"Entrypoint, environment, healthchecks,
-etc."|Deploy|
-Service configuration|Infrastructure specific configuration stored in the
-orchestrator|Deploy|
-Service secrets|Infrastructure specific secrets stored in the
-orchestrator|Deploy|
-Deployment strategy|"How services are deployed (e.g.: placement, affinity,
-etc.)"|Deploy|
-Non-container workloads|Other Cloud native components |Extension|Not containers
-but stateless cloud native component
-Production runtime service parameters|"Replicas, CPU/memory limits,
-etc."|Deploy|Production Ops concern
+Labelling|Make parts of application identifiable|Core|Ease of user/structure of application 
+Container image build|Allow scripting of container image build|Build|Part of developer inner loop
+Container runtime configuration|"Entrypoint, environment, healthchecks, etc."|Deploy|
+Service configuration|Infrastructure specific configuration stored in the orchestrator|Deploy|
+Service secrets|Infrastructure specific secrets stored in the orchestrator|Deploy|
+Deployment strategy|How services are deployed (e.g.: placement, affinity, etc.)|Deploy|
+Production runtime service parameters|Replicas, CPU/memory limits, etc.|Deploy|
+Non-container workloads|Other Cloud native components |Extension|Not containers but stateless cloud native component
 Logging|Where logs are kept|Out|Production Ops concern
-Platform infrastructure|"Cluster setup, DaaS, etc."|Out|Production Ops concern
+Platform infrastructure|"Cluster setup, DBaaS, etc."|Out|Production Ops concern
