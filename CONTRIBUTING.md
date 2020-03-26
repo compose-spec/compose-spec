@@ -1,66 +1,65 @@
 # Contributing
 
 Contributions should be made via pull requests. Pull requests will be reviewed
-by one or more maintainers and merged when acceptable.
+by two or more maintainers and merged when acceptable.
 
-The goal of the Compose Specification is to be the simplest cloud and platform 
-agnostic way of defining container based applications. A developer should be able 
-to develop and debug an application on their local system before confidently deploying 
-it to a production platform– cloud or otherwise. The format will be portable across 
-container platforms by providing a high level abstraction for how the containers are 
-built, deployed, networked, and configured.
+The goal of the Compose Specification is to be the simplest cloud and platform
+agnostic way of defining container based applications. A developer should be
+able to develop and debug an application on their local system before
+confidently deploying it to a production platform– cloud or otherwise. The
+format will be portable across container platforms by providing a high level
+abstraction for how the containers are built, deployed, networked, and
+configured.
 
-When proposing features as part of the Compose Specification, changes should be focused 
-towards features which enable developers as part of their [inner loop](https://docs.microsoft.com/en-us/dotnet/architecture/containerized-lifecycle/design-develop-containerized-apps/docker-apps-inner-loop-workflow)
- and not focused on operator controls. 
-Some features may benefit the container ecosystem, however, they may not be appropriate 
-for a first class feature in Compose.
+When proposing features as part of the Compose Specification, changes should be
+focused towards features which enable developers as part of their
+[inner loop](https://docs.microsoft.com/en-us/dotnet/architecture/containerized-lifecycle/design-develop-containerized-apps/docker-apps-inner-loop-workflow)
+and not focused on operator controls.
+Some features may benefit the container ecosystem, however, they may not be
+appropriate for a first class feature in Compose.
 
 ## Successful Changes
 
-We ask that before contributing, please make the effort to ensure you have read the 
-Compose Vision to ensure that your change is in keeping with the objectives of Compose. 
-You can coordinate with the maintainers of the project before submitting large proposals 
-or high impact PRs, this will prevent you from doing extra work that may or may not be merged.
-PRs that are just submitted without any prior communication will likely be summarily closed.
+We ask that contributors read the [Compose Vision](VISION.md) to ensure that
+proposed changes are aligned with the objectives of the Compose project.
 
-While pull requests are the methodology for submitting changes, changes are much more 
-likely to be accepted if they are accompanied by a full justification of what developer 
-problem you are solving. Often times, it helps to first state the problem before presenting 
-solutions.
+To help maintainers understand what user or developer problem needs to be
+solved, the first step to a contribution is usually submitting an issue. A well
+written issue is one that clearly outlines the developer or user problem that
+needs to be solved along with a list of requirements for resolution of the
+problem. If there are multiple possible solutions to the problem, these can be
+outlined in the issue. Once consensus is reached on how to resolve the issue, a
+pull request can be created.
 
-Typically, the best methods of accomplishing this are to submit an issue, stating the 
-problem. This issue can include a problem statement and a checklist with requirements. 
-If solutions are proposed, alternatives should be listed and eliminated. Even if the 
-criteria for elimination of a solution is frivolous, say so.
-Larger changes typically work best with design documents, these are items which may 
-change the scope or vision for Compose. These should be accompanied with a more detailed 
-overview of the proposal, providing context to the justfication at the time the feature 
-was conceived and can inform future documentation contributions.
+Pull requests that propose minor changes or improvements may be submitted
+without an associated issue or discussion.
+
+For large or high impact changes, contributors can reach out to maintainers
+before starting work. This will ensure that contributors and maintainers are
+aligned and increase the chance that the change is accepted.
 
 ## Commit Messages
 
-There are times for one line commit messages and this is not one of them.
-Commit messages should follow best practices, including explaining the context
-of the problem and how it was solved, including in caveats or follow up changes
-required. They should tell the story of the change and provide readers
+Commit messages should follow best practices and explain the context of the
+problem and how it was solved-- including any caveats or follow up changes
+required. They should tell the story of the change and provide readers an
 understanding of what led to it.
 
-If you're lost about what this even means, please see [How to Write a Git
-Commit Message](http://chris.beams.io/posts/git-commit/) for a start.
+[How to Write a Git Commit Message](http://chris.beams.io/posts/git-commit/)
+provides a good guide for how to do so.
 
 In practice, the best approach to maintaining a nice commit message is to
 leverage a `git add -p` and `git commit --amend` to formulate a solid
-changeset. This allows one to piece together a change, as information becomes
+change set. This allows one to piece together a change, as information becomes
 available.
 
 If you squash a series of commits, don't just submit that. Re-write the commit
 message, as if the series of commits was a single stroke of brilliance.
 
-That said, there is no requirement to have a single commit for a PR, as long as
-each commit tells the story. For example, if there is a feature that requires a
-package, it might make sense to have the package in a separate commit then have
-a subsequent commit that uses it.
+That said, there is no requirement to have a single commit for a pull request,
+as long as each commit tells the story. For example, if there is a feature that
+requires a package, it might make sense to have the package in a separate commit
+then have a subsequent commit that uses it.
 
 Remember, you're telling part of the story with the commit message. Don't make
 your chapter weird.
