@@ -1,7 +1,7 @@
 # Compose Specification Project Governance
 
-For specific guidance on practical contribution steps for the Compose Spec please
-see our [CONTRIBUTING.md](./CONTRIBUTING.md) guide.
+For specific guidance on practical contribution steps for the Compose Spec
+please see our [CONTRIBUTING.md](./CONTRIBUTING.md) guide.
 
 ## Maintainership
 
@@ -13,8 +13,10 @@ all maintainers have 3 things in common:
 3) They spend that time doing whatever needs to be done, not necessarily what
 is the most interesting or fun.
 
-Maintainers are often under-appreciated, because their work is harder to appreciate.
-It's easy to appreciate a really cool and technically advanced feature. It's harder
+Maintainers are often under-appreciated, because their work is harder to
+appreciate.
+It's easy to appreciate a really cool and technically advanced feature.
+It's harder
 to appreciate the absence of bugs, the slow but steady improvement in stability,
 or the reliability of a release process. But those things distinguish a good
 project from a great one.
@@ -22,8 +24,8 @@ project from a great one.
 ## Reviewers
 
 A reviewer is a core role within the project.
-They share in reviewing issues and pull requests and their LGTM counts towards the
-required LGTM count to merge a code change into the project.
+They share in reviewing issues and pull requests and their LGTM counts towards
+the required LGTM count to merge a code change into the project.
 
 Reviewers are part of the organization but do not have write access.
 Becoming a reviewer is a core aspect in the journey to becoming a maintainer.
@@ -91,33 +93,33 @@ by a pull request removing them.
 
 ## How are decisions made?
 
-The Compose Specification is an open-source project with an open design philosophy. This means
-that the repository is the source of truth for EVERY aspect of the project,
-including its philosophy, design, road map, and APIs. *If it's part of the
-project, it's in the repo. If it's in the repo, it's part of the project.*
+The Compose Specification is an open-source project with an open design
+philosophy.
+This means that the repository is the source of truth for EVERY aspect of the
+project, including its philosophy, design, road map, and APIs. *If it's part of
+the project, it's in the repo. If it's in the repo, it's part of the project.*
 
 As a result, all decisions can be expressed as changes to the repository. An
 implementation change is a change to the source code. An API change is a change
 to the API specification. A philosophy change is a change to the philosophy
 manifesto, and so on.
 
-All decisions affecting The Compose Specificiation, big and small, follow the same 3 steps:
+All decisions affecting The Compose Specificiation, big and small, follow the
+same 3 steps:
 
 * Step 1: Open a pull request. Anyone can do this.
-
 * Step 2: Discuss the pull request. Anyone can do this.
-
 * Step 3: Merge or refuse the pull request. Who does this depends on the nature
 of the pull request and which areas of the project it affects.
 
 ## Helping contributors with the DCO
 
-The [DCO or `Sign your work`](./CONTRIBUTING.md#sign-your-work)
-requirement is not intended as a roadblock or speed bump.
+The [DCO or `Sign your work`](./CONTRIBUTING.md#sign-your-work) requirement is
+not intended as a roadblock or speed bump.
 
-Some Compose Specificaiton contributors are not as familiar with `git`, or have used a web
-based editor, and thus asking them to `git commit --amend -s` is not the best
-way forward.
+Some Compose Specificaiton contributors are not as familiar with `git`, or have
+used a web based editor, and thus asking them to `git commit --amend -s` is not
+the best way forward.
 
 In this case, maintainers can update the commits based on clause (c) of the DCO.
 The most trivial way for a contributor to allow the maintainer to do this, is to
@@ -136,6 +138,7 @@ made through a pull request.
 
 If you have a technical dispute that you feel has reached an impasse with a
 subset of the community, any contributor may open an issue, specifically
-calling for a resolution vote of the current core maintainers to resolve the dispute.
+calling for a resolution vote of the current core maintainers to resolve the
+dispute.
 The same voting quorums required (2/3) for adding and removing maintainers
 will apply to conflict resolution.
