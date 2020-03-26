@@ -19,7 +19,7 @@ Additional documentation about how this group operates:
 To provide more context on the Compose specification the following section gives
 example use cases for each part of the specification.
 
-### Developement tools
+### Development tools
 
 Developers can use a Compose file to specify a container-based application
 that will run as a set of containers on a local container engine. The Compose
