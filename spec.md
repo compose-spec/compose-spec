@@ -1244,13 +1244,14 @@ Default and available values are platform specific. Compose specification MUST s
 
 #### host or none
 
-The syntax for using built-in networks such as `host` and `none` is different, as such networks implicitly exists outside
-the scope of the Compose implementation. To use them one MUST define an external network with the name `host` or `none` and
-an alias that the Compose implementation can use (`hostnet` or `nonet` in the following examples), then grant the service
-access to that network using its alias.
+Use the host’s networking stack, or no networking. Equivalent to `docker run --net=host` or `docker run --net=none`. Only used if you use `docker stack` commands. If you use the `docker-compose` command, use network_mode instead.
+
+If you want to use a particular network on a common build, use [network](#network_mode) as mentioned in the second yaml file example.
+
+The syntax for using built-in networks such as `host` and `none` is a little different. Define an external network with the name `host` or `none` (that Docker has already created automatically) and an alias that Compose can use (`hostnet` or `nonet` in the following examples), then grant the service access to that network using the alias.
 
 ```yml
-version: "3"
+version: "3.7"
 services:
   web:
     networks:
@@ -1260,6 +1261,17 @@ networks:
   hostnet:
     external: true
     name: host
+```
+
+```yml
+services:
+  web:
+    ...
+    build:
+      ...
+      network: host
+      context: .
+      ...
 ```
 
 ```yml
