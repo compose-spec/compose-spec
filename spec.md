@@ -321,6 +321,8 @@ container_name: my-web-container
 Compose implementation MUST NOT scale a service beyond one container if the Compose file specifies a 
 `container_name`. Attempting to do so MUST result in an error.
 
+If represents, `container_name` SHOULD follow the regex fomrat of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`
+
 ### credential_spec
 
 `credential_spec` configures the credential spec for a managed service account.
