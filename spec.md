@@ -449,6 +449,18 @@ starting a dependent service.
 Compose implementations MUST guarantee dependency services marked with
 `service_healthy` are "healthy" before starting a dependent service.
 
+### device_cgroup_rules
+
+`device_cgroup_rules` defines a list of device cgroup rules for this container.
+The format is the same format the Linux kernel specifies in the [Control Groups
+Device Whitelist Controller](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/devices.html).
+
+```yml
+device_cgroup_rules:
+  - 'c 1:3 mr'
+  - 'a 7:* rmw'
+```
+
 ### devices
 
 `devices` defines a list of device mappings for created containers.
