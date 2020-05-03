@@ -1244,7 +1244,20 @@ expressed in the short form.
 
 ### ipc
 
-`ipc` configures the IPC isolation mode set by service container.
+`ipc` configures the IPC isolation mode set by service container. Available
+values are platform specific, but Compose specification defines specific values
+which MUST be implemented as described if supported:
+
+- `shareable` which gives the container own private IPC namespace, with a
+  possibility to share it with other containers.
+- `service:{name}` which makes the container join another (`shareable`)
+   container's IPC namespace.
+
+```yml
+    ipc: "shareable"
+    ipc: "service:[service name]"
+```
+
 
 ### mac_address
 
