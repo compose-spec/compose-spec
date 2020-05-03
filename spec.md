@@ -398,6 +398,26 @@ Compose implementations MUST guarantee dependency services have been started bef
 starting a dependent service.
 Compose implementations MAY wait for dependency services to be "ready" before
 starting a dependent service.
+If `condition: service_healthy` is specified on a dependency, Compose
+implementations MUST wait for such dependency to be "healthy" (as indicated by
+[healthcheck](#healthcheck)) before starting a dependent service.
+
+Simple example:
+
+```yml
+version: "3"
+services:
+  web:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+  redis:
+    image: redis
+  db:
+    image: postgres
+```
 
 ### devices
 
