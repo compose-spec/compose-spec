@@ -369,8 +369,12 @@ configs:
 
 ### depends_on
 
-`depends_on` expresses a startup and shutdown dependencies between services, Service dependencies cause the following
-behaviors:
+`depends_on` expresses startup and shutdown dependencies between services.
+
+#### Short syntax
+
+The short syntax variant only specifies service names of the dependencies.
+Service dependencies cause the following behaviors:
 
 - Compose implementations MUST create services in dependency order. In the following
   example, `db` and `redis` are created before `web`.
@@ -398,9 +402,29 @@ Compose implementations MUST guarantee dependency services have been started bef
 starting a dependent service.
 Compose implementations MAY wait for dependency services to be "ready" before
 starting a dependent service.
-If `condition: service_healthy` is specified on a dependency, Compose
-implementations MUST wait for such dependency to be "healthy" (as indicated by
-[healthcheck](#healthcheck)) before starting a dependent service.
+
+#### Long syntax
+
+The long form syntax enables the configuration of additional fields that can't be
+expressed in the short form.
+
+- `condition`: condition under which dependency is considered satisfied
+  - `service_started`: is an equivalent of the short syntax described above
+  - `service_healthy`: specifies that a dependency is expected to be "healthy"
+    (as indicated by [healthcheck](#healthcheck)) before starting a dependent
+    service.
+
+Service dependencies cause the following behaviors:
+
+- Compose implementations MUST create services in dependency order. In the following
+  example, `db` and `redis` are created before `web`.
+
+- Compose implementations MUST wait for healthchecks to pass on dependencies
+  marked with `service_healthy`. In the following example, `db` is expected to
+  be "healthy" before `web` is created.
+
+- Compose implementations MUST remove services in dependency order. In the following
+  example, `web` is removed before `db` and `redis`.
 
 Simple example:
 
@@ -413,11 +437,17 @@ services:
       db:
         condition: service_healthy
       redis:
+        condition: service_started
   redis:
     image: redis
   db:
     image: postgres
 ```
+
+Compose implementations MUST guarantee dependency services have been started before
+starting a dependent service.
+Compose implementations MUST guarantee dependency services marked with
+`service_healthy` are "healthy" before starting a dependent service.
 
 ### devices
 

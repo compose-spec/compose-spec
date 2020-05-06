@@ -138,7 +138,28 @@
           "additionalProperties": false,
           "patternProperties": {"^x-": {}}
         },
-        "depends_on": {"$ref": "#/definitions/list_of_strings"},
+        "depends_on": {
+          "oneOf": [
+            {"$ref": "#/definitions/list_of_strings"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "patternProperties": {
+                "^[a-zA-Z0-9._-]+$": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "condition": {
+                      "type": "string",
+                      "enum": ["service_started", "service_healthy"]
+                    }
+                  },
+                  "required": ["condition"]
+                }
+              }
+            }
+          ]
+        },
         "devices": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "dns": {"$ref": "#/definitions/string_or_list"},
         "dns_search": {"$ref": "#/definitions/string_or_list"},
