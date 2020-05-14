@@ -108,7 +108,7 @@ volumes:
     driver_opts:
       size: "10GiB"
 
-config:
+configs:
   httpd-config:
     external: true
 
