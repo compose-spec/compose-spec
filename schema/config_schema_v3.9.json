@@ -187,6 +187,9 @@
         "healthcheck": {"$ref": "#/definitions/healthcheck"},
         "hostname": {"type": "string"},
         "image": {"type": "string"},
+        "pull_policy": {"type": "string", "enum": [
+          "always", "never", "if_not_present"
+        ]},
         "init": {"type": "boolean"},
         "ipc": {"type": "string"},
         "isolation": {"type": "string"},

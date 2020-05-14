@@ -692,12 +692,24 @@ as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
     image: my_private.registry:5000/redis
 ```    
 
-If the image does not exist on the platform, Compose implementations MUST attempt to pull it. Compose
+If the image does not exist on the platform, Compose implementations MUST attempt to pull it based on the `pull_policy`. Compose
 implementations with build support MAY offer alternative options for the end user to control precedence of
-pull over building the image from source, however pulling the image MUST be the default behaviour.
+pull over building the image from source, however pulling the image MUST be the default behavior.
 
 `image` MAY be omitted from a Compose file as long as a `build` section is declared. Compose implementations
 without build support MUST fail when `image` is missing from the Compose file.
+
+
+### pull_policy
+
+`pull_policy` defines the decisions Compose implementations will make when it starts to pull images. Possible values are:
+
+* `always`: Compose implementations SHOULD always pull the image from the registry.
+* `never`: Compose implementations SHOULD NOT pull the image from a registry and SHOULD rely on the platform cached image. If there is no cached image, a failure MUST be reported.
+* `if_not_present`: Compose implementations SHOULD pull the image only if it's not available in the platform cache.This SHOULD be the default option for Compose implementations without build support.
+
+If `pull_policy` and `build` both presents, Compose implementations SHOULD build the image by default. Compose implementations MAY override this behavior in the toolchain.
+
 
 ### init
 
