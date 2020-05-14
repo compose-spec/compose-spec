@@ -171,7 +171,7 @@ services:
 
 ### restart_policy
 
-`restart_policy` configures if and how to restart containers when they exit. If not `restart_policy` is set, Compose implementations MUST consider `restart` field set by service configuration.
+`restart_policy` configures if and how to restart containers when they exit. If `restart_policy` is not set, Compose implementations MUST consider `restart` field set by service configuration.
 
 - `condition`: One of `none`, `on-failure` or `any` (default: `any`). 
 - `delay`: How long to wait between restart attempts, specified as a [duration](spec.md#specifying-durations) (default: 0).
