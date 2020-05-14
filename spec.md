@@ -108,7 +108,7 @@ volumes:
     driver_opts:
       size: "10GiB"
 
-config:
+configs:
   httpd-config:
     external: true
 
@@ -1722,7 +1722,8 @@ volumes:
 
 ## Extension
 
-Special extensions fields can be of any format as long as they are located at the root of your Compose file, or first level element, and their name starts with the `x-` character sequence.
+Special extension fields can be of any format as long as their name starts with the `x-` character sequence. They can be used 
+within any structure in a Compose file. This is the sole exception for Compose implementations to silently ignore unrecognized field.
 
 ```yml
 version: "3"
@@ -1730,6 +1731,11 @@ x-custom:
   foo:
     - bar
     - zot
+
+services:
+  webapp:
+    image: awesome/webapp
+    x-foo: bar
 ```
 
 The contents of such fields are unspecified by Compose specification, and can be used to enable custom features. Compose implementation to encounter an unknown extension field MUST NOT fail, but COULD warn about unknown field.
