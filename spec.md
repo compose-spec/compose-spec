@@ -209,6 +209,114 @@ not implemented the Deploy section SHOULD be ignored and the Compose file MUST s
 
 `deploy` specifies the configuration for the deployment and lifecycle of services, as defined [here](deploy.md).
 
+### blkio_config
+
+`blkio_config` defines a set of configuration options to set block IO limits for this service.
+                         
+```yml
+services:
+  foo:
+    image: busybox
+    blkio_config:
+       weight: 300
+       weight_device:
+         - path: /dev/sda
+           weight: 400
+       device_read_bps:
+         - path: /dev/sdb
+           rate: '12mb'
+       device_read_iops:
+         - path: /dev/sdb
+           rate: 120
+       device_write_bps:
+         - path: /dev/sdb
+           rate: '1024k'
+       device_write_iops:
+         - path: /dev/sdb
+           rate: 30
+```
+
+#### device_read_bps, device_write_bps
+
+Set a limit in bytes per second for read / write operations on a given device. 
+Each item in the list MUST have two keys:
+
+- `path`: defining the symbolic path to the affected device.
+- `rate`: either as an integer value representing the number of bytes or as a string expressing a byte value.
+
+#### device_read_iops, device_write_iops
+
+Set a limit in operations per second for read / write operations on a given device. 
+Each item in the list MUST have two keys:
+
+- `path`: defining the symbolic path to the affected device.
+- `rate`: as an integer value representing the permitted number of operations per second.
+
+#### weight
+
+Modify the proportion of bandwidth allocated to this service relative to other services. 
+Takes an integer value between 10 and 1000, with 500 being the default.
+
+#### weight_device
+
+Fine-tune bandwidth allocation by device. Each item in the list must have two keys:
+
+- `path`: defining the symbolic path to the affected device.
+- `weight`: an integer value between 10 and 1000.
+
+
+### cpu_count
+
+`cpu_count` defines the number of usable CPUs for service container.
+
+### cpu_percent
+
+`cpu_percent` defines the usable percentage of the available CPUs.
+
+### cpu_shares
+
+`cpu_shares` defines (as integer value) service container relative CPU weight versus other containers.
+
+### cpu_period
+
+`cpu_period` allow Compose implementations to configure CPU CFS (Completely Fair Scheduler) period when platform is based
+on Linux kernel.
+
+### cpu_quota
+
+`cpu_quota` allow Compose implementations to configure CPU CFS (Completely Fair Scheduler) quota when platform is based
+on Linux kernel.
+
+### cpu_rt_runtime
+
+`cpu_rt_runtime` configures CPU allocation parameters for platform with support for realtime scheduler. Can be either 
+an integer value using microseconds as unit or a [duration](#specifying-durations).
+
+```yml
+ cpu_rt_runtime: '400ms'
+ cpu_rt_runtime: 95000`
+```
+
+### cpu_rt_period
+
+`cpu_rt_period` configures CPU allocation parameters for platform with support for realtime scheduler. Can be either
+an integer value using microseconds as unit or a [duration](#specifying-durations).
+
+```yml
+ cpu_rt_period: '1400us'
+ cpu_rt_period: 11000`
+```
+
+### cpus
+_DEPRECATED: use [deploy.reservations.cpus](deploy.md#cpus)_
+
+`cpus` define the number of (potentially virtual) CPUs to allocate to service containers. This is a fractional number. 
+`0.000` means no limit.
+
+### cpuset
+
+`cpuset` defines the explicit CPUs in which to allow execution. Can be a range `0-3` or a list `0,1`
+
 ### build
 
 `build` specifies the build configuration for creating container image from source, as defined [here](build.md).
@@ -500,6 +608,16 @@ dns:
   - 9.9.9.9
 ```
 
+### dns_opt
+
+`dns_opt` list custom DNS options to be passed to the container’s DNS resolver (`/etc/resolv.conf` file on Linux).
+
+```yml
+dns_opt:
+  - use-vc
+  - no-tld-query
+```
+
 ### dns_search
 
 `dns` defines custom DNS search domains to set on container network interface configuration. Can be a single value or a list.
@@ -658,6 +776,25 @@ configuration, which means for Linux `/etc/hosts` will get extra lines:
 50.31.209.229   otherhost
 ```
 
+### group_add
+
+`group_add` specifies additional groups (by name or number) which the user inside the container MUST be a member of. 
+
+An example of where this is useful is when multiple containers (running as different users) need to all read or write 
+the same file on a shared volume. That file can be owned by a group shared by all the containers, and specified in 
+`group_add`.
+
+```yml
+services:
+  myservice:
+    image: alpine
+    group_add:
+      - mail
+```
+
+Running `id` inside the created container MUST show that the user belongs to the `mail` group, which would not have 
+been the case if `group_add` were not declared.
+
 ### healthcheck
 
 `healthcheck` declares a check that's run to determine whether or not containers for this
@@ -720,24 +857,12 @@ as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
     image: my_private.registry:5000/redis
 ```    
 
-If the image does not exist on the platform, Compose implementations MUST attempt to pull it based on the `pull_policy`. Compose
-implementations with build support MAY offer alternative options for the end user to control precedence of
+If the image does not exist on the platform, Compose implementations MUST attempt to pull it based on the `pull_policy`. 
+Compose implementations with build support MAY offer alternative options for the end user to control precedence of
 pull over building the image from source, however pulling the image MUST be the default behavior.
 
 `image` MAY be omitted from a Compose file as long as a `build` section is declared. Compose implementations
 without build support MUST fail when `image` is missing from the Compose file.
-
-
-### pull_policy
-
-`pull_policy` defines the decisions Compose implementations will make when it starts to pull images. Possible values are:
-
-* `always`: Compose implementations SHOULD always pull the image from the registry.
-* `never`: Compose implementations SHOULD NOT pull the image from a registry and SHOULD rely on the platform cached image. If there is no cached image, a failure MUST be reported.
-* `if_not_present`: Compose implementations SHOULD pull the image only if it's not available in the platform cache.This SHOULD be the default option for Compose implementations without build support.
-
-If `pull_policy` and `build` both presents, Compose implementations SHOULD build the image by default. Compose implementations MAY override this behavior in the toolchain.
-
 
 ### init
 
@@ -936,10 +1061,43 @@ networks:
         - subnet: "2001:3984:3989::/64"
 ```
 
+### oom_kill_disable
+ 
+If `oom_kill_disable` is set Compose implementation MUST configure the platform so it won't kill the container in case 
+of memory starvation.
+ 
+### oom_score_adj
+
+`oom_score_adj` tunes the preference for containers to be killed by platform in case of memory starvation. Valu MUST 
+be within [-1000,1000] range.
+
+
 ### pid
 
 `pid` sets the PID mode for container created by the Compose implementation.
 Supported values are platform specific.
+
+
+### pid_limit
+
+`pid_limit` tunes a container’s PIDs limit. Set to -1 for unlimited PIDs.
+
+```yml
+pids_limit: 10
+```
+
+### platform
+
+`platform` defines the target platform containers for this service will run on, using the `os[/arch[/variant]]` syntax.
+Compose implementation MUST use this attribute when declared to determine which version of the image will be pulled 
+and/or on which platform the service’s build will be performed.
+
+```yml
+platform: osx
+platform: windows/amd64
+platform: linux/arm64/v8
+```
+
 
 ### ports
 
@@ -1002,6 +1160,18 @@ ports:
     mode: host
 ```
 
+
+### pull_policy
+
+`pull_policy` defines the decisions Compose implementations will make when it starts to pull images. Possible values are:
+
+* `always`: Compose implementations SHOULD always pull the image from the registry.
+* `never`: Compose implementations SHOULD NOT pull the image from a registry and SHOULD rely on the platform cached image. If there is no cached image, a failure MUST be reported.
+* `if_not_present`: Compose implementations SHOULD pull the image only if it's not available in the platform cache.This SHOULD be the default option for Compose implementations without build support.
+
+If `pull_policy` and `build` both presents, Compose implementations SHOULD build the image by default. Compose implementations MAY override this behavior in the toolchain.
+
+
 ### restart
 
 `restart` defines the policy that the platform will apply on container termination.
@@ -1018,6 +1188,23 @@ ports:
     restart: on-failure
     restart: unless-stopped
 ```
+
+### runtime
+_DEPRECATED: this attribute is low-level platform implementation detail_ 
+
+`runtime` specifies which runtime to use for the service’s containers.
+
+```yml
+web:
+  image: busybox:latest
+  command: true
+  runtime: runc
+```
+
+### scale
+-DEPRECATED: use [deploy/replicas](deploy.md#replicas)_
+
+`scale` specifies the default number of containers to deploy for this service.
 
 ### secrets
 
