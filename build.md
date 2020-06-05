@@ -56,7 +56,6 @@ attribute, whenever the actual raw yaml file doesn't explicitly declare one.
 The following sample illustrates Compose specification concepts with a concrete sample application. The sample is non-normative.
 
 ```yaml
-version: "3"
 services:
   frontend:
     image: awesome/webapp
@@ -87,7 +86,6 @@ The `build` element define configuration options that are applied by Compose imp
 `build` can be specified either as a string containing a path to the build context or a detailled structure:
 
 ```yml
-version: "3"
 services:
   webapp:
     build: ./dir
