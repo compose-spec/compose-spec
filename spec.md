@@ -24,6 +24,25 @@ This document specifies the Compose file format used to define multi-containers 
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://tools.ietf.org/html/rfc2119).
 
+### Requirements and optional attributes
+
+The Compose specification includes properties designed to target a local [OCI](https://opencontainers.org/) container runtime,
+exposing Linux kernel specific configuration options, but also some Windows container specific properties, as well as cloud platform features related to resource placement on a cluster, replicated application distribution and scalability. 
+
+We acknowledge that no Compose implementation is expected to support **all** attributes, and that support for some properties
+is Platform dependent and can only be confirmed at runtime. The definition of a versioned schema to control the supported
+properties in a Compose file, established by the [docker-compose](https://github.com/docker/compose) tool where the Compose
+file format was designed, doesn't offer any guarantee to the end-user attributes will be actually implemented. 
+
+The specification defines the expected configuration syntax and behaviour, but - until noted - supporting any of those is OPTIONAL. 
+
+A Compose implementation to parse a Compose file using unsupported attributes SHOULD warn user. We recommend implementors
+to support those running modes:
+
+* default: warn user about unsupported attributes, but ignore them
+* strict: warn user about unsupported attributes and reject the compose file
+* loose: ignore unsupported attributes AND unknown attributes (that were not defined by the spec by the time implementation was created)
+
 ## The Compose application model
 
 The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
@@ -81,7 +100,6 @@ The example application is composed of the following parts:
 - 2 networks
 
 ```yml
-version: "3"
 services:
   frontend:
     image: awesome/webapp
@@ -153,11 +171,14 @@ the expanded form.
 
 ## Version top-level element
 
-A top-level version property is required by the specification. Version MUST be 3.x or later, legacy docker-compose 1.x and 2.x are not included as part of this specification. Implementations MAY accept such legacy formats for compatibility purposes.
+Top-level `version` property is defined by the specification for backward compatibility but is only informative. 
 
-The specification format follows [Semantic Versioning](https://semver.org), which means that the file format is backward compatible within a major version set. As the specification evolves, minor versions MAY introduce new elements and MAY deprecate others for removal in the next major version.
+A Compose implementation SHOULD NOT use this version to select an exact schema to validate the Compose file, but 
+prefer the most recent schema at the time it has been designed. 
 
-Implementations MAY ignore attributes used in a configuration file that are not supported by the declared version, whenever they are valid for a more recent version. If they do, a warning message MUST inform the user.
+Compose implementations SHOULD validate they can fully parse the Compose file. If some fields are unknown, typically 
+because the Compose file was written with fields defined by a newer version of the specification, Compose implementations 
+SHOULD warn the user. Compose implementations MAY offer options to ignore unknown fields (as defined by ["loose"](#Requirements-and-optional-attributes) mode).
 
 ## Services top-level element
 
@@ -261,7 +282,6 @@ already been defined in the platform. If the external config does not exist,
 the deployment MUST fail.
 
 ```yml
-version: "3"
 services:
   redis:
     image: redis:latest
@@ -293,7 +313,6 @@ to `103`. The `redis` service does not have access to the `my_other_config`
 config.
 
 ```yml
-version: "3"
 services:
   redis:
     image: redis:latest
@@ -355,7 +374,6 @@ When configuring a gMSA credential spec for a service, you only need
 to specify a credential spec with `config`, as shown in the following example:
 
 ```yml
-version: "3"
 services:
   myservice:
     image: myimage:latest
@@ -385,7 +403,6 @@ Service dependencies cause the following behaviors:
 Simple example:
 
 ```yml
-version: "3"
 services:
   web:
     build: .
@@ -429,7 +446,6 @@ Service dependencies cause the following behaviors:
 Simple example:
 
 ```yml
-version: "3"
 services:
   web:
     build: .
@@ -729,7 +745,6 @@ If `pull_policy` and `build` both presents, Compose implementations SHOULD build
 Set this option to `true` to enable this feature for the service.
 
 ```yml
-version: "3"
 services:
   web:
     image: alpine:latest
@@ -868,8 +883,6 @@ the hostname `backend` or `database` on the `back-tier` network, and service `mo
 will be able to reach same `backend` service at `db` or `mysql` on the `admin` network.
 
 ```yml
-version: "3"
-
 services:
   frontend:
     image: awesome/webapp
@@ -906,8 +919,6 @@ The corresponding network configuration in the [top-level networks section](#net
 `ipam` block with subnet configurations covering each static address.
 
 ```yml
-version: "3"
-
 services:
   frontend:
     image: awesome/webapp
@@ -1028,7 +1039,6 @@ access to the `server-certificate` secret. The value of `server-certificate` is 
 to the contents of the file `./server.cert`.
 
 ```yml
-version: "3"
 services:
   frontend:
     image: awesome/webapp
@@ -1060,7 +1070,6 @@ to `103`. The value of `server-certificate` secret is provided by the platform t
 the secret lifecycle not directly managed by the Compose implementation.
 
 ```yml
-version: "3"
 services:
   frontend:
     image: awesome/webapp
@@ -1183,7 +1192,6 @@ This example shows a named volume (`db-data`) being used by the `backend` servic
 and a bind mount defined for a single service
 
 ```yml
-version: "3"
 services:
   backend:
     image: awesome/backend
@@ -1306,7 +1314,6 @@ In the following example, at runtime, networks `front-tier` and `back-tier` will
 connected to the `front-tier` network and the `back-tier` network.
 
 ```yml
-version: "3"
 services:
   frontend:
     image: awesome/webapp
@@ -1342,7 +1349,6 @@ an alias that the Compose implementation can use (`hostnet` or `nonet` in the fo
 access to that network using its alias.
 
 ```yml
-version: "3"
 services:
   web:
     networks:
@@ -1449,7 +1455,6 @@ implementations SHOULD interrogate the platform for an existing network simply c
 `proxy` service's containers to it.
 
 ```yml
-version: "3"
 
 services:
   proxy:
@@ -1473,7 +1478,6 @@ networks:
 The name is used as is and will **not** be scoped with the project name.
 
 ```yml
-version: "3"
 networks:
   network1:
     name: my-app-net
@@ -1483,7 +1487,6 @@ It can also be used in conjunction with the `external` property to define the pl
 should retrieve, typically by using a parameter so the Compose file doesn't need to hard-code runtime specific values:
 
 ```yml
-version: "3"
 networks:
   network1:
     external: true
@@ -1500,8 +1503,6 @@ an example of a two-service setup where a database's data directory is shared wi
 that it can be periodically backed up:
 
 ```yml
-version: "3"
-
 services:
   backend:
     image: awesome/database
@@ -1552,8 +1553,6 @@ In the example below, instead of attempting to create a volume called
 called `data` and mount it into the `db` service's containers.
 
 ```yml
-version: "3"
-
 services:
   backend:
     image: awesome/database
@@ -1594,7 +1593,6 @@ Compose implementation MUST set `com.docker.compose.project` and `com.docker.com
 characters. The name is used as is and will **not** be scoped with the stack name.
 
 ```yml
-version: "3"
 volumes:
   data:
     name: "my-app-data"
@@ -1740,7 +1738,6 @@ It is also possible to partially override values set by anchor reference using t
 to avoid repetition but override `name` attribute:
 
 ```yml
-version: "3"
 
 services:
   backend:
@@ -1763,7 +1760,6 @@ Special extension fields can be of any format as long as their name starts with 
 within any structure in a Compose file. This is the sole exception for Compose implementations to silently ignore unrecognized field.
 
 ```yml
-version: "3"
 x-custom:
   foo:
     - bar
@@ -1804,7 +1800,6 @@ This section is informative. At the time of writing, the following prefixes are 
 With the support for extension fields, Compose file can be written as follows to improve readability of reused fragments:
 
 ```yml
-version: "3"
 x-logging: &default-logging
   options:
     max-size: "12m"
