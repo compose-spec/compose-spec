@@ -91,12 +91,41 @@
                 "cache_from": {"$ref": "#/definitions/list_of_strings"},
                 "network": {"type": "string"},
                 "target": {"type": "string"},
-                "shm_size": {"type": ["integer", "string"]}
+                "shm_size": {"type": ["integer", "string"]},
+                "extra_hosts": {"$ref": "#/definitions/list_or_dict"},
+                "isolation": {"type": "string"}
               },
               "additionalProperties": false,
               "patternProperties": {"^x-": {}}
             }
           ]
+        },
+        "blkio_config": {
+          "type": "object",
+          "properties": {
+            "device_read_bps": {
+              "type": "array",
+              "items": {"$ref": "#/definitions/blkio_limit"}
+            },
+            "device_read_iops": {
+              "type": "array",
+              "items": {"$ref": "#/definitions/blkio_limit"}
+            },
+            "device_write_bps": {
+              "type": "array",
+              "items": {"$ref": "#/definitions/blkio_limit"}
+            },
+            "device_write_iops": {
+              "type": "array",
+              "items": {"$ref": "#/definitions/blkio_limit"}
+            },
+            "weight": {"type": "integer"},
+            "weight_device": {
+              "type": "array",
+              "items": {"$ref": "#/definitions/blkio_weight"}
+            }
+          },
+          "additionalProperties": false
         },
         "cap_add": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "cap_drop": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
@@ -128,6 +157,15 @@
           }
         },
         "container_name": {"type": "string"},
+        "cpu_count": {"type": "integer", "minimum": 0},
+        "cpu_percent": {"type": "integer", "minimum": 0, "maximum": 100},
+        "cpu_shares": {"type": ["number", "string"]},
+        "cpu_quota": {"type": ["number", "string"]},
+        "cpu_period": {"type": ["number", "string"]},
+        "cpu_rt_period": {"type": ["number", "string"]},
+        "cpu_rt_runtime": {"type": ["number", "string"]},
+        "cpus": {"type": "number", "minimum": 0},
+        "cpuset": {"type": "string"},
         "credential_spec": {
           "type": "object",
           "properties": {
@@ -163,6 +201,13 @@
         "device_cgroup_rules": {"$ref": "#/definitions/list_of_strings"},
         "devices": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "dns": {"$ref": "#/definitions/string_or_list"},
+        "dns_opt": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
         "dns_search": {"$ref": "#/definitions/string_or_list"},
         "domainname": {"type": "string"},
         "entrypoint": {
@@ -185,18 +230,21 @@
 
         "external_links": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "extra_hosts": {"$ref": "#/definitions/list_or_dict"},
+        "group_add": {
+          "type": "array",
+          "items": {
+            "type": ["string", "number"]
+          },
+          "uniqueItems": true
+        },
         "healthcheck": {"$ref": "#/definitions/healthcheck"},
         "hostname": {"type": "string"},
         "image": {"type": "string"},
-        "pull_policy": {"type": "string", "enum": [
-          "always", "never", "if_not_present"
-        ]},
         "init": {"type": "boolean"},
         "ipc": {"type": "string"},
         "isolation": {"type": "string"},
         "labels": {"$ref": "#/definitions/list_or_dict"},
         "links": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
-
         "logging": {
             "type": "object",
 
@@ -212,10 +260,8 @@
             "additionalProperties": false,
             "patternProperties": {"^x-": {}}
         },
-
         "mac_address": {"type": "string"},
         "network_mode": {"type": "string"},
-
         "networks": {
           "oneOf": [
             {"$ref": "#/definitions/list_of_strings"},
@@ -242,8 +288,11 @@
             }
           ]
         },
+        "oom_kill_disable": {"type": "boolean"},
+        "oom_score_adj": {"type": "integer", "minimum": -1000, "maximum": 1000},
         "pid": {"type": ["string", "null"]},
-
+        "pids_limit": {"type": ["number", "string"]},
+        "platform": {"type": "string"},
         "ports": {
           "type": "array",
           "items": {
@@ -265,10 +314,16 @@
           },
           "uniqueItems": true
         },
-
         "privileged": {"type": "boolean"},
+        "pull_policy": {"type": "string", "enum": [
+          "always", "never", "if_not_present"
+        ]},
         "read_only": {"type": "boolean"},
         "restart": {"type": "string"},
+        "runtime": {
+          "deprecated": true,
+          "type": "string"
+        },
         "security_opt": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "shm_size": {"type": ["number", "string"]},
         "secrets": {
@@ -667,6 +722,23 @@
         },
         {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
       ]
+    },
+
+    "blkio_limit": {
+      "type": "object",
+      "properties": {
+        "path": {"type": "string"},
+        "rate": {"type": ["integer", "string"]}
+      },
+      "additionalProperties": false
+    },
+    "blkio_weight": {
+      "type": "object",
+      "properties": {
+        "path": {"type": "string"},
+        "weight": {"type": "integer"}
+      },
+      "additionalProperties": false
     },
 
     "constraints": {
