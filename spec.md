@@ -771,7 +771,7 @@ The following restrictions apply to the service being referenced:
 - Services with `depends_on` cannot be used as a base
 - Services cannot have circular references with `extends`
 
-Compose implementations MUST return an error if all of these cases.
+Compose implementations MUST return an error in all of these cases.
 
 #### Finding referenced service
 
@@ -793,7 +793,7 @@ Compose implementations MUST return an error if service denoted by `service` was
 Two service definitions (_main_ one in the current Compose file) and (_referenced_ one,
 specified by `extends`) MUST be merged in the following way:
 
-- Scalar fields: values in _main_ service definition take precedence over values in the
+- Scalar fields: keys in _main_ service definition take precedence over keys in the
   _referenced_ one
 - Sequences: items are combined together into an new sequence
 - Mappings: keys in mappings of _main_ service definition take precedence over keys in
