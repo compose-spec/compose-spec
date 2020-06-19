@@ -744,6 +744,61 @@ expose:
   - "8000"
 ```
 
+### extends
+
+Extend another service, in the current file or another, optionally overriding configuration. You can use
+`extends` on any service together with other configuration keys. The `extends` value must be a dictionary
+defined with a required `service` and an optional `file` key.
+
+```yaml
+extends:
+  file: common.yml
+  service: webapp
+```
+
+If supported Compose implementations MUST process `extends` in the following way.
+`service` defines the name of the service being referenced as a base, for example `web` or `database`.
+The `file` is the location of a Compose configuration file defining that service.
+
+#### Restrictions
+
+The following restrictions apply to the service being referenced:
+
+- Services with `links` cannot be used as a base
+- Services with `volumes_from` cannot be used as a base
+- Services with `net: container` cannot be used as a base
+- Services with `network_mode: service` cannot be used as a base
+- Services with `depends_on` cannot be used as a base
+- Services cannot have circular references with `extends`
+
+Compose implementations MUST return an error if all of these cases.
+
+#### Finding referenced service
+
+`file` value can be:
+
+- Not present.
+  This indicates that another service within the same Compose file is being referenced.
+- File path, which can be either:
+  - Relative path. This path is considered as relative to the location of the main Compose
+    file.
+  - Absolute path. `~/` in path is expanded to the home directory of current user. `~user/`
+    is expanded to the home directory of `user` user.
+
+Service denoted by `service` must be present in the identified referenced Compose file.
+Compose implementations MUST return an error if service denoted by `service` was not found.
+
+#### Merging service definitions
+
+Two service definitions (_main_ one in the current Compose file) and (_referenced_ one,
+specified by `extends`) MUST be merged in the following way:
+
+- Scalar fields: values in _main_ service definition take precedence over values in the
+  _referenced_ one
+- Sequences: items are combined together into an new sequence
+- Mappings: keys in mappings of _main_ service definition take precedence over keys in
+  mappings of _referenced_ service definition
+
 ### external_links
 
 `external_links` link service containers to services managed outside this Compose application.
