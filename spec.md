@@ -786,18 +786,152 @@ Compose implementations MUST return an error in all of these cases.
     is expanded to the home directory of `user` user.
 
 Service denoted by `service` must be present in the identified referenced Compose file.
-Compose implementations MUST return an error if service denoted by `service` was not found.
+Compose implementations MUST return an error if:
+
+- Service denoted by `service` was not found
+- Compose file denoted by `file` was not found
 
 #### Merging service definitions
 
 Two service definitions (_main_ one in the current Compose file) and (_referenced_ one,
 specified by `extends`) MUST be merged in the following way:
 
-- Scalar fields: keys in _main_ service definition take precedence over keys in the
-  _referenced_ one
-- Sequences: items are combined together into an new sequence
-- Mappings: keys in mappings of _main_ service definition take precedence over keys in
-  mappings of _referenced_ service definition
+- Scalars: keys in _main_ service definition take precedence over keys in the
+  _referenced_ one.
+- Sequences: items are combined together into an new sequence. Order of elements is
+  preserved with the _referenced_ items coming first and _main_ items after.
+- Mappings: keys in mappings of _main_ service definition override keys in mappings
+  of _referenced_ service definition. Keys that aren't overridden are included as is.
+
+The following keys should be treated as mappings: `build.args`, `build.labels`,
+`build.extra_hosts`, `deploy.labels`, `deploy.update_config`, `deploy.rollback_config`,
+`deploy.restart_policy`, `deploy.resources.limits`, `environment`, `healthcheck`,
+`labels`, `logging.options`, `sysctls`, `storage_opt`, `extra_hosts`, `ulimits`.
+
+One exception that applies to `healthcheck` is that _main_ mapping cannot specify
+`disable: true` unless _referenced_ mapping also specifies `disable: true`. Compose
+implementations MUST return an error in this case.
+
+For example, the input below:
+
+```yaml
+services:
+  common:
+    image: busybox
+    environment:
+      TZ: utc
+      PORT: 80
+  cli:
+    extends:
+      service: common
+    environment:
+      PORT: 8080
+```
+
+Produces the following configuration for the `cli` service. The same output is
+produced if array syntax is used.
+
+```yaml
+environment:
+  PORT: 8080
+  TZ: utc
+image: busybox
+```
+
+Items under `blkio_config.device_read_bps`, `blkio_config.device_read_iops`,
+`blkio_config.device_write_bps`, `blkio_config.device_write_iops`, `devices` and
+`volumes` are also treated as mappings where key is the target path inside the
+container.
+
+For example, the input below:
+
+```yaml
+services:
+  common:
+    image: busybox
+    volumes:
+      - common-volume:/var/lib/backup/data:rw
+  cli:
+    extends:
+      service: common
+    volumes:
+      - cli-volume:/var/lib/backup/data:ro
+```
+
+Produces the following configuration for the `cli` service. Note that mounted path
+now points to the new volume name and `ro` flag was applied.
+
+```yaml
+image: busybox
+volumes:
+- cli-volume:/var/lib/backup/data:ro
+```
+
+The following keys should be treated as sequences: `cap_add`, `cap_drop`, `configs`,
+`deploy.placement.constraints`, `deploy.placement.preferences`,
+`deploy.reservations.generic_resources`, `device_cgroup_rules`, `expose`,
+`external_links`, `ports`, `secrets`, `security_opt`.
+Any duplicates resulting from the merge are removed so that the sequence only
+contains unique elements.
+
+For example, the input below:
+
+```yaml
+services:
+  common:
+    image: busybox
+    security_opt:
+      - label:role:ROLE
+  cli:
+    extends:
+      service: common
+    security_opt:
+      - label:user:USER
+```
+
+Produces the following configuration for the `cli` service.
+
+```yaml
+image: busybox
+security_opt:
+- label:role:ROLE
+- label:user:USER
+```
+
+In case list syntax is used, the following keys should also be treated as sequences:
+`dns`, `dns_search`, `env_file`, `tmpfs`. Unlike sequence fields mentioned above,
+duplicates resulting from the merge are not removed.
+
+If _referenced_ service definition contains `extends` key, the items under it are
+copied into the new _merged_ definition. Merging process is then kicked off again
+until no `extends` keys are remaining.
+
+For example, the input below:
+
+```yaml
+services:
+  base:
+    image: busybox
+    user: root
+  common:
+    image: busybox
+    extends:
+      service: base
+  cli:
+    extends:
+      service: common
+```
+
+Produces the following configuration for the `cli` service. Here, `cli` services
+gets `user` key from `common` service, which in turn gets this key from `base`
+service.
+
+```yaml
+image: busybox
+user: root
+```
+
+Any other allowed keys in the service definition should be treated as scalars.
 
 ### external_links
 
