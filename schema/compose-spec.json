@@ -227,7 +227,23 @@
           },
           "uniqueItems": true
         },
+        "extends": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
 
+              "properties": {
+                "service": {"type": "string"},
+                "file": {"type": "string"}
+              },
+              "required": ["service"],
+              "additionalProperties": false
+            }
+          ]
+        },
         "external_links": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "extra_hosts": {"$ref": "#/definitions/list_or_dict"},
         "group_add": {
