@@ -797,12 +797,12 @@ Compose implementations MUST return an error if:
 Two service definitions (_main_ one in the current Compose file and _referenced_ one
 specified by `extends`) MUST be merged in the following way:
 
-- Scalars: keys in _main_ service definition take precedence over keys in the
-  _referenced_ one.
-- Sequences: items are combined together into an new sequence. Order of elements is
-  preserved with the _referenced_ items coming first and _main_ items after.
 - Mappings: keys in mappings of _main_ service definition override keys in mappings
   of _referenced_ service definition. Keys that aren't overridden are included as is.
+- Sequences: items are combined together into an new sequence. Order of elements is
+  preserved with the _referenced_ items coming first and _main_ items after.
+- Scalars: keys in _main_ service definition take precedence over keys in the
+  _referenced_ one.
 
 ##### Mappings
 
