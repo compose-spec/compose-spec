@@ -747,7 +747,7 @@ expose:
 ### extends
 
 Extend another service, in the current file or another, optionally overriding configuration. You can use
-`extends` on any service together with other configuration keys. The `extends` value must be a dictionary
+`extends` on any service together with other configuration keys. The `extends` value must be a mapping
 defined with a required `service` and an optional `file` key.
 
 ```yaml
@@ -756,9 +756,10 @@ extends:
   service: webapp
 ```
 
-If supported Compose implementations MUST process `extends` in the following way.
-`service` defines the name of the service being referenced as a base, for example `web` or `database`.
-The `file` is the location of a Compose configuration file defining that service.
+If supported Compose implementations MUST process `extends` in the following way:
+
+- `service` defines the name of the service being referenced as a base, for example `web` or `database`.
+- `file` is the location of a Compose configuration file defining that service.
 
 #### Restrictions
 
@@ -793,7 +794,7 @@ Compose implementations MUST return an error if:
 
 #### Merging service definitions
 
-Two service definitions (_main_ one in the current Compose file) and (_referenced_ one,
+Two service definitions (_main_ one in the current Compose file and _referenced_ one
 specified by `extends`) MUST be merged in the following way:
 
 - Scalars: keys in _main_ service definition take precedence over keys in the
@@ -802,6 +803,8 @@ specified by `extends`) MUST be merged in the following way:
   preserved with the _referenced_ items coming first and _main_ items after.
 - Mappings: keys in mappings of _main_ service definition override keys in mappings
   of _referenced_ service definition. Keys that aren't overridden are included as is.
+
+##### Mappings
 
 The following keys should be treated as mappings: `build.args`, `build.labels`,
 `build.extra_hosts`, `deploy.labels`, `deploy.update_config`, `deploy.rollback_config`,
@@ -867,6 +870,37 @@ volumes:
 - cli-volume:/var/lib/backup/data:ro
 ```
 
+If _referenced_ service definition contains `extends` mapping, the items under it
+are simply copied into the new _merged_ definition. Merging process is then kicked
+off again until no `extends` keys are remaining.
+
+For example, the input below:
+
+```yaml
+services:
+  base:
+    image: busybox
+    user: root
+  common:
+    image: busybox
+    extends:
+      service: base
+  cli:
+    extends:
+      service: common
+```
+
+Produces the following configuration for the `cli` service. Here, `cli` services
+gets `user` key from `common` service, which in turn gets this key from `base`
+service.
+
+```yaml
+image: busybox
+user: root
+```
+
+##### Sequences
+
 The following keys should be treated as sequences: `cap_add`, `cap_drop`, `configs`,
 `deploy.placement.constraints`, `deploy.placement.preferences`,
 `deploy.reservations.generic_resources`, `device_cgroup_rules`, `expose`,
@@ -902,34 +936,7 @@ In case list syntax is used, the following keys should also be treated as sequen
 `dns`, `dns_search`, `env_file`, `tmpfs`. Unlike sequence fields mentioned above,
 duplicates resulting from the merge are not removed.
 
-If _referenced_ service definition contains `extends` key, the items under it are
-copied into the new _merged_ definition. Merging process is then kicked off again
-until no `extends` keys are remaining.
-
-For example, the input below:
-
-```yaml
-services:
-  base:
-    image: busybox
-    user: root
-  common:
-    image: busybox
-    extends:
-      service: base
-  cli:
-    extends:
-      service: common
-```
-
-Produces the following configuration for the `cli` service. Here, `cli` services
-gets `user` key from `common` service, which in turn gets this key from `base`
-service.
-
-```yaml
-image: busybox
-user: root
-```
+##### Scalars
 
 Any other allowed keys in the service definition should be treated as scalars.
 
