@@ -783,10 +783,9 @@ Compose implementations MUST return an error in all of these cases.
 - File path, which can be either:
   - Relative path. This path is considered as relative to the location of the main Compose
     file.
-  - Absolute path. `~/` in path is expanded to the home directory of current user. `~user/`
-    is expanded to the home directory of `user` user.
+  - Absolute path.
 
-Service denoted by `service` must be present in the identified referenced Compose file.
+Service denoted by `service` MUST be present in the identified referenced Compose file.
 Compose implementations MUST return an error if:
 
 - Service denoted by `service` was not found
