@@ -747,7 +747,7 @@ expose:
 ### extends
 
 Extend another service, in the current file or another, optionally overriding configuration. You can use
-`extends` on any service together with other configuration keys. The `extends` value must be a mapping
+`extends` on any service together with other configuration keys. The `extends` value MUST be a mapping
 defined with a required `service` and an optional `file` key.
 
 ```yaml
