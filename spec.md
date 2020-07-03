@@ -765,11 +765,10 @@ If supported Compose implementations MUST process `extends` in the following way
 
 The following restrictions apply to the service being referenced:
 
-- Services with `links` cannot be used as a base
-- Services with `volumes_from` cannot be used as a base
-- Services with `net: container` cannot be used as a base
-- Services with `network_mode: service` cannot be used as a base
-- Services with `depends_on` cannot be used as a base
+- Services that have dependencies on other services cannot be used as a base. Therefore, any key
+  that introduces a dependency on another service is incompatible with `extends`. The
+  non-exhaustive list of such keys is: `links`, `volumes_from`, `container` mode (in `ipc`, `pid`,
+  `network_mode` and `net`), `service` mode (in `ipc`, `pid` and `network_mode`), `depends_on`.
 - Services cannot have circular references with `extends`
 
 Compose implementations MUST return an error in all of these cases.
