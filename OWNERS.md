@@ -3,3 +3,4 @@ maintainers:
 - hangyan
 - justincormack 
 - kohidave
+- EricHripko
