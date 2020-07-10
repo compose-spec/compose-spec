@@ -634,7 +634,7 @@ dns_search:
 
 ### domainname
 
-`domainname` TODO
+`domainname` declares a custom domain name to use for the service container. MUST be a valid RFC 1123 hostname.
 
 ### entrypoint
 
@@ -1035,6 +1035,10 @@ healthcheck:
   disable: true
 ```
 
+### hostname
+
+`hostname` declares a custom host name to use for the service container. MUST be a valid RFC 1123 hostname.
+
 ### image
 
 `image` specifies the image to start the container from. Image MUST follow the Open Container Specification 
@@ -1071,6 +1075,22 @@ services:
 ```
 
 The init binary that is used is platform specific.
+
+### ipc
+
+`ipc` configures the IPC isolation mode set by service container. Available
+values are platform specific, but Compose specification defines specific values
+which MUST be implemented as described if supported:
+
+- `shareable` which gives the container own private IPC namespace, with a
+  possibility to share it with other containers.
+- `service:{name}` which makes the container join another (`shareable`)
+   container's IPC namespace.
+
+```yml
+    ipc: "shareable"
+    ipc: "service:[service name]"
+```
 
 ### isolation
 
@@ -1255,6 +1275,88 @@ networks:
         - subnet: "2001:3984:3989::/64"
 ```
 
+#### link_local_ips
+
+`link_local_ips` specifies a list of link-local IPs. Link-local IPs are special IPs which belong to a well
+known subnet and are purely managed by the operator, usually dependent on the architecture where they are
+deployed. Implementation is Platform specific.
+
+Example:
+```yaml
+version: "2.4"
+services:
+  app:
+    image: busybox
+    command: top
+    networks:
+      app_net:
+        link_local_ips:
+          - 57.123.22.11
+          - 57.123.22.13
+networks:
+  app_net:
+    driver: bridge
+```    
+
+#### priority
+
+`priority` indicates in which order Compose implementation SHOULD connect the service’s containers to its
+networks. If unspecified, the default value is 0.
+
+In the following example, the app service connects to app_net_1 first as it has the highest priority. It then connects to app_net_3, then app_net_2, which uses the default priority value of 0.
+```yaml
+version: "2.4"
+services:
+  app:
+    image: busybox
+    command: top
+    networks:
+      app_net_1:
+        priority: 1000
+      app_net_2:
+
+      app_net_3:
+        priority: 100
+networks:
+  app_net_1:
+  app_net_2:
+  app_net_3:
+```
+
+### mac_address
+
+`mac_address` sets a MAC address for service container.
+
+### mem_limit
+_DEPRECATED: use [deploy.limits.memory](deploy.md#memory)_
+
+### mem_reservation
+_DEPRECATED: use [deploy.reservations.memory](deploy.md#memory)_
+
+### mem_swappiness
+
+`mem_swappiness` defines as a percentage (a value between 0 and 100) for the host kernel to swap out
+anonymous memory pages used by a container. 
+
+- a value of 0 turns off anonymous page swapping.
+- a value of 100 sets all anonymous pages as swappable.
+
+Default value is platform specific.
+
+### memswap_limit
+
+`memswap_limit` defines the amount of memory container is allowed to swap to disk. This is a modifier 
+attribute that only has meaning if `memory` is also set. Using swap allows the container to write excess
+memory requirements to disk when the container has exhausted all the memory that is available to it. 
+There is a performance penalty for applications that swap memory to disk often.
+
+- If `memswap_limit` is set to a positive integer, then both `memory` and `memswap_limit` MUST be set. `memswap_limit` represents the total amount of memory and swap that can be used, and `memory` controls the amount used by non-swap memory. So if `memory`="300m" and `memswap_limit`="1g", the container can use 300m of memory and 700m (1g - 300m) swap.
+- If `memswap_limit` is set to 0, the setting MUST be ignored, and the value is treated as unset.
+- If `memswap_limit` is set to the same value as `memory`, and `memory` is set to a positive integer, the container does not have access to swap. See Prevent a container from using swap.
+- If `memswap_limit` is unset, and `memory` is set, the container can use as much swap as the `memory` setting, if the host container has swap memory configured. For instance, if `memory`="300m" and `memswap_limit` is not set, the container can use 600m in total of memory and swap.
+- If `memswap_limit` is explicitly set to -1, the container is allowed to use unlimited swap, up to the amount available on the host system.
+
+
 ### oom_kill_disable
  
 If `oom_kill_disable` is set Compose implementation MUST configure the platform so it won't kill the container in case 
@@ -1354,6 +1456,9 @@ ports:
     mode: host
 ```
 
+### privileged
+
+`privileged` configures the service container to run with elevated privileges. Support and actual impacts are platform-specific.
 
 ### pull_policy
 
@@ -1365,6 +1470,9 @@ ports:
 
 If `pull_policy` and `build` both presents, Compose implementations SHOULD build the image by default. Compose implementations MAY override this behavior in the toolchain.
 
+### read_only
+
+`read_only` configures service container to be created with a read-only filesystem.
 
 ### restart
 
@@ -1479,6 +1587,15 @@ security_opt:
   - label:role:ROLE
 ```
 
+### shm_size
+
+`shm_size` configures the size of the shared memory (`/dev/shm` partition on Linux) allowed by the service container.
+Specified as a [byte value](#specifying-byte-values).
+
+### stdin_open
+
+`stdin_open` configures service containers to run with an allocated stdin.
+
 ### stop_grace_period
 
 `stop_grace_period` specifies how long the Compose implementation MUST wait when attempting to stop a container if it doesn't
@@ -1537,6 +1654,10 @@ tmpfs:
   - /tmp
 ```
 
+### tty
+
+`tty` configure service container to run with a TTY.
+
 ### ulimits
 
 `ulimits` overrides the default ulimits for a container. Either specifies as a single limit as an integer or
@@ -1549,6 +1670,11 @@ ulimits:
     soft: 20000
     hard: 40000
 ```
+
+### user
+
+`user` overrides the user used to run the container process. Default is that set by image (i.e. Dockerfile `USER`),
+if not set, `root`.
 
 ### userns_mode
 
@@ -1623,60 +1749,22 @@ expressed in the short form.
   - `size`: the size for the tmpfs mount in bytes
 - `consistency`: the consistency requirements of the mount. Available values are platform specific
 
-### domainname
+### volumes_from
 
-`domainname` declares a custom domain name to use for the service container. MUST be a valid RFC 1123 hostname.
+`volumes_from` mounts all of the volumes from another service or container, optionally specifying 
+read-only access (ro) or read-write (rw). If no access level is specified, then read-write MUST be used.
 
-### hostname
+String value defines another service in the Compose application model to mount volumes from. The 
+`container:` prefix, if supported, allows to mount volumes from a container that is not managed by the
+Compose implementation.
 
-`hostname` declares a custom host name to use for the service container. MUST be a valid RFC 1123 hostname.
-
-### ipc
-
-`ipc` configures the IPC isolation mode set by service container. Available
-values are platform specific, but Compose specification defines specific values
-which MUST be implemented as described if supported:
-
-- `shareable` which gives the container own private IPC namespace, with a
-  possibility to share it with other containers.
-- `service:{name}` which makes the container join another (`shareable`)
-   container's IPC namespace.
-
-```yml
-    ipc: "shareable"
-    ipc: "service:[service name]"
+```yaml
+volumes_from:
+  - service_name
+  - service_name:ro
+  - container:container_name
+  - container:container_name:rw
 ```
-
-
-### mac_address
-
-`mac_address` sets a MAC address for service container.
-
-### privileged
-
-`privileged` configures the service container to run with elevated privileges. Support and actual impacts are platform-specific.
-
-### read_only
-
-`read_only` configures service container to be created with a read-only filesystem.
-
-### shm_size
-
-`shm_size` configures the size of the shared memory (`/dev/shm` partition on Linux) allowed by the service container.
-Specified as a [byte value](#specifying-byte-values).
-
-### stdin_open
-
-`stdin_open` configures service containers to run with an allocated stdin.
-
-### tty
-
-`tty` configure service container to run with a TTY.
-
-### user
-
-`user` overrides the user used to run the container process. Default is that set by image (i.e. Dockerfile `USER`),
-if not set, `root`.
 
 ### working_dir
 
@@ -1789,6 +1877,10 @@ networks:
 - `driver`: Custom IPAM driver, instead of the default.
 - `config`: A list with zero or more configuration elements, each containing:
   - `subnet`: Subnet in CIDR format that represents a network segment
+  - `ip_range`: Range of IPs from which to allocate container IPs
+  - `gateway`: IPv4 or IPv6 gateway for the master subnet
+  - `aux_addresses`: Auxiliary IPv4 or IPv6 addresses used by Network driver, as a mapping from hostname to IP
+- `options`: Driver-specific options as a key-value mapping.
 
 A full example:
 
@@ -1797,6 +1889,15 @@ ipam:
   driver: default
   config:
     - subnet: 172.28.0.0/16
+      ip_range: 172.28.5.0/24
+      gateway: 172.28.5.254
+      aux_addresses:
+        host1: 172.28.1.5
+        host2: 172.28.1.6
+        host3: 172.28.1.7
+  options:
+    foo: bar
+    baz: "0"
 ```
 
 ### internal

@@ -1,10 +1,9 @@
 {
-  "$schema": "http://json-schema.org/draft/2019-09/schema",
-  "id": "config_schema_v3.9.json",
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "id": "compose_spec.json",
   "type": "object",
   "title": "Compose Specification",
   "description": "The Compose file is a YAML file defining a multi-containers based application.",
-  "required": ["version"],
 
   "properties": {
     "version": {
@@ -201,13 +200,7 @@
         "device_cgroup_rules": {"$ref": "#/definitions/list_of_strings"},
         "devices": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "dns": {"$ref": "#/definitions/string_or_list"},
-        "dns_opt": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "uniqueItems": true
-        },
+        "dns_opt": {"type": "array","items": {"type": "string"}, "uniqueItems": true},
         "dns_search": {"$ref": "#/definitions/string_or_list"},
         "domainname": {"type": "string"},
         "entrypoint": {
@@ -229,9 +222,7 @@
         },
         "extends": {
           "oneOf": [
-            {
-              "type": "string"
-            },
+            {"type": "string"},
             {
               "type": "object",
 
@@ -262,21 +253,25 @@
         "labels": {"$ref": "#/definitions/list_or_dict"},
         "links": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "logging": {
-            "type": "object",
+          "type": "object",
 
-            "properties": {
-                "driver": {"type": "string"},
-                "options": {
-                  "type": "object",
-                  "patternProperties": {
-                    "^.+$": {"type": ["string", "number", "null"]}
-                  }
-                }
-            },
-            "additionalProperties": false,
-            "patternProperties": {"^x-": {}}
+          "properties": {
+            "driver": {"type": "string"},
+            "options": {
+              "type": "object",
+              "patternProperties": {
+                "^.+$": {"type": ["string", "number", "null"]}
+              }
+            }
+          },
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}
         },
         "mac_address": {"type": "string"},
+        "mem_limit": {"type": ["number", "string"]},
+        "mem_reservation": {"type": ["string", "integer"]},
+        "mem_swappiness": {"type": "integer"},
+        "memswap_limit": {"type": ["number", "string"]},
         "network_mode": {"type": "string"},
         "networks": {
           "oneOf": [
@@ -291,7 +286,9 @@
                       "properties": {
                         "aliases": {"$ref": "#/definitions/list_of_strings"},
                         "ipv4_address": {"type": "string"},
-                        "ipv6_address": {"type": "string"}
+                        "ipv6_address": {"type": "string"},
+                        "link_local_ips": {"$ref": "#/definitions/list_of_strings"},
+                        "priority": {"type": "number"}
                       },
                       "additionalProperties": false,
                       "patternProperties": {"^x-": {}}
@@ -340,6 +337,9 @@
           "deprecated": true,
           "type": "string"
         },
+        "scale": {
+          "type": "integer"
+        },
         "security_opt": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "shm_size": {"type": ["number", "string"]},
         "secrets": {
@@ -375,7 +375,7 @@
               "oneOf": [
                 {"type": "integer"},
                 {
-                  "type":"object",
+                  "type": "object",
                   "properties": {
                     "hard": {"type": "integer"},
                     "soft": {"type": "integer"}
@@ -438,6 +438,11 @@
             ],
             "uniqueItems": true
           }
+        },
+        "volumes_from": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
         },
         "working_dir": {"type": "string"}
       },
@@ -606,11 +611,23 @@
               "items": {
                 "type": "object",
                 "properties": {
-                  "subnet": {"type": "string"}
-                },
-                "additionalProperties": false,
-                "patternProperties": {"^x-": {}}
-              }
+                  "subnet": {"type": "string", "format": "subnet_ip_address"},
+                  "ip_range": {"type": "string"},
+                  "gateway": {"type": "string"},
+                  "aux_addresses": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "patternProperties": {"^.+$": {"type": "string"}}
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "patternProperties": {"^x-": {}}
+            },
+            "options": {
+              "type": "object",
+              "additionalProperties": false,
+              "patternProperties": {"^.+$": {"type": "string"}}
             }
           },
           "additionalProperties": false,
@@ -660,8 +677,8 @@
         },
         "labels": {"$ref": "#/definitions/list_or_dict"}
       },
-      "patternProperties": {"^x-": {}},
-      "additionalProperties": false
+      "additionalProperties": false,
+      "patternProperties": {"^x-": {}}
     },
 
     "secret": {
