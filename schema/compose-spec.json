@@ -630,7 +630,8 @@
               "patternProperties": {"^.+$": {"type": "string"}}
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}
         },
         "external": {
           "type": ["boolean", "object"],
