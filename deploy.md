@@ -19,7 +19,6 @@ Compose Specification is extended to support an OPTIONAL `deploy` subsection on 
 for a service.
 
 
-
 ### endpoint_mode
 
 `endpoint_mode` specifies a service discovery method for external clients connecting to a service. Default and available values
@@ -34,8 +33,6 @@ are platform specific, anyway the Compose specification define two canonical val
 
 
 ```yml
-version: "3"
-
 services:
   frontend:
     image: awesome/webapp
@@ -53,8 +50,7 @@ services:
 `labels` specifies metadata for the service. These labels MUST *only* be set on the service and *not* on any containers for the service.
 This assumes the platform as some native concept of "service" that can match Compose application model.
 
-```yaml
-version: "3"
+```yml
 services:
   frontend:
     image: awesome/webapp
@@ -69,8 +65,7 @@ services:
 `mode` define the replication model used to run the service on platform. Either `global` (exactly one container per physical node) or `replicated` (a specified number of containers). The default is `replicated`.
 
 
-```yaml
-version: "3"
+```yml
 services:
   frontend:
     image: awesome/webapp
@@ -129,7 +124,6 @@ If the service is `replicated` (which is the default), `replicas` specifies the 
 running at any given time.
 
 ```yml
-version: "3"
 services:
   fronted:
     image: awesome/webapp
@@ -146,7 +140,6 @@ as a:
 - `reservations`: The platform MUST guarantee container can allocate at least the configured amount
 
 ```yml
-version: "3"
 services:
   frontend:
     image: awesome/webapp
@@ -171,7 +164,7 @@ services:
 
 ### restart_policy
 
-`restart_policy` configures if and how to restart containers when they exit. If not `restart_policy` is set, Compose implementations MUST consider `restart` field set by service configuration.
+`restart_policy` configures if and how to restart containers when they exit. If `restart_policy` is not set, Compose implementations MUST consider `restart` field set by service configuration.
 
 - `condition`: One of `none`, `on-failure` or `any` (default: `any`). 
 - `delay`: How long to wait between restart attempts, specified as a [duration](spec.md#specifying-durations) (default: 0).

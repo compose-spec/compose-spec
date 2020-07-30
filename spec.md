@@ -1,7 +1,5 @@
 # The Compose Specification
 
-version: 3.9
-
 ## Table of Contents
 
 - [Status of this document](#status-of-this-document)
@@ -23,6 +21,25 @@ version: 3.9
 This document specifies the Compose file format used to define multi-containers applications. Distribution of this document is unlimited.
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://tools.ietf.org/html/rfc2119).
+
+### Requirements and optional attributes
+
+The Compose specification includes properties designed to target a local [OCI](https://opencontainers.org/) container runtime,
+exposing Linux kernel specific configuration options, but also some Windows container specific properties, as well as cloud platform features related to resource placement on a cluster, replicated application distribution and scalability. 
+
+We acknowledge that no Compose implementation is expected to support **all** attributes, and that support for some properties
+is Platform dependent and can only be confirmed at runtime. The definition of a versioned schema to control the supported
+properties in a Compose file, established by the [docker-compose](https://github.com/docker/compose) tool where the Compose
+file format was designed, doesn't offer any guarantee to the end-user attributes will be actually implemented. 
+
+The specification defines the expected configuration syntax and behaviour, but - until noted - supporting any of those is OPTIONAL. 
+
+A Compose implementation to parse a Compose file using unsupported attributes SHOULD warn user. We recommend implementors
+to support those running modes:
+
+* default: warn user about unsupported attributes, but ignore them
+* strict: warn user about unsupported attributes and reject the compose file
+* loose: ignore unsupported attributes AND unknown attributes (that were not defined by the spec by the time implementation was created)
 
 ## The Compose application model
 
@@ -81,7 +98,6 @@ The example application is composed of the following parts:
 - 2 networks
 
 ```yml
-version: "3"
 services:
   frontend:
     image: awesome/webapp
@@ -108,7 +124,7 @@ volumes:
     driver_opts:
       size: "10GiB"
 
-config:
+configs:
   httpd-config:
     external: true
 
@@ -153,11 +169,14 @@ the expanded form.
 
 ## Version top-level element
 
-A top-level version property is required by the specification. Version MUST be 3.x or later, legacy docker-compose 1.x and 2.x are not included as part of this specification. Implementations MAY accept such legacy formats for compatibility purposes.
+Top-level `version` property is defined by the specification for backward compatibility but is only informative. 
 
-The specification format follows [Semantic Versioning](https://semver.org), which means that the file format is backward compatible within a major version set. As the specification evolves, minor versions MAY introduce new elements and MAY deprecate others for removal in the next major version.
+A Compose implementation SHOULD NOT use this version to select an exact schema to validate the Compose file, but 
+prefer the most recent schema at the time it has been designed. 
 
-Implementations MAY ignore attributes used in a configuration file that are not supported by the declared version, whenever they are valid for a more recent version. If they do, a warning message MUST inform the user.
+Compose implementations SHOULD validate they can fully parse the Compose file. If some fields are unknown, typically 
+because the Compose file was written with fields defined by a newer version of the specification, Compose implementations 
+SHOULD warn the user. Compose implementations MAY offer options to ignore unknown fields (as defined by ["loose"](#Requirements-and-optional-attributes) mode).
 
 ## Services top-level element
 
@@ -187,6 +206,114 @@ not implemented the Deploy section SHOULD be ignored and the Compose file MUST s
 ### deploy
 
 `deploy` specifies the configuration for the deployment and lifecycle of services, as defined [here](deploy.md).
+
+### blkio_config
+
+`blkio_config` defines a set of configuration options to set block IO limits for this service.
+                         
+```yml
+services:
+  foo:
+    image: busybox
+    blkio_config:
+       weight: 300
+       weight_device:
+         - path: /dev/sda
+           weight: 400
+       device_read_bps:
+         - path: /dev/sdb
+           rate: '12mb'
+       device_read_iops:
+         - path: /dev/sdb
+           rate: 120
+       device_write_bps:
+         - path: /dev/sdb
+           rate: '1024k'
+       device_write_iops:
+         - path: /dev/sdb
+           rate: 30
+```
+
+#### device_read_bps, device_write_bps
+
+Set a limit in bytes per second for read / write operations on a given device. 
+Each item in the list MUST have two keys:
+
+- `path`: defining the symbolic path to the affected device.
+- `rate`: either as an integer value representing the number of bytes or as a string expressing a byte value.
+
+#### device_read_iops, device_write_iops
+
+Set a limit in operations per second for read / write operations on a given device. 
+Each item in the list MUST have two keys:
+
+- `path`: defining the symbolic path to the affected device.
+- `rate`: as an integer value representing the permitted number of operations per second.
+
+#### weight
+
+Modify the proportion of bandwidth allocated to this service relative to other services. 
+Takes an integer value between 10 and 1000, with 500 being the default.
+
+#### weight_device
+
+Fine-tune bandwidth allocation by device. Each item in the list must have two keys:
+
+- `path`: defining the symbolic path to the affected device.
+- `weight`: an integer value between 10 and 1000.
+
+
+### cpu_count
+
+`cpu_count` defines the number of usable CPUs for service container.
+
+### cpu_percent
+
+`cpu_percent` defines the usable percentage of the available CPUs.
+
+### cpu_shares
+
+`cpu_shares` defines (as integer value) service container relative CPU weight versus other containers.
+
+### cpu_period
+
+`cpu_period` allow Compose implementations to configure CPU CFS (Completely Fair Scheduler) period when platform is based
+on Linux kernel.
+
+### cpu_quota
+
+`cpu_quota` allow Compose implementations to configure CPU CFS (Completely Fair Scheduler) quota when platform is based
+on Linux kernel.
+
+### cpu_rt_runtime
+
+`cpu_rt_runtime` configures CPU allocation parameters for platform with support for realtime scheduler. Can be either 
+an integer value using microseconds as unit or a [duration](#specifying-durations).
+
+```yml
+ cpu_rt_runtime: '400ms'
+ cpu_rt_runtime: 95000`
+```
+
+### cpu_rt_period
+
+`cpu_rt_period` configures CPU allocation parameters for platform with support for realtime scheduler. Can be either
+an integer value using microseconds as unit or a [duration](#specifying-durations).
+
+```yml
+ cpu_rt_period: '1400us'
+ cpu_rt_period: 11000`
+```
+
+### cpus
+_DEPRECATED: use [deploy.reservations.cpus](deploy.md#cpus)_
+
+`cpus` define the number of (potentially virtual) CPUs to allocate to service containers. This is a fractional number. 
+`0.000` means no limit.
+
+### cpuset
+
+`cpuset` defines the explicit CPUs in which to allow execution. Can be a range `0-3` or a list `0,1`
 
 ### build
 
@@ -261,7 +388,6 @@ already been defined in the platform. If the external config does not exist,
 the deployment MUST fail.
 
 ```yml
-version: "3"
 services:
   redis:
     image: redis:latest
@@ -293,7 +419,6 @@ to `103`. The `redis` service does not have access to the `my_other_config`
 config.
 
 ```yml
-version: "3"
 services:
   redis:
     image: redis:latest
@@ -357,7 +482,6 @@ When configuring a gMSA credential spec for a service, you only need
 to specify a credential spec with `config`, as shown in the following example:
 
 ```yml
-version: "3"
 services:
   myservice:
     image: myimage:latest
@@ -371,8 +495,12 @@ configs:
 
 ### depends_on
 
-`depends_on` expresses a startup and shutdown dependencies between services, Service dependencies cause the following
-behaviors:
+`depends_on` expresses startup and shutdown dependencies between services.
+
+#### Short syntax
+
+The short syntax variant only specifies service names of the dependencies.
+Service dependencies cause the following behaviors:
 
 - Compose implementations MUST create services in dependency order. In the following
   example, `db` and `redis` are created before `web`.
@@ -383,7 +511,6 @@ behaviors:
 Simple example:
 
 ```yml
-version: "3"
 services:
   web:
     build: .
@@ -400,6 +527,63 @@ Compose implementations MUST guarantee dependency services have been started bef
 starting a dependent service.
 Compose implementations MAY wait for dependency services to be "ready" before
 starting a dependent service.
+
+#### Long syntax
+
+The long form syntax enables the configuration of additional fields that can't be
+expressed in the short form.
+
+- `condition`: condition under which dependency is considered satisfied
+  - `service_started`: is an equivalent of the short syntax described above
+  - `service_healthy`: specifies that a dependency is expected to be "healthy"
+    (as indicated by [healthcheck](#healthcheck)) before starting a dependent
+    service.
+
+Service dependencies cause the following behaviors:
+
+- Compose implementations MUST create services in dependency order. In the following
+  example, `db` and `redis` are created before `web`.
+
+- Compose implementations MUST wait for healthchecks to pass on dependencies
+  marked with `service_healthy`. In the following example, `db` is expected to
+  be "healthy" before `web` is created.
+
+- Compose implementations MUST remove services in dependency order. In the following
+  example, `web` is removed before `db` and `redis`.
+
+Simple example:
+
+```yml
+services:
+  web:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+  redis:
+    image: redis
+  db:
+    image: postgres
+```
+
+Compose implementations MUST guarantee dependency services have been started before
+starting a dependent service.
+Compose implementations MUST guarantee dependency services marked with
+`service_healthy` are "healthy" before starting a dependent service.
+
+### device_cgroup_rules
+
+`device_cgroup_rules` defines a list of device cgroup rules for this container.
+The format is the same format the Linux kernel specifies in the [Control Groups
+Device Whitelist Controller](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/devices.html).
+
+```yml
+device_cgroup_rules:
+  - 'c 1:3 mr'
+  - 'a 7:* rmw'
+```
 
 ### devices
 
@@ -424,6 +608,16 @@ dns:
   - 9.9.9.9
 ```
 
+### dns_opt
+
+`dns_opt` list custom DNS options to be passed to the container’s DNS resolver (`/etc/resolv.conf` file on Linux).
+
+```yml
+dns_opt:
+  - use-vc
+  - no-tld-query
+```
+
 ### dns_search
 
 `dns` defines custom DNS search domains to set on container network interface configuration. Can be a single value or a list.
@@ -440,7 +634,7 @@ dns_search:
 
 ### domainname
 
-`domainname` TODO
+`domainname` declares a custom domain name to use for the service container. MUST be a valid RFC 1123 hostname.
 
 ### entrypoint
 
@@ -550,6 +744,200 @@ expose:
   - "8000"
 ```
 
+### extends
+
+Extend another service, in the current file or another, optionally overriding configuration. You can use
+`extends` on any service together with other configuration keys. The `extends` value MUST be a mapping
+defined with a required `service` and an optional `file` key.
+
+```yaml
+extends:
+  file: common.yml
+  service: webapp
+```
+
+If supported Compose implementations MUST process `extends` in the following way:
+
+- `service` defines the name of the service being referenced as a base, for example `web` or `database`.
+- `file` is the location of a Compose configuration file defining that service.
+
+#### Restrictions
+
+The following restrictions apply to the service being referenced:
+
+- Services that have dependencies on other services cannot be used as a base. Therefore, any key
+  that introduces a dependency on another service is incompatible with `extends`. The
+  non-exhaustive list of such keys is: `links`, `volumes_from`, `container` mode (in `ipc`, `pid`,
+  `network_mode` and `net`), `service` mode (in `ipc`, `pid` and `network_mode`), `depends_on`.
+- Services cannot have circular references with `extends`
+
+Compose implementations MUST return an error in all of these cases.
+
+#### Finding referenced service
+
+`file` value can be:
+
+- Not present.
+  This indicates that another service within the same Compose file is being referenced.
+- File path, which can be either:
+  - Relative path. This path is considered as relative to the location of the main Compose
+    file.
+  - Absolute path.
+
+Service denoted by `service` MUST be present in the identified referenced Compose file.
+Compose implementations MUST return an error if:
+
+- Service denoted by `service` was not found
+- Compose file denoted by `file` was not found
+
+#### Merging service definitions
+
+Two service definitions (_main_ one in the current Compose file and _referenced_ one
+specified by `extends`) MUST be merged in the following way:
+
+- Mappings: keys in mappings of _main_ service definition override keys in mappings
+  of _referenced_ service definition. Keys that aren't overridden are included as is.
+- Sequences: items are combined together into an new sequence. Order of elements is
+  preserved with the _referenced_ items coming first and _main_ items after.
+- Scalars: keys in _main_ service definition take precedence over keys in the
+  _referenced_ one.
+
+##### Mappings
+
+The following keys should be treated as mappings: `build.args`, `build.labels`,
+`build.extra_hosts`, `deploy.labels`, `deploy.update_config`, `deploy.rollback_config`,
+`deploy.restart_policy`, `deploy.resources.limits`, `environment`, `healthcheck`,
+`labels`, `logging.options`, `sysctls`, `storage_opt`, `extra_hosts`, `ulimits`.
+
+One exception that applies to `healthcheck` is that _main_ mapping cannot specify
+`disable: true` unless _referenced_ mapping also specifies `disable: true`. Compose
+implementations MUST return an error in this case.
+
+For example, the input below:
+
+```yaml
+services:
+  common:
+    image: busybox
+    environment:
+      TZ: utc
+      PORT: 80
+  cli:
+    extends:
+      service: common
+    environment:
+      PORT: 8080
+```
+
+Produces the following configuration for the `cli` service. The same output is
+produced if array syntax is used.
+
+```yaml
+environment:
+  PORT: 8080
+  TZ: utc
+image: busybox
+```
+
+Items under `blkio_config.device_read_bps`, `blkio_config.device_read_iops`,
+`blkio_config.device_write_bps`, `blkio_config.device_write_iops`, `devices` and
+`volumes` are also treated as mappings where key is the target path inside the
+container.
+
+For example, the input below:
+
+```yaml
+services:
+  common:
+    image: busybox
+    volumes:
+      - common-volume:/var/lib/backup/data:rw
+  cli:
+    extends:
+      service: common
+    volumes:
+      - cli-volume:/var/lib/backup/data:ro
+```
+
+Produces the following configuration for the `cli` service. Note that mounted path
+now points to the new volume name and `ro` flag was applied.
+
+```yaml
+image: busybox
+volumes:
+- cli-volume:/var/lib/backup/data:ro
+```
+
+If _referenced_ service definition contains `extends` mapping, the items under it
+are simply copied into the new _merged_ definition. Merging process is then kicked
+off again until no `extends` keys are remaining.
+
+For example, the input below:
+
+```yaml
+services:
+  base:
+    image: busybox
+    user: root
+  common:
+    image: busybox
+    extends:
+      service: base
+  cli:
+    extends:
+      service: common
+```
+
+Produces the following configuration for the `cli` service. Here, `cli` services
+gets `user` key from `common` service, which in turn gets this key from `base`
+service.
+
+```yaml
+image: busybox
+user: root
+```
+
+##### Sequences
+
+The following keys should be treated as sequences: `cap_add`, `cap_drop`, `configs`,
+`deploy.placement.constraints`, `deploy.placement.preferences`,
+`deploy.reservations.generic_resources`, `device_cgroup_rules`, `expose`,
+`external_links`, `ports`, `secrets`, `security_opt`.
+Any duplicates resulting from the merge are removed so that the sequence only
+contains unique elements.
+
+For example, the input below:
+
+```yaml
+services:
+  common:
+    image: busybox
+    security_opt:
+      - label:role:ROLE
+  cli:
+    extends:
+      service: common
+    security_opt:
+      - label:user:USER
+```
+
+Produces the following configuration for the `cli` service.
+
+```yaml
+image: busybox
+security_opt:
+- label:role:ROLE
+- label:user:USER
+```
+
+In case list syntax is used, the following keys should also be treated as sequences:
+`dns`, `dns_search`, `env_file`, `tmpfs`. Unlike sequence fields mentioned above,
+duplicates resulting from the merge are not removed.
+
+##### Scalars
+
+Any other allowed keys in the service definition should be treated as scalars.
+
 ### external_links
 
 `external_links` link service containers to services managed outside this Compose application.
@@ -581,6 +969,25 @@ configuration, which means for Linux `/etc/hosts` will get extra lines:
 162.242.195.82  somehost
 50.31.209.229   otherhost
 ```
+
+### group_add
+
+`group_add` specifies additional groups (by name or number) which the user inside the container MUST be a member of. 
+
+An example of where this is useful is when multiple containers (running as different users) need to all read or write 
+the same file on a shared volume. That file can be owned by a group shared by all the containers, and specified in 
+`group_add`.
+
+```yml
+services:
+  myservice:
+    image: alpine
+    group_add:
+      - mail
+```
+
+Running `id` inside the created container MUST show that the user belongs to the `mail` group, which would not have 
+been the case if `group_add` were not declared.
 
 ### healthcheck
 
@@ -628,6 +1035,10 @@ healthcheck:
   disable: true
 ```
 
+### hostname
+
+`hostname` declares a custom host name to use for the service container. MUST be a valid RFC 1123 hostname.
+
 ### image
 
 `image` specifies the image to start the container from. Image MUST follow the Open Container Specification 
@@ -644,9 +1055,9 @@ as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
     image: my_private.registry:5000/redis
 ```    
 
-If the image does not exist on the platform, Compose implementations MUST attempt to pull it. Compose
-implementations with build support MAY offer alternative options for the end user to control precedence of
-pull over building the image from source, however pulling the image MUST be the default behaviour.
+If the image does not exist on the platform, Compose implementations MUST attempt to pull it based on the `pull_policy`. 
+Compose implementations with build support MAY offer alternative options for the end user to control precedence of
+pull over building the image from source, however pulling the image MUST be the default behavior.
 
 `image` MAY be omitted from a Compose file as long as a `build` section is declared. Compose implementations
 without build support MUST fail when `image` is missing from the Compose file.
@@ -657,7 +1068,6 @@ without build support MUST fail when `image` is missing from the Compose file.
 Set this option to `true` to enable this feature for the service.
 
 ```yml
-version: "3"
 services:
   web:
     image: alpine:latest
@@ -665,6 +1075,22 @@ services:
 ```
 
 The init binary that is used is platform specific.
+
+### ipc
+
+`ipc` configures the IPC isolation mode set by service container. Available
+values are platform specific, but Compose specification defines specific values
+which MUST be implemented as described if supported:
+
+- `shareable` which gives the container own private IPC namespace, with a
+  possibility to share it with other containers.
+- `service:{name}` which makes the container join another (`shareable`)
+   container's IPC namespace.
+
+```yml
+    ipc: "shareable"
+    ipc: "service:[service name]"
+```
 
 ### isolation
 
@@ -796,8 +1222,6 @@ the hostname `backend` or `database` on the `back-tier` network, and service `mo
 will be able to reach same `backend` service at `db` or `mysql` on the `admin` network.
 
 ```yml
-version: "3"
-
 services:
   frontend:
     image: awesome/webapp
@@ -834,8 +1258,6 @@ The corresponding network configuration in the [top-level networks section](#net
 `ipam` block with subnet configurations covering each static address.
 
 ```yml
-version: "3"
-
 services:
   frontend:
     image: awesome/webapp
@@ -853,10 +1275,123 @@ networks:
         - subnet: "2001:3984:3989::/64"
 ```
 
+#### link_local_ips
+
+`link_local_ips` specifies a list of link-local IPs. Link-local IPs are special IPs which belong to a well
+known subnet and are purely managed by the operator, usually dependent on the architecture where they are
+deployed. Implementation is Platform specific.
+
+Example:
+```yaml
+services:
+  app:
+    image: busybox
+    command: top
+    networks:
+      app_net:
+        link_local_ips:
+          - 57.123.22.11
+          - 57.123.22.13
+networks:
+  app_net:
+    driver: bridge
+```    
+
+#### priority
+
+`priority` indicates in which order Compose implementation SHOULD connect the service’s containers to its
+networks. If unspecified, the default value is 0.
+
+In the following example, the app service connects to app_net_1 first as it has the highest priority. It then connects to app_net_3, then app_net_2, which uses the default priority value of 0.
+```yaml
+services:
+  app:
+    image: busybox
+    command: top
+    networks:
+      app_net_1:
+        priority: 1000
+      app_net_2:
+
+      app_net_3:
+        priority: 100
+networks:
+  app_net_1:
+  app_net_2:
+  app_net_3:
+```
+
+### mac_address
+
+`mac_address` sets a MAC address for service container.
+
+### mem_limit
+_DEPRECATED: use [deploy.limits.memory](deploy.md#memory)_
+
+### mem_reservation
+_DEPRECATED: use [deploy.reservations.memory](deploy.md#memory)_
+
+### mem_swappiness
+
+`mem_swappiness` defines as a percentage (a value between 0 and 100) for the host kernel to swap out
+anonymous memory pages used by a container. 
+
+- a value of 0 turns off anonymous page swapping.
+- a value of 100 sets all anonymous pages as swappable.
+
+Default value is platform specific.
+
+### memswap_limit
+
+`memswap_limit` defines the amount of memory container is allowed to swap to disk. This is a modifier 
+attribute that only has meaning if `memory` is also set. Using swap allows the container to write excess
+memory requirements to disk when the container has exhausted all the memory that is available to it. 
+There is a performance penalty for applications that swap memory to disk often.
+
+- If `memswap_limit` is set to a positive integer, then both `memory` and `memswap_limit` MUST be set. `memswap_limit` represents the total amount of memory and swap that can be used, and `memory` controls the amount used by non-swap memory. So if `memory`="300m" and `memswap_limit`="1g", the container can use 300m of memory and 700m (1g - 300m) swap.
+- If `memswap_limit` is set to 0, the setting MUST be ignored, and the value is treated as unset.
+- If `memswap_limit` is set to the same value as `memory`, and `memory` is set to a positive integer, the container does not have access to swap. See Prevent a container from using swap.
+- If `memswap_limit` is unset, and `memory` is set, the container can use as much swap as the `memory` setting, if the host container has swap memory configured. For instance, if `memory`="300m" and `memswap_limit` is not set, the container can use 600m in total of memory and swap.
+- If `memswap_limit` is explicitly set to -1, the container is allowed to use unlimited swap, up to the amount available on the host system.
+
+
+### oom_kill_disable
+ 
+If `oom_kill_disable` is set Compose implementation MUST configure the platform so it won't kill the container in case 
+of memory starvation.
+ 
+### oom_score_adj
+
+`oom_score_adj` tunes the preference for containers to be killed by platform in case of memory starvation. Valu MUST 
+be within [-1000,1000] range.
+
+
 ### pid
 
 `pid` sets the PID mode for container created by the Compose implementation.
 Supported values are platform specific.
+
+
+### pid_limit
+
+`pid_limit` tunes a container’s PIDs limit. Set to -1 for unlimited PIDs.
+
+```yml
+pids_limit: 10
+```
+
+### platform
+
+`platform` defines the target platform containers for this service will run on, using the `os[/arch[/variant]]` syntax.
+Compose implementation MUST use this attribute when declared to determine which version of the image will be pulled 
+and/or on which platform the service’s build will be performed.
+
+```yml
+platform: osx
+platform: windows/amd64
+platform: linux/arm64/v8
+```
+
 
 ### ports
 
@@ -919,6 +1454,24 @@ ports:
     mode: host
 ```
 
+### privileged
+
+`privileged` configures the service container to run with elevated privileges. Support and actual impacts are platform-specific.
+
+### pull_policy
+
+`pull_policy` defines the decisions Compose implementations will make when it starts to pull images. Possible values are:
+
+* `always`: Compose implementations SHOULD always pull the image from the registry.
+* `never`: Compose implementations SHOULD NOT pull the image from a registry and SHOULD rely on the platform cached image. If there is no cached image, a failure MUST be reported.
+* `if_not_present`: Compose implementations SHOULD pull the image only if it's not available in the platform cache.This SHOULD be the default option for Compose implementations without build support.
+
+If `pull_policy` and `build` both presents, Compose implementations SHOULD build the image by default. Compose implementations MAY override this behavior in the toolchain.
+
+### read_only
+
+`read_only` configures service container to be created with a read-only filesystem.
+
 ### restart
 
 `restart` defines the policy that the platform will apply on container termination.
@@ -935,6 +1488,23 @@ ports:
     restart: on-failure
     restart: unless-stopped
 ```
+
+### runtime
+_DEPRECATED: this attribute is low-level platform implementation detail_ 
+
+`runtime` specifies which runtime to use for the service’s containers.
+
+```yml
+web:
+  image: busybox:latest
+  command: true
+  runtime: runc
+```
+
+### scale
+-DEPRECATED: use [deploy/replicas](deploy.md#replicas)_
+
+`scale` specifies the default number of containers to deploy for this service.
 
 ### secrets
 
@@ -956,7 +1526,6 @@ access to the `server-certificate` secret. The value of `server-certificate` is 
 to the contents of the file `./server.cert`.
 
 ```yml
-version: "3"
 services:
   frontend:
     image: awesome/webapp
@@ -988,7 +1557,6 @@ to `103`. The value of `server-certificate` secret is provided by the platform t
 the secret lifecycle not directly managed by the Compose implementation.
 
 ```yml
-version: "3"
 services:
   frontend:
     image: awesome/webapp
@@ -1016,6 +1584,15 @@ security_opt:
   - label:user:USER
   - label:role:ROLE
 ```
+
+### shm_size
+
+`shm_size` configures the size of the shared memory (`/dev/shm` partition on Linux) allowed by the service container.
+Specified as a [byte value](#specifying-byte-values).
+
+### stdin_open
+
+`stdin_open` configures service containers to run with an allocated stdin.
 
 ### stop_grace_period
 
@@ -1075,6 +1652,10 @@ tmpfs:
   - /tmp
 ```
 
+### tty
+
+`tty` configure service container to run with a TTY.
+
 ### ulimits
 
 `ulimits` overrides the default ulimits for a container. Either specifies as a single limit as an integer or
@@ -1087,6 +1668,11 @@ ulimits:
     soft: 20000
     hard: 40000
 ```
+
+### user
+
+`user` overrides the user used to run the container process. Default is that set by image (i.e. Dockerfile `USER`),
+if not set, `root`.
 
 ### userns_mode
 
@@ -1111,7 +1697,6 @@ This example shows a named volume (`db-data`) being used by the `backend` servic
 and a bind mount defined for a single service
 
 ```yml
-version: "3"
 services:
   backend:
     image: awesome/backend
@@ -1162,47 +1747,22 @@ expressed in the short form.
   - `size`: the size for the tmpfs mount in bytes
 - `consistency`: the consistency requirements of the mount. Available values are platform specific
 
-### domainname
+### volumes_from
 
-`domainname` declares a custom domain name to use for the service container. MUST be a valid RFC 1123 hostname.
+`volumes_from` mounts all of the volumes from another service or container, optionally specifying 
+read-only access (ro) or read-write (rw). If no access level is specified, then read-write MUST be used.
 
-### hostname
+String value defines another service in the Compose application model to mount volumes from. The 
+`container:` prefix, if supported, allows to mount volumes from a container that is not managed by the
+Compose implementation.
 
-`hostname` declares a custom host name to use for the service container. MUST be a valid RFC 1123 hostname.
-
-### ipc
-
-`ipc` configures the IPC isolation mode set by service container.
-
-### mac_address
-
-`mac_address` sets a MAC address for service container.
-
-### privileged
-
-`privileged` configures the service container to run with elevated privileges. Support and actual impacts are platform-specific.
-
-### read_only
-
-`read_only` configures service container to be created with a read-only filesystem.
-
-### shm_size
-
-`shm_size` configures the size of the shared memory (`/dev/shm` partition on Linux) allowed by the service container.
-Specified as a [byte value](#specifying-byte-values).
-
-### stdin_open
-
-`stdin_open` configures service containers to run with an allocated stdin.
-
-### tty
-
-`tty` configure service container to run with a TTY.
-
-### user
-
-`user` overrides the user used to run the container process. Default is that set by image (i.e. Dockerfile `USER`),
-if not set, `root`.
+```yaml
+volumes_from:
+  - service_name
+  - service_name:ro
+  - container:container_name
+  - container:container_name:rw
+```
 
 ### working_dir
 
@@ -1221,7 +1781,6 @@ In the following example, at runtime, networks `front-tier` and `back-tier` will
 connected to the `front-tier` network and the `back-tier` network.
 
 ```yml
-version: "3"
 services:
   frontend:
     image: awesome/webapp
@@ -1257,7 +1816,6 @@ an alias that the Compose implementation can use (`hostnet` or `nonet` in the fo
 access to that network using its alias.
 
 ```yml
-version: "3"
 services:
   web:
     networks:
@@ -1317,6 +1875,10 @@ networks:
 - `driver`: Custom IPAM driver, instead of the default.
 - `config`: A list with zero or more configuration elements, each containing:
   - `subnet`: Subnet in CIDR format that represents a network segment
+  - `ip_range`: Range of IPs from which to allocate container IPs
+  - `gateway`: IPv4 or IPv6 gateway for the master subnet
+  - `aux_addresses`: Auxiliary IPv4 or IPv6 addresses used by Network driver, as a mapping from hostname to IP
+- `options`: Driver-specific options as a key-value mapping.
 
 A full example:
 
@@ -1325,6 +1887,15 @@ ipam:
   driver: default
   config:
     - subnet: 172.28.0.0/16
+      ip_range: 172.28.5.0/24
+      gateway: 172.28.5.254
+      aux_addresses:
+        host1: 172.28.1.5
+        host2: 172.28.1.6
+        host3: 172.28.1.7
+  options:
+    foo: bar
+    baz: "0"
 ```
 
 ### internal
@@ -1364,7 +1935,6 @@ implementations SHOULD interrogate the platform for an existing network simply c
 `proxy` service's containers to it.
 
 ```yml
-version: "3"
 
 services:
   proxy:
@@ -1388,7 +1958,6 @@ networks:
 The name is used as is and will **not** be scoped with the project name.
 
 ```yml
-version: "3"
 networks:
   network1:
     name: my-app-net
@@ -1398,7 +1967,6 @@ It can also be used in conjunction with the `external` property to define the pl
 should retrieve, typically by using a parameter so the Compose file doesn't need to hard-code runtime specific values:
 
 ```yml
-version: "3"
 networks:
   network1:
     external: true
@@ -1415,8 +1983,6 @@ an example of a two-service setup where a database's data directory is shared wi
 that it can be periodically backed up:
 
 ```yml
-version: "3"
-
 services:
   backend:
     image: awesome/database
@@ -1467,8 +2033,6 @@ In the example below, instead of attempting to create a volume called
 called `data` and mount it into the `db` service's containers.
 
 ```yml
-version: "3"
-
 services:
   backend:
     image: awesome/database
@@ -1509,7 +2073,6 @@ Compose implementation MUST set `com.docker.compose.project` and `com.docker.com
 characters. The name is used as is and will **not** be scoped with the stack name.
 
 ```yml
-version: "3"
 volumes:
   data:
     name: "my-app-data"
@@ -1655,7 +2218,6 @@ It is also possible to partially override values set by anchor reference using t
 to avoid repetition but override `name` attribute:
 
 ```yml
-version: "3"
 
 services:
   backend:
@@ -1674,14 +2236,19 @@ volumes:
 
 ## Extension
 
-Special extensions fields can be of any format as long as they are located at the root of your Compose file, or first level element, and their name starts with the `x-` character sequence.
+Special extension fields can be of any format as long as their name starts with the `x-` character sequence. They can be used 
+within any structure in a Compose file. This is the sole exception for Compose implementations to silently ignore unrecognized field.
 
 ```yml
-version: "3"
 x-custom:
   foo:
     - bar
     - zot
+
+services:
+  webapp:
+    image: awesome/webapp
+    x-foo: bar
 ```
 
 The contents of such fields are unspecified by Compose specification, and can be used to enable custom features. Compose implementation to encounter an unknown extension field MUST NOT fail, but COULD warn about unknown field.
@@ -1713,7 +2280,6 @@ This section is informative. At the time of writing, the following prefixes are 
 With the support for extension fields, Compose file can be written as follows to improve readability of reused fragments:
 
 ```yml
-version: "3"
 x-logging: &default-logging
   options:
     max-size: "12m"

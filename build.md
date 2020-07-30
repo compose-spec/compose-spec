@@ -56,7 +56,6 @@ attribute, whenever the actual raw yaml file doesn't explicitly declare one.
 The following sample illustrates Compose specification concepts with a concrete sample application. The sample is non-normative.
 
 ```yaml
-version: "3"
 services:
   frontend:
     image: awesome/webapp
@@ -87,7 +86,6 @@ The `build` element define configuration options that are applied by Compose imp
 `build` can be specified either as a string containing a path to the build context or a detailled structure:
 
 ```yml
-version: "3"
 services:
   webapp:
     build: ./dir
@@ -170,6 +168,29 @@ build:
     - alpine:latest
     - corp/web_app:3.14
 ```
+
+### extra_hosts
+
+`extra_hosts` adds hostname mappings at build-time. Use the same syntax as [extra_hosts](spec.md#extra_hosts).
+
+```yml
+extra_hosts:
+  - "somehost:162.242.195.82"
+  - "otherhost:50.31.209.229"
+```
+
+Compose implementations MUST create matching entry with the IP address and hostname in the container's network
+configuration, which means for Linux `/etc/hosts` will get extra lines:
+
+```
+162.242.195.82  somehost
+50.31.209.229   otherhost
+```
+
+### isolation
+
+`isolation` specifies a build’s container isolation technology. Like [isolation](spec.md#isolation) supported values 
+are platform-specific.
 
 ### labels
 
