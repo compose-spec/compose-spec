@@ -513,7 +513,7 @@
             "limits": {
               "type": "object",
               "properties": {
-                "cpus": {"type": "string"},
+                "cpus": {"type": "number", "minimum": 0},
                 "memory": {"type": "string"}
               },
               "additionalProperties": false,
@@ -522,7 +522,7 @@
             "reservations": {
               "type": "object",
               "properties": {
-                "cpus": {"type": "string"},
+                "cpus": {"type": "number", "minimum": 0},
                 "memory": {"type": "string"},
                 "generic_resources": {"$ref": "#/definitions/generic_resources"}
               },
@@ -645,6 +645,7 @@
           "patternProperties": {"^x-": {}}
         },
         "internal": {"type": "boolean"},
+        "enable_ipv6": {"type": "boolean"},
         "attachable": {"type": "boolean"},
         "labels": {"$ref": "#/definitions/list_or_dict"}
       },
