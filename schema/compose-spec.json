@@ -328,6 +328,7 @@
           "uniqueItems": true
         },
         "privileged": {"type": "boolean"},
+        "profiles": {"$ref": "#/definitions/list_of_strings"},
         "pull_policy": {"type": "string", "enum": [
           "always", "never", "if_not_present"
         ]},
@@ -647,7 +648,8 @@
         "internal": {"type": "boolean"},
         "enable_ipv6": {"type": "boolean"},
         "attachable": {"type": "boolean"},
-        "labels": {"$ref": "#/definitions/list_or_dict"}
+        "labels": {"$ref": "#/definitions/list_or_dict"},
+        "profiles": {"$ref": "#/definitions/list_of_strings"}
       },
       "additionalProperties": false,
       "patternProperties": {"^x-": {}}
@@ -676,7 +678,8 @@
           "additionalProperties": false,
           "patternProperties": {"^x-": {}}
         },
-        "labels": {"$ref": "#/definitions/list_or_dict"}
+        "labels": {"$ref": "#/definitions/list_or_dict"},
+        "profiles": {"$ref": "#/definitions/list_of_strings"}
       },
       "additionalProperties": false,
       "patternProperties": {"^x-": {}}
@@ -702,6 +705,7 @@
             "^.+$": {"type": ["string", "number"]}
           }
         },
+        "profiles": {"$ref": "#/definitions/list_of_strings"},
         "template_driver": {"type": "string"}
       },
       "additionalProperties": false,
@@ -724,6 +728,7 @@
           }
         },
         "labels": {"$ref": "#/definitions/list_or_dict"},
+        "profiles": {"$ref": "#/definitions/list_of_strings"},
         "template_driver": {"type": "string"}
       },
       "additionalProperties": false,

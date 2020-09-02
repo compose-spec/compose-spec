@@ -167,6 +167,43 @@ merged are hosted in other folders.
 As some Compose file elements can both be expressed as single strings or complex objects, merges MUST apply to
 the expanded form.
 
+### Profiles
+
+Profiles allow to adjust the Compose application model for various usages and environments. A Compose
+implementation SHOULD allow user to define a set of active profiles. The exact mechanism is implementation
+specific and MAY include command line flags, environment variables, etc.
+
+All top-level elements support a `profiles` attribute to define a list of named profiles. Elements without 
+a `profiles` attribute set MUST always be enabled. The enclosing component MUST be ignored by compose
+implementation when none of the listed profiles match the active ones, until the target component is
+explicitly targeted by a command.
+
+References to other services (by `links`, `extends` or shared resource syntax `service:xxx`) MUST not
+automatically enable a component that would otherwise have been ignored by active profiles.
+
+#### illustration sample
+
+```yaml
+services:
+  foo:
+     image: foo
+  bar:
+     image: bar
+     profiles: ["test"]
+  zot:
+     image: zot
+     profiles: ["debug"]
+     depends_on: ["bar"]
+```
+
+- Compose application model parsed with no profile enabled only contains the `foo` service.
+- If profile `test` is enabled, model contains both the `foo` and `bar` service.
+- If profile `debug` is enabled, model contains both the `foo` and `zot` service, but not `bar` 
+  and as such the model is invalid regarding the `depends_on` constraint.
+- If Compose implementation is executed with `bar` as explicit service to run, it will be active 
+  whenever `test` profile is not enabled.
+
+
 ## Version top-level element
 
 Top-level `version` property is defined by the specification for backward compatibility but is only informative. 
@@ -1458,6 +1495,10 @@ ports:
 
 `privileged` configures the service container to run with elevated privileges. Support and actual impacts are platform-specific.
 
+### profiles
+
+`profiles` defines a list of named profile for service to be enabled. When not set, service is always enabled.
+
 ### pull_policy
 
 `pull_policy` defines the decisions Compose implementations will make when it starts to pull images. Possible values are:
@@ -1925,6 +1966,10 @@ labels:
 
 Compose implementations MUST set `com.docker.compose.project` and `com.docker.compose.network` labels.
 
+### profiles
+
+`profiles` defines a list of named profile for network to be enabled. When not set, network is always enabled
+
 ### external
 
 If set to `true`, `external` specifies that this network’s lifecycle is maintained outside of that of the application.
@@ -2098,6 +2143,11 @@ volumes:
       name: ${DATABASE_VOLUME}
 ```
 
+### profiles
+
+`profiles` defines a list of named profile for volume to be enabled. When not set, volume is always enabled.
+
+
 ## Configs top-level element
 
 Configs allow services to adapt their behaviour without the need to rebuild a Docker image. Configs are comparable to Volumes from a service point of view as they are mounted into service's containers filesystem. The actual implementation detail to get configuration provided by the platform can be set from the Configuration definition.
@@ -2113,12 +2163,27 @@ The top-level `configs` declaration defines or references
 configuration data that can be granted to the services in this
 application. The source of the config is either `file` or `external`.
 
-- `file`: The config is created with the contents of the file at the specified path.
-- `external`: If set to true, specifies that this config has already been created. Compose implementation does not
-  attempt to create it, and if it does not exist, an error occurs.
-- `name`: The name of config object on Platform to lookup. This field can be used to
-  reference configs that contain special characters. The name is used as is
-  and will **not** be scoped with the project name.
+### file
+
+If `file` is set, the config is created with the contents of the file at the specified path.
+`file` MUST not be set if `external`is set to `true`.
+
+### external
+
+if `external` is set to true, compose implementation does not attempt to create it, and if it 
+does not exist, an error occurs.
+
+### name
+
+`name` deifnes the name of config object on Platform to lookup. This field can be used to
+reference configs that contain special characters. The name is used as is and will **not** be scoped 
+with the project name.
+
+### profiles
+
+`profiles` defines a list of named profile for config to be enabled. When not set, config is always enabled.
+
+
 
 In this example, `http_config` is created (as `<project_name>_http_config)`when the application is deployed,
 and `my_second_config` MUST already exists on Platform and value will be obtained by lookup.
@@ -2161,12 +2226,25 @@ Secrets are a flavour of Configs focussing on sensitive data, with specific cons
 The top-level `secrets` declaration defines or references sensitive data that can be granted to the services in this
 application. The source of the secret is either `file` or `external`.
 
-- `file`: The secret is created with the contents of the file at the specified path.
-- `external`: If set to true, specifies that this secret has already been created. Compose implementation does
-  not attempt to create it, and if it does not exist, an error occurs.
-- `name`: The name of the secret object in Docker. This field can be used to
-  reference secrets that contain special characters. The name is used as is
-  and will **not** be scoped with the project name.
+### file
+
+if `file` is set, the secret is created with the contents of the file at the specified path.
+`file` MUST not be set if `external`is set to `true`.
+
+### eternal
+
+if `external` is set to true, compose implementation does not attempt to create it, and if it 
+does not exist, an error occurs.
+
+### name 
+
+`name` defines the name of the secret object in Docker. This field can be used to reference secrets 
+that contain special characters. The name is used as is and will **not** be scoped with the project name.
+
+### profiles
+
+`profiles` defines a list of named profile for secret to be enabled. When not set, secret is always enabled.
+
 
 In this example, `server-certificate` is created as `<project_name>_server-certificate` when the application is deployed,
 by registering content of the `server.cert` as a platform secret.
