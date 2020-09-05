@@ -161,6 +161,89 @@ services:
 
 `memory` configures a limit or reservation on the amount of memory a container can allocate, set as a string expressing a [byte value](spec.md#specifying-byte-values).
 
+#### devices
+
+`devices` configures reservations of the devices a container can use. It contains a list of reservations, each set as an object with the following parameters: `capabilities`, `driver`, `count`, `device_ids` and `options`.
+
+Devices are reserved using a list of capabilities, making `capabilities` the only required field. A device MUST satisfy all the requested capabilities for a successful reservation.
+
+##### capabilities
+
+`capabilities` are set as a list of strings, expressing both generic and driver specific capabilities.
+The following generic capabilities are recognized today:
+
+- `gpu`: Graphics accelerator
+- `tpu`: AI accelerator
+
+To avoid name clashes, driver specific capabilities MUST be prefixed with the driver name.
+For example, reserving an nVidia CUDA-enabled accelerator might look like this:
+
+```yml
+deploy:
+  resources:
+    reservations:
+      devices:
+        - capabilities: ["nvidia-compute"]
+```
+
+##### driver
+
+A different driver for the reserved device(s) can be requested using `driver` field. The value is specified as a string.
+
+```yml
+deploy:
+  resources:
+    reservations:
+      devices:
+        - capabilities: ["nvidia-compute"]
+          driver: nvidia
+```
+
+##### count
+
+If `count` is set to `-1` or not specified, Compose implementations MUST reserve all devices that satisfy the requested capabilities. Otherwise, Compose implementations MUST reserve at least the number of devices specified. The value is specified as an integer.
+
+```yml
+deploy:
+  resources:
+    reservations:
+      devices:
+        - capabilities: ["tpu"]
+          count: 2
+```
+
+`count` and `device_ids` fields are exclusive. Compose implementations MUST return an error if both are specified.
+
+##### device_ids
+
+If `device_ids` is set, Compose implementations MUST reserve devices with the specified IDs providing they satisfy the requested capabilities. The value is specified as a list of strings.
+
+
+```yml
+deploy:
+  resources:
+    reservations:
+      devices:
+        - capabilities: ["gpu"]
+          device_ids: ["GPU-f123d1c9-26bb-df9b-1c23-4a731f61d8c7"]
+```
+
+`count` and `device_ids` fields are exclusive. Compose implementations MUST return an error if both are specified.
+
+##### options
+
+Driver specific options can be set with `options` as key-value pairs.
+
+```yml
+deploy:
+  resources:
+    reservations:
+      devices:
+        - capabilities: ["gpu"]
+          driver: gpuvendor
+          options:
+            virtualization: false
+```
 
 ### restart_policy
 
