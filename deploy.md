@@ -201,7 +201,7 @@ deploy:
 
 ##### count
 
-If `count` is set to `-1` or not specified, Compose implementations MUST reserve all devices that satisfy the requested capabilities. Otherwise, Compose implementations MUST reserve at least the number of devices specified. The value is specified as an integer.
+If `count` is set to `all` or not specified, Compose implementations MUST reserve all devices that satisfy the requested capabilities. Otherwise, Compose implementations MUST reserve at least the number of devices specified. The value is specified as an integer.
 
 ```yml
 deploy:
