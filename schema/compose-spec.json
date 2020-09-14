@@ -334,7 +334,6 @@
         "read_only": {"type": "boolean"},
         "restart": {"type": "string"},
         "runtime": {
-          "deprecated": true,
           "type": "string"
         },
         "scale": {

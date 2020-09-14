@@ -1492,9 +1492,11 @@ If `pull_policy` and `build` both presents, Compose implementations SHOULD build
 ```
 
 ### runtime
-_DEPRECATED: this attribute is low-level platform implementation detail_ 
 
 `runtime` specifies which runtime to use for the service’s containers.
+
+The value of `runtime` is specific to implementation.
+For example, `runtime` can be the name of [an implementation of OCI Runtime Spec](https://github.com/opencontainers/runtime-spec/blob/master/implementations.md), such as "runc".
 
 ```yml
 web:
