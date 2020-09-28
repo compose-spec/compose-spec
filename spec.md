@@ -2341,6 +2341,12 @@ Similarly, the following syntax allows you to specify mandatory variables:
 - `${VARIABLE?err}` exits with an error message containing `err` if
   `VARIABLE` is unset in the environment.
 
+Interpolation can also be nested:
+
+- `${VARIABLE:-${FOO}}`
+- `${VARIABLE?$FOO}`
+- `${VARIABLE:-${FOO:-default}}`
+
 Other extended shell-style features, such as `${VARIABLE/foo/bar}`, are not
 supported by the Compose specification.
 
