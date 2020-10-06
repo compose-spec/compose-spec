@@ -435,9 +435,9 @@
                 "additionalProperties": false,
                 "patternProperties": {"^x-": {}}
               }
-            ],
-            "uniqueItems": true
-          }
+            ]
+          },
+          "uniqueItems": true
         },
         "volumes_from": {
           "type": "array",
@@ -619,10 +619,10 @@
                     "additionalProperties": false,
                     "patternProperties": {"^.+$": {"type": "string"}}
                   }
-                }
-              },
-              "additionalProperties": false,
-              "patternProperties": {"^x-": {}}
+                },
+                "additionalProperties": false,
+                "patternProperties": {"^x-": {}}
+              }
             },
             "options": {
               "type": "object",
