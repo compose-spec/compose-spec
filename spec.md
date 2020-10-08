@@ -431,6 +431,8 @@ services:
 configs:
   my_config:
     external: true
+  my_other_config:
+    external: true
 ```
 
 You can grant a service access to multiple configs, and you can mix long and short syntax.
