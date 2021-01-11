@@ -69,6 +69,5 @@ The specification and code is licensed under the Apache 2.0 license found in the
 
 | Metadata |                  |
 | -------- | ---------------: |
-| Version  | 3.9              |
 | Status   | Work in progress |
 | Created  | 2020-01-02       |
