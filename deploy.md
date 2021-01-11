@@ -1,5 +1,4 @@
 # The Compose Specification - Deployment support
-version: 3.9
 
 *Note:* Deployment is an OPTIONAL part of the Compose Specification
 
