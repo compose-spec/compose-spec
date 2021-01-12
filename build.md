@@ -193,7 +193,7 @@ are platform-specific.
 
 ### labels
 
-`labels` add metadata to the resulting image. `labrls` can be set either as an array or a map.
+`labels` add metadata to the resulting image. `labels` can be set either as an array or a map.
 
 reverse-DNS notation SHOULD be used to prevent labels from conflicting with those used by other software.
 
