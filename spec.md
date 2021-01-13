@@ -148,10 +148,10 @@ will use a platform-specific lookup mechanism to retrieve runtime values.
 ## Compose file
 
 The Compose file is a [YAML](http://yaml.org/) file defining
-[version](#version) (DEPRECATED),
-[services](#service-top-level-element) (REQUIRED),
-[networks](#network-top-level-element),
-[volumes](#volume-top-level-element),
+[version](#version-top-level-element) (DEPRECATED),
+[services](#services-top-level-element) (REQUIRED),
+[networks](#networks-top-level-element),
+[volumes](#volumes-top-level-element),
 [configs](#configs-top-level-element) and
 [secrets](#secrets-top-level-element).
 The default path for a Compose file is `compose.yaml` (preferred) or `compose.yml` in working directory.
