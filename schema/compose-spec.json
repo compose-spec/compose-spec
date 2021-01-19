@@ -590,7 +590,7 @@
         "patternProperties": {"^x-": {}}
       }
     },
-    
+
     "devices": {
       "id": "#/definitions/devices",
       "type": "array",
