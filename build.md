@@ -1,5 +1,4 @@
 # The Compose Specification - Build support
-version: 3.9
 
 *Note:* Build is an OPTIONAL part of the Compose Specification
 

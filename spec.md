@@ -148,7 +148,7 @@ will use a platform-specific lookup mechanism to retrieve runtime values.
 ## Compose file
 
 The Compose file is a [YAML](http://yaml.org/) file defining
-[version](#version) (REQUIRED),
+[version](#version) (DEPRECATED),
 [services](#service-top-level-element) (REQUIRED),
 [networks](#network-top-level-element),
 [volumes](#volume-top-level-element),
@@ -700,7 +700,7 @@ dns_search:
 
 `entrypoint` overrides the default entrypoint for the Docker image (i.e. `ENTRYPOINT` set by Dockerfile).
 Compose implementations MUST clear out any default command on the Docker image - both `ENTRYPOINT` and `CMD` instruction
-in the Dockerfile - when `entrypoint` is configured by a Compose file. If [`command](#command) is also set,
+in the Dockerfile - when `entrypoint` is configured by a Compose file. If [`command`](#command) is also set,
 it is used as parameter to `entrypoint` as a replacement for Docker image's `CMD`
 
 ```yml
