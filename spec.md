@@ -1529,8 +1529,11 @@ If present, `profiles` SHOULD follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_
 `pull_policy` defines the decisions Compose implementations will make when it starts to pull images. Possible values are:
 
 * `always`: Compose implementations SHOULD always pull the image from the registry.
-* `never`: Compose implementations SHOULD NOT pull the image from a registry and SHOULD rely on the platform cached image. If there is no cached image, a failure MUST be reported.
-* `if_not_present`: Compose implementations SHOULD pull the image only if it's not available in the platform cache.This SHOULD be the default option for Compose implementations without build support.
+* `never`: Compose implementations SHOULD NOT pull the image from a registry and SHOULD rely on the platform cached image. 
+   If there is no cached image, a failure MUST be reported.   
+* `missing`: Compose implementations SHOULD pull the image only if it's not available in the platform cache. 
+   This SHOULD be the default option for Compose implementations without build support.
+  `if_not_present` SHOULD be considered an alias for this value for backward compatibility   
 * `build`: Compose implementations SHOULD build the image. Compose implementations SHOULD rebuild the image if already present.
 
 If `pull_policy` and `build` both presents, Compose implementations SHOULD build the image by default. Compose implementations MAY override this behavior in the toolchain.
