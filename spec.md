@@ -2362,7 +2362,7 @@ services:
     logging: *default-logging
 ```
 
-### specifying- byte values
+### specifying byte values
 
 Value express a byte value as a string in `{amount}{byte unit}` format:
 The supported units are `b` (bytes), `k` or `kb` (kilo bytes), `m` or `mb` (mega bytes) and `g` or `gb` (giga bytes).
