@@ -598,8 +598,8 @@ expressed in the short form.
   - `service_healthy`: specifies that a dependency is expected to be "healthy"
     (as indicated by [healthcheck](#healthcheck)) before starting a dependent
     service.
-  - `service_finished_successfully`: specifies that a dependency is expected to run 
-    to successful completion (as indicated by an exit code of 0)
+  - `service_completed_successfully`: specifies that a dependency is expected to run 
+    to successful completion before starting a dependent service.
 
 Service dependencies cause the following behaviors:
 
