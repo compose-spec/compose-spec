@@ -142,7 +142,7 @@ Services communicate with each other through [Networks](#Networks-top-level-elem
 
 Services store and share persistent data into [Volumes](#Volumes-top-level-element). The specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platforms.
 
-Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](Configs-top-level-element). From a Service container point of view, Configs are comparable to Volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
+Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](#Configs-top-level-element). From a Service container point of view, Configs are comparable to Volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
 
 A [Secret](#Secrets-top-level-element) is a specific flavour of configuration data for sensitive data that SHOULD NOT be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
 
@@ -239,10 +239,10 @@ will use a platform-specific lookup mechanism to retrieve runtime values.
 ## Compose file
 
 The Compose file is a [YAML](http://yaml.org/) file defining
-[version](#version) (REQUIRED),
-[services](#service-top-level-element) (REQUIRED),
-[networks](#network-top-level-element),
-[volumes](#volume-top-level-element),
+[version](#version-top-level-element) (DEPRECATED),
+[services](#services-top-level-element) (REQUIRED),
+[networks](#networks-top-level-element),
+[volumes](#volumes-top-level-element),
 [configs](#configs-top-level-element) and
 [secrets](#secrets-top-level-element).
 The default path for a Compose file is `compose.yaml` (preferred) or `compose.yml` in working directory.
@@ -791,7 +791,7 @@ dns_search:
 
 `entrypoint` overrides the default entrypoint for the Docker image (i.e. `ENTRYPOINT` set by Dockerfile).
 Compose implementations MUST clear out any default command on the Docker image - both `ENTRYPOINT` and `CMD` instruction
-in the Dockerfile - when `entrypoint` is configured by a Compose file. If [`command](#command) is also set,
+in the Dockerfile - when `entrypoint` is configured by a Compose file. If [`command`](#command) is also set,
 it is used as parameter to `entrypoint` as a replacement for Docker image's `CMD`
 
 ```yml
@@ -1648,9 +1648,11 @@ If `pull_policy` and `build` both presents, Compose implementations SHOULD build
 ```
 
 ### runtime
-_DEPRECATED: this attribute is low-level platform implementation detail_ 
 
 `runtime` specifies which runtime to use for the service’s containers.
+
+The value of `runtime` is specific to implementation.
+For example, `runtime` can be the name of [an implementation of OCI Runtime Spec](https://github.com/opencontainers/runtime-spec/blob/master/implementations.md), such as "runc".
 
 ```yml
 web:
@@ -2453,7 +2455,7 @@ services:
     logging: *default-logging
 ```
 
-### specifying- byte values
+### specifying byte values
 
 Value express a byte value as a string in `{amount}{byte unit}` format:
 The supported units are `b` (bytes), `k` or `kb` (kilo bytes), `m` or `mb` (mega bytes) and `g` or `gb` (giga bytes).
