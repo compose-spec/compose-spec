@@ -2099,7 +2099,7 @@ volumes:
 ### external
 
 If set to `true`, `external` specifies that this volume already exist on the platform and its lifecycle is managed outside
-of that of the application. Compose implementations MUST NOT attempt to create these volumes, and MUST return an error they
+of that of the application. Compose implementations MUST NOT attempt to create these volumes, and MUST return an error if they
 do not exist.
 
 In the example below, instead of attempting to create a volume called
