@@ -58,8 +58,7 @@ A [Secret](#Secrets-top-level-element) is a specific flavour of configuration da
 Distinction within Volumes, Configs and Secret allows implementations to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
 
 A **Project** is an individual deployment of an application specification on a platform. A project's name is used to group
-resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. A Compose implementation creating resources on a platform MUST prefix resource names by project and
-set the label `com.docker.compose.project`.
+resources together and isolate them from other applications or other installations of the same Compose specified application with distinct parameters.
 
 ### Illustrative example
 
@@ -1178,15 +1177,6 @@ labels:
   - "com.example.department=Finance"
   - "com.example.label-with-empty-value"
 ```
-
-Compose implementations MUST create containers with canonical labels:
-
-- `com.docker.compose.project` set on all resources created by Compose implementation to the user project name
-- `com.docker.compose.service` set on service containers with service name as defined in the Compose file
-
-The `com.docker.compose` label prefix is reserved. Specifying labels with this previx in the Compose file MUST
-result in a runtime error.
-
 ### links
 
 `links` defines a network link to containers in another service. Either specify both the service name and
@@ -1997,8 +1987,6 @@ labels:
   - "com.example.label-with-empty-value"
 ```
 
-Compose implementations MUST set `com.docker.compose.project` and `com.docker.compose.network` labels.
-
 ### external
 
 If set to `true`, `external` specifies that this network’s lifecycle is maintained outside of that of the application.
@@ -2138,8 +2126,6 @@ labels:
   - "com.example.department=IT/Ops"
   - "com.example.label-with-empty-value"
 ```
-
-Compose implementation MUST set `com.docker.compose.project` and `com.docker.compose.volmume` labels.
 
 ### name
 
