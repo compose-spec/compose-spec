@@ -1476,7 +1476,7 @@ Host IP, if not set, MUST bind to all network interfaces. Port can be either a s
 value or a range. Host and container MUST use equivalent ranges.
 
 Either specify both ports (`HOST:CONTAINER`), or just the container port. In the latter case, the
-Compose implementation SHOULD automatically allocate and unassigned host port.
+Compose implementation SHOULD automatically allocate any unassigned host port.
 
 `HOST:CONTAINER` SHOULD always be specified as a (quoted) string, to avoid conflicts
 with [yaml base-60 float](https://yaml.org/type/float.html).
