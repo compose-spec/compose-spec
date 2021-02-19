@@ -15,7 +15,6 @@
 - [Extension](#extension)
 - [Interpolation](#interpolation)
 
-
 ## Status of this document
 
 This document specifies the Compose file format used to define multi-containers applications. Distribution of this document is unlimited.
@@ -25,14 +24,14 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 ### Requirements and optional attributes
 
 The Compose specification includes properties designed to target a local [OCI](https://opencontainers.org/) container runtime,
-exposing Linux kernel specific configuration options, but also some Windows container specific properties, as well as cloud platform features related to resource placement on a cluster, replicated application distribution and scalability. 
+exposing Linux kernel specific configuration options, but also some Windows container specific properties, as well as cloud platform features related to resource placement on a cluster, replicated application distribution and scalability.
 
 We acknowledge that no Compose implementation is expected to support **all** attributes, and that support for some properties
 is Platform dependent and can only be confirmed at runtime. The definition of a versioned schema to control the supported
 properties in a Compose file, established by the [docker-compose](https://github.com/docker/compose) tool where the Compose
-file format was designed, doesn't offer any guarantee to the end-user attributes will be actually implemented. 
+file format was designed, doesn't offer any guarantee to the end-user attributes will be actually implemented.
 
-The specification defines the expected configuration syntax and behaviour, but - until noted - supporting any of those is OPTIONAL. 
+The specification defines the expected configuration syntax and behaviour, but - until noted - supporting any of those is OPTIONAL.
 
 A Compose implementation to parse a Compose file using unsupported attributes SHOULD warn user. We recommend implementors
 to support those running modes:
@@ -89,8 +88,8 @@ Both services communicate with each other on an isolated back-tier network, whil
                   +--------------------+        \_________________/
 ```
 
-
 The example application is composed of the following parts:
+
 - 2 services, backed by Docker images: `webapp` and `database`
 - 1 secret (HTTPS certificate), injected into the frontend
 - 1 configuration (HTTP), injected into the frontend
@@ -155,8 +154,8 @@ The Compose file is a [YAML](http://yaml.org/) file defining
 [configs](#configs-top-level-element) and
 [secrets](#secrets-top-level-element).
 The default path for a Compose file is `compose.yaml` (preferred) or `compose.yml` in working directory.
-Compose implementations SHOULD also support `docker-compose.yaml` and `docker-compose.yml` for backward compatibility. 
-If both files exist, Compose implementations MUST prefer canonical `compose.yaml` one. 
+Compose implementations SHOULD also support `docker-compose.yaml` and `docker-compose.yml` for backward compatibility.
+If both files exist, Compose implementations MUST prefer canonical `compose.yaml` one.
 
 Multiple Compose files can be combined together to define the application model. The combination of YAML files
 MUST be implemented by appending/overriding YAML elements based on Compose file order set by the user. Simple
@@ -224,16 +223,15 @@ services:
   profile `debug` is automatically enabled and service `bar` is pulled in as a dependency starting both
   services `zot` and `bar`.
 
-
 ## Version top-level element
 
-Top-level `version` property is defined by the specification for backward compatibility but is only informative. 
+Top-level `version` property is defined by the specification for backward compatibility but is only informative.
 
-A Compose implementation SHOULD NOT use this version to select an exact schema to validate the Compose file, but 
-prefer the most recent schema at the time it has been designed. 
+A Compose implementation SHOULD NOT use this version to select an exact schema to validate the Compose file, but
+prefer the most recent schema at the time it has been designed.
 
-Compose implementations SHOULD validate they can fully parse the Compose file. If some fields are unknown, typically 
-because the Compose file was written with fields defined by a newer version of the specification, Compose implementations 
+Compose implementations SHOULD validate they can fully parse the Compose file. If some fields are unknown, typically
+because the Compose file was written with fields defined by a newer version of the specification, Compose implementations
 SHOULD warn the user. Compose implementations MAY offer options to ignore unknown fields (as defined by ["loose"](#Requirements-and-optional-attributes) mode).
 
 ## Services top-level element
@@ -254,7 +252,7 @@ the Build section SHOULD be ignored and the Compose file MUST still be considere
 
 Build support is an OPTIONAL aspect of the Compose specification, and is described in detail [here](build.md)
 
-Each Service defines runtime constraints and requirements to run its containers. The `deploy` section groups 
+Each Service defines runtime constraints and requirements to run its containers. The `deploy` section groups
 these constraints and allows the platform to adjust the deployment strategy to best match containers' needs with
 available resources.
 
@@ -268,7 +266,7 @@ not implemented the Deploy section SHOULD be ignored and the Compose file MUST s
 ### blkio_config
 
 `blkio_config` defines a set of configuration options to set block IO limits for this service.
-                         
+
 ```yml
 services:
   foo:
@@ -294,7 +292,7 @@ services:
 
 #### device_read_bps, device_write_bps
 
-Set a limit in bytes per second for read / write operations on a given device. 
+Set a limit in bytes per second for read / write operations on a given device.
 Each item in the list MUST have two keys:
 
 - `path`: defining the symbolic path to the affected device.
@@ -302,7 +300,7 @@ Each item in the list MUST have two keys:
 
 #### device_read_iops, device_write_iops
 
-Set a limit in operations per second for read / write operations on a given device. 
+Set a limit in operations per second for read / write operations on a given device.
 Each item in the list MUST have two keys:
 
 - `path`: defining the symbolic path to the affected device.
@@ -310,7 +308,7 @@ Each item in the list MUST have two keys:
 
 #### weight
 
-Modify the proportion of bandwidth allocated to this service relative to other services. 
+Modify the proportion of bandwidth allocated to this service relative to other services.
 Takes an integer value between 10 and 1000, with 500 being the default.
 
 #### weight_device
@@ -319,7 +317,6 @@ Fine-tune bandwidth allocation by device. Each item in the list must have two ke
 
 - `path`: defining the symbolic path to the affected device.
 - `weight`: an integer value between 10 and 1000.
-
 
 ### cpu_count
 
@@ -345,7 +342,7 @@ on Linux kernel.
 
 ### cpu_rt_runtime
 
-`cpu_rt_runtime` configures CPU allocation parameters for platform with support for realtime scheduler. Can be either 
+`cpu_rt_runtime` configures CPU allocation parameters for platform with support for realtime scheduler. Can be either
 an integer value using microseconds as unit or a [duration](#specifying-durations).
 
 ```yml
@@ -364,9 +361,10 @@ an integer value using microseconds as unit or a [duration](#specifying-duration
 ```
 
 ### cpus
+
 _DEPRECATED: use [deploy.reservations.cpus](deploy.md#cpus)_
 
-`cpus` define the number of (potentially virtual) CPUs to allocate to service containers. This is a fractional number. 
+`cpus` define the number of (potentially virtual) CPUs to allocate to service containers. This is a fractional number.
 `0.000` means no limit.
 
 ### cpuset
@@ -503,7 +501,7 @@ You can grant a service access to multiple configs, and you can mix long and sho
 container_name: my-web-container
 ```
 
-Compose implementation MUST NOT scale a service beyond one container if the Compose file specifies a 
+Compose implementation MUST NOT scale a service beyond one container if the Compose file specifies a
 `container_name`. Attempting to do so MUST result in an error.
 
 If present, `container_name` SHOULD follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`
@@ -598,7 +596,7 @@ expressed in the short form.
   - `service_healthy`: specifies that a dependency is expected to be "healthy"
     (as indicated by [healthcheck](#healthcheck)) before starting a dependent
     service.
-  - `service_completed_successfully`: specifies that a dependency is expected to run 
+  - `service_completed_successfully`: specifies that a dependency is expected to run
     to successful completion before starting a dependent service.
 
 Service dependencies cause the following behaviors:
@@ -1034,10 +1032,10 @@ configuration, which means for Linux `/etc/hosts` will get extra lines:
 
 ### group_add
 
-`group_add` specifies additional groups (by name or number) which the user inside the container MUST be a member of. 
+`group_add` specifies additional groups (by name or number) which the user inside the container MUST be a member of.
 
-An example of where this is useful is when multiple containers (running as different users) need to all read or write 
-the same file on a shared volume. That file can be owned by a group shared by all the containers, and specified in 
+An example of where this is useful is when multiple containers (running as different users) need to all read or write
+the same file on a shared volume. That file can be owned by a group shared by all the containers, and specified in
 `group_add`.
 
 ```yml
@@ -1048,7 +1046,7 @@ services:
       - mail
 ```
 
-Running `id` inside the created container MUST show that the user belongs to the `mail` group, which would not have 
+Running `id` inside the created container MUST show that the user belongs to the `mail` group, which would not have
 been the case if `group_add` were not declared.
 
 ### healthcheck
@@ -1103,10 +1101,9 @@ healthcheck:
 
 ### image
 
-`image` specifies the image to start the container from. Image MUST follow the Open Container Specification 
+`image` specifies the image to start the container from. Image MUST follow the Open Container Specification
 [addressable image format](https://github.com/opencontainers/org/blob/master/docs/docs/introduction/digests.md),
 as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
-
 
 ```yml
     image: redis
@@ -1115,9 +1112,9 @@ as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
     image: library/redis
     image: docker.io/library/redis
     image: my_private.registry:5000/redis
-```    
+```
 
-If the image does not exist on the platform, Compose implementations MUST attempt to pull it based on the `pull_policy`. 
+If the image does not exist on the platform, Compose implementations MUST attempt to pull it based on the `pull_policy`.
 Compose implementations with build support MAY offer alternative options for the end user to control precedence of
 pull over building the image from source, however pulling the image MUST be the default behavior.
 
@@ -1344,6 +1341,7 @@ known subnet and are purely managed by the operator, usually dependent on the ar
 deployed. Implementation is Platform specific.
 
 Example:
+
 ```yaml
 services:
   app:
@@ -1357,7 +1355,7 @@ services:
 networks:
   app_net:
     driver: bridge
-```    
+```
 
 #### priority
 
@@ -1365,6 +1363,7 @@ networks:
 networks. If unspecified, the default value is 0.
 
 In the following example, the app service connects to app_net_1 first as it has the highest priority. It then connects to app_net_3, then app_net_2, which uses the default priority value of 0.
+
 ```yaml
 services:
   app:
@@ -1388,15 +1387,17 @@ networks:
 `mac_address` sets a MAC address for service container.
 
 ### mem_limit
+
 _DEPRECATED: use [deploy.limits.memory](deploy.md#memory)_
 
 ### mem_reservation
+
 _DEPRECATED: use [deploy.reservations.memory](deploy.md#memory)_
 
 ### mem_swappiness
 
 `mem_swappiness` defines as a percentage (a value between 0 and 100) for the host kernel to swap out
-anonymous memory pages used by a container. 
+anonymous memory pages used by a container.
 
 - a value of 0 turns off anonymous page swapping.
 - a value of 100 sets all anonymous pages as swappable.
@@ -1405,9 +1406,9 @@ Default value is platform specific.
 
 ### memswap_limit
 
-`memswap_limit` defines the amount of memory container is allowed to swap to disk. This is a modifier 
+`memswap_limit` defines the amount of memory container is allowed to swap to disk. This is a modifier
 attribute that only has meaning if `memory` is also set. Using swap allows the container to write excess
-memory requirements to disk when the container has exhausted all the memory that is available to it. 
+memory requirements to disk when the container has exhausted all the memory that is available to it.
 There is a performance penalty for applications that swap memory to disk often.
 
 - If `memswap_limit` is set to a positive integer, then both `memory` and `memswap_limit` MUST be set. `memswap_limit` represents the total amount of memory and swap that can be used, and `memory` controls the amount used by non-swap memory. So if `memory`="300m" and `memswap_limit`="1g", the container can use 300m of memory and 700m (1g - 300m) swap.
@@ -1416,23 +1417,20 @@ There is a performance penalty for applications that swap memory to disk often.
 - If `memswap_limit` is unset, and `memory` is set, the container can use as much swap as the `memory` setting, if the host container has swap memory configured. For instance, if `memory`="300m" and `memswap_limit` is not set, the container can use 600m in total of memory and swap.
 - If `memswap_limit` is explicitly set to -1, the container is allowed to use unlimited swap, up to the amount available on the host system.
 
-
 ### oom_kill_disable
- 
-If `oom_kill_disable` is set Compose implementation MUST configure the platform so it won't kill the container in case 
+
+If `oom_kill_disable` is set Compose implementation MUST configure the platform so it won't kill the container in case
 of memory starvation.
- 
+
 ### oom_score_adj
 
-`oom_score_adj` tunes the preference for containers to be killed by platform in case of memory starvation. Value MUST 
+`oom_score_adj` tunes the preference for containers to be killed by platform in case of memory starvation. Value MUST
 be within [-1000,1000] range.
-
 
 ### pid
 
 `pid` sets the PID mode for container created by the Compose implementation.
 Supported values are platform specific.
-
 
 ### pid_limit
 
@@ -1445,7 +1443,7 @@ pids_limit: 10
 ### platform
 
 `platform` defines the target platform containers for this service will run on, using the `os[/arch[/variant]]` syntax.
-Compose implementation MUST use this attribute when declared to determine which version of the image will be pulled 
+Compose implementation MUST use this attribute when declared to determine which version of the image will be pulled
 and/or on which platform the service’s build will be performed.
 
 ```yml
@@ -1453,7 +1451,6 @@ platform: osx
 platform: windows/amd64
 platform: linux/arm64/v8
 ```
-
 
 ### ports
 
@@ -1531,11 +1528,11 @@ If present, `profiles` SHOULD follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_
 `pull_policy` defines the decisions Compose implementations will make when it starts to pull images. Possible values are:
 
 * `always`: Compose implementations SHOULD always pull the image from the registry.
-* `never`: Compose implementations SHOULD NOT pull the image from a registry and SHOULD rely on the platform cached image. 
-   If there is no cached image, a failure MUST be reported.   
-* `missing`: Compose implementations SHOULD pull the image only if it's not available in the platform cache. 
+* `never`: Compose implementations SHOULD NOT pull the image from a registry and SHOULD rely on the platform cached image.
+   If there is no cached image, a failure MUST be reported.
+* `missing`: Compose implementations SHOULD pull the image only if it's not available in the platform cache.
    This SHOULD be the default option for Compose implementations without build support.
-  `if_not_present` SHOULD be considered an alias for this value for backward compatibility   
+  `if_not_present` SHOULD be considered an alias for this value for backward compatibility
 * `build`: Compose implementations SHOULD build the image. Compose implementations SHOULD rebuild the image if already present.
 
 If `pull_policy` and `build` both presents, Compose implementations SHOULD build the image by default. Compose implementations MAY override this behavior in the toolchain.
@@ -1576,6 +1573,7 @@ web:
 ```
 
 ### scale
+
 -DEPRECATED: use [deploy/replicas](deploy.md#replicas)_
 
 `scale` specifies the default number of containers to deploy for this service.
@@ -1823,10 +1821,10 @@ expressed in the short form.
 
 ### volumes_from
 
-`volumes_from` mounts all of the volumes from another service or container, optionally specifying 
+`volumes_from` mounts all of the volumes from another service or container, optionally specifying
 read-only access (ro) or read-write (rw). If no access level is specified, then read-write MUST be used.
 
-String value defines another service in the Compose application model to mount volumes from. The 
+String value defines another service in the Compose application model to mount volumes from. The
 `container:` prefix, if supported, allows to mount volumes from a container that is not managed by the
 Compose implementation.
 
@@ -2310,7 +2308,7 @@ volumes:
 
 ## Extension
 
-Special extension fields can be of any format as long as their name starts with the `x-` character sequence. They can be used 
+Special extension fields can be of any format as long as their name starts with the `x-` character sequence. They can be used
 within any structure in a Compose file. This is the sole exception for Compose implementations to silently ignore unrecognized field.
 
 ```yml
