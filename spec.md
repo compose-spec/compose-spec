@@ -743,7 +743,7 @@ Relative path MUST be resolved from the Compose file's parent folder. As absolut
 file from being portable, Compose implementations SHOULD warn users when such a path is used to set `env_file`.
 
 Environment variables declared in the [environment](#environment) section
-MUST override these values &ndash; this holds true even if those values are
+MUST override these values – this holds true even if those values are
 empty or undefined.
 
 #### Env_file format
@@ -1184,7 +1184,7 @@ Compose implementations MUST create containers with canonical labels:
 - `com.docker.compose.project` set on all resources created by Compose implementation to the user project name
 - `com.docker.compose.service` set on service containers with service name as defined in the Compose file
 
-The `com.docker.compose` label prefix is reserved. Specifying labels with this previx in the Compose file MUST
+The `com.docker.compose` label prefix is reserved. Specifying labels with this prefix in the Compose file MUST
 result in a runtime error.
 
 ### links
@@ -1424,7 +1424,7 @@ of memory starvation.
  
 ### oom_score_adj
 
-`oom_score_adj` tunes the preference for containers to be killed by platform in case of memory starvation. Valu MUST 
+`oom_score_adj` tunes the preference for containers to be killed by platform in case of memory starvation. Value MUST 
 be within [-1000,1000] range.
 
 
@@ -1476,7 +1476,7 @@ Host IP, if not set, MUST bind to all network interfaces. Port can be either a s
 value or a range. Host and container MUST use equivalent ranges.
 
 Either specify both ports (`HOST:CONTAINER`), or just the container port. In the latter case, the
-Compose implementation SHOULD automatically allocate and unassigned host port.
+Compose implementation SHOULD automatically allocate any unassigned host port.
 
 `HOST:CONTAINER` SHOULD always be specified as a (quoted) string, to avoid conflicts
 with [yaml base-60 float](https://yaml.org/type/float.html).
@@ -2139,7 +2139,7 @@ labels:
   - "com.example.label-with-empty-value"
 ```
 
-Compose implementation MUST set `com.docker.compose.project` and `com.docker.compose.volmume` labels.
+Compose implementation MUST set `com.docker.compose.project` and `com.docker.compose.volume` labels.
 
 ### name
 
@@ -2176,9 +2176,9 @@ volumes:
 
 Configs allow services to adapt their behaviour without the need to rebuild a Docker image. Configs are comparable to Volumes from a service point of view as they are mounted into service's containers filesystem. The actual implementation detail to get configuration provided by the platform can be set from the Configuration definition.
 
-When granted accessto a config, the config content is mounted as a file in the container. The location of the mount point within the container defaults to `/<config-name>` in Linux containers and `C:\<config-name>` in Windows containers.
+When granted access to a config, the config content is mounted as a file in the container. The location of the mount point within the container defaults to `/<config-name>` in Linux containers and `C:\<config-name>` in Windows containers.
 
-By default, the config MUST be owned by the user running the container command but can be overriden by service configuration.
+By default, the config MUST be owned by the user running the container command but can be overridden by service configuration.
 By default, the config MUST have world-readable permissions (mode 0444), unless service is configured to override this.
 
 Services can only access configs when explicitly granted by a [`configs`](#configs) subsection.
@@ -2194,8 +2194,8 @@ application. The source of the config is either `file` or `external`.
   reference configs that contain special characters. The name is used as is
   and will **not** be scoped with the project name.
 
-In this example, `http_config` is created (as `<project_name>_http_config)`when the application is deployed,
-and `my_second_config` MUST already exists on Platform and value will be obtained by lookup.
+In this example, `http_config` is created (as `<project_name>_http_config`) when the application is deployed,
+and `my_second_config` MUST already exist on Platform and value will be obtained by lookup.
 
 In this example, `server-http_config` is created as `<project_name>_http_config` when the application is deployed,
 by registering content of the `httpd.conf` as configuration data.
@@ -2230,7 +2230,7 @@ Compose file need to explicitly grant access to the configs to relevant services
 
 ## Secrets top-level element
 
-Secrets are a flavour of Configs focussing on sensitive data, with specific constraint for this usage. As the platform implementation may significally differ from Configs, dedicated Secrets section allows to configure the related resources.
+Secrets are a flavour of Configs focussing on sensitive data, with specific constraint for this usage. As the platform implementation may significantly differ from Configs, dedicated Secrets section allows to configure the related resources.
 
 The top-level `secrets` declaration defines or references sensitive data that can be granted to the services in this
 application. The source of the secret is either `file` or `external`.
@@ -2384,9 +2384,9 @@ The supported units are `b` (bytes), `k` or `kb` (kilo bytes), `m` or `mb` (mega
 
 ### specifying durations
 
-Value express a duration as a string in thte in the form of `{value}{unit}`.
+Value express a duration as a string in the in the form of `{value}{unit}`.
 The supported units are `us` (microseconds), `ms` (milliseconds), `s` (seconds), `m` (minutes) and `h` (hours).
-Value can can combine mutiple values and using without separator.
+Value can can combine multiple values and using without separator.
 
 ```
   10ms

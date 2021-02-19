@@ -18,7 +18,7 @@ subsection, others being created based on `Image` attribute. When a Build subsec
 is *valid* for a Compose file to miss an `Image` attribute for corresponding service, as Compose implementation 
 can build image from source.
 
-Build can be either specified as a single string defining a context path, or as a detailled build definition. 
+Build can be either specified as a single string defining a context path, or as a detailed build definition. 
 
 In the former case, the whole path is used as a Docker context to execute a docker build, looking for a canonical 
 `Dockerfile` at context root. Context path can be absolute or relative, and if so relative path MUST be resolved 
@@ -82,7 +82,7 @@ On push, both `awesome/webapp` and `awesome/database` docker images are pushed t
 ## Build definition
 
 The `build` element define configuration options that are applied by Compose implementations to build Docker image from source.
-`build` can be specified either as a string containing a path to the build context or a detailled structure:
+`build` can be specified either as a string containing a path to the build context or a detailed structure:
 
 ```yml
 services:
@@ -148,7 +148,7 @@ build:
     - GIT_COMMIT=cdc3b19
 ```
 
-Value can be omited when specifying a build argument, in which case its value at build time MUST be obtained by user interaction,
+Value can be omitted when specifying a build argument, in which case its value at build time MUST be obtained by user interaction,
 otherwise build arg won't be set when building the Docker image.
 
 ```yml
@@ -193,7 +193,7 @@ are platform-specific.
 
 ### labels
 
-`labels` add metadata to the resulting image. `labrls` can be set either as an array or a map.
+`labels` add metadata to the resulting image. `labels` can be set either as an array or a map.
 
 reverse-DNS notation SHOULD be used to prevent labels from conflicting with those used by other software.
 
