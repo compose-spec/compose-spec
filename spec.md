@@ -2139,7 +2139,7 @@ labels:
   - "com.example.label-with-empty-value"
 ```
 
-Compose implementation MUST set `com.docker.compose.project` and `com.docker.compose.volmume` labels.
+Compose implementation MUST set `com.docker.compose.project` and `com.docker.compose.volume` labels.
 
 ### name
 
