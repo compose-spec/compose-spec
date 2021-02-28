@@ -8,28 +8,25 @@ Compose specification is a platform-neutral way to define multi-container applic
 deployment of application model MAY require some additional metadata as the Compose application model is way too abstract
 to reflect actual infrastructure needs per service, or lifecycle constraints.
 
-Compose Specification Deployment allows users to declare additional metadata on services so Compose implementations get 
+Compose Specification Deployment allows users to declare additional metadata on services so Compose implementations get
 relevant data to allocate adequate resources on platform and configure them to match user's needs.
-
 
 ## Definitions
 
 Compose Specification is extended to support an OPTIONAL `deploy` subsection on services. This section define runtime requirements
 for a service.
 
-
 ### endpoint_mode
 
 `endpoint_mode` specifies a service discovery method for external clients connecting to a service. Default and available values
 are platform specific, anyway the Compose specification define two canonical values:
 
-* `endpoint_mode: vip`: Assigns the service a virtual IP (VIP) that acts as the front end for clients to reach the service 
-  on a network. Platform routes requests between the client and nodes running the service, without client knowledge of how 
+* `endpoint_mode: vip`: Assigns the service a virtual IP (VIP) that acts as the front end for clients to reach the service
+  on a network. Platform routes requests between the client and nodes running the service, without client knowledge of how
   many nodes are participating in the service or their IP addresses or ports.
 
-* `endpoint_mode: dnsrr`: Platform sets up DNS entries for the service such that a DNS query for the service name returns a 
+* `endpoint_mode: dnsrr`: Platform sets up DNS entries for the service such that a DNS query for the service name returns a
   list of IP addresses (DNS round-robin), and the client connects directly to one of these.
-
 
 ```yml
 services:
@@ -42,7 +39,6 @@ services:
       replicas: 2
       endpoint_mode: vip
 ```
-
 
 ### labels
 
@@ -58,11 +54,9 @@ services:
         com.example.description: "This label will appear on the web service"
 ```
 
-
 ### mode
 
 `mode` define the replication model used to run the service on platform. Either `global` (exactly one container per physical node) or `replicated` (a specified number of containers). The default is `replicated`.
-
 
 ```yml
 services:
@@ -80,7 +74,6 @@ services:
 
 `constraints` defines a REQUIRED property the platform's node MUST fulfill to run service container. Can be set either
 by a list or a map with string values.
-
 
 ```yml
 deploy:
@@ -101,7 +94,6 @@ deploy:
 `preferences` defines a property the platform's node SHOULD fulfill to run service container. Can be set either
 by a list or a map with string values.
 
-
 ```yml
 deploy:
     placement:
@@ -115,7 +107,6 @@ deploy:
     preferences:
         datacenter: us-east
 ```
-
 
 ### replicas
 
@@ -135,6 +126,7 @@ services:
 
 `resources` configures physical resource constraints for container to run on platform. Those constraints can be configured
 as a:
+
 - `limits`: The platform MUST prevent container to allocate more
 - `reservations`: The platform MUST guarantee container can allocate at least the configured amount
 
@@ -217,7 +209,6 @@ deploy:
 
 If `device_ids` is set, Compose implementations MUST reserve devices with the specified IDs providing they satisfy the requested capabilities. The value is specified as a list of strings.
 
-
 ```yml
 deploy:
   resources:
@@ -248,7 +239,7 @@ deploy:
 
 `restart_policy` configures if and how to restart containers when they exit. If `restart_policy` is not set, Compose implementations MUST consider `restart` field set by service configuration.
 
-- `condition`: One of `none`, `on-failure` or `any` (default: `any`). 
+- `condition`: One of `none`, `on-failure` or `any` (default: `any`).
 - `delay`: How long to wait between restart attempts, specified as a [duration](spec.md#specifying-durations) (default: 0).
 - `max_attempts`: How many times to attempt to restart a container before giving up (default: never give up). If the restart does not
   succeed within the configured `window`, this attempt doesn't count toward the configured `max_attempts` value.
@@ -274,7 +265,7 @@ deploy:
 - `failure_action`: What to do if a rollback fails. One of `continue` or `pause` (default `pause`)
 - `monitor`: Duration after each task update to monitor for failure `(ns|us|ms|s|m|h)` (default 0s).
 - `max_failure_ratio`: Failure rate to tolerate during a rollback (default 0).
-- `order`: Order of operations during rollbacks. One of `stop-first` (old task is stopped before starting new one), 
+- `order`: Order of operations during rollbacks. One of `stop-first` (old task is stopped before starting new one),
    or `start-first` (new task is started first, and the running tasks briefly overlap) (default `stop-first`).
 
 ### update_config
@@ -286,9 +277,8 @@ deploy:
 - `failure_action`: What to do if an update fails. One of `continue`, `rollback`, or `pause` (default: `pause`).
 - `monitor`: Duration after each task update to monitor for failure `(ns|us|ms|s|m|h)` (default 0s).
 - `max_failure_ratio`: Failure rate to tolerate during an update.
-- `order`: Order of operations during updates. One of `stop-first` (old task is stopped before starting new one), 
+- `order`: Order of operations during updates. One of `stop-first` (old task is stopped before starting new one),
    or `start-first` (new task is started first, and the running tasks briefly overlap) (default `stop-first`).
-
 
 ```yml
 deploy:
