@@ -1689,6 +1689,15 @@ If unset containers are stopped by the Compose Implementation by sending `SIGTER
 stop_signal: SIGUSR1
 ```
 
+### storage_opts
+
+`storage_opts` defines storage driver options for a service.
+
+```yml
+storage_opt:
+  size: '1G'
+```
+
 ### sysctls
 
 `sysctls` defines kernel parameters to set in the container. `sysctls` can use either an array or a map.
