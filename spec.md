@@ -1689,9 +1689,9 @@ If unset containers are stopped by the Compose Implementation by sending `SIGTER
 stop_signal: SIGUSR1
 ```
 
-### storage_opts
+### storage_opt
 
-`storage_opts` defines storage driver options for a service.
+`storage_opt` defines storage driver options for a service.
 
 ```yml
 storage_opt:
