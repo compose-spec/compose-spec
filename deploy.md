@@ -77,16 +77,16 @@ by a list or a map with string values.
 
 ```yml
 deploy:
-    placement:
+  placement:
     constraints:
-        - disktype=ssd
+      - disktype=ssd
 ```
 
 ```yml
 deploy:
-    placement:
+  placement:
     constraints:
-        disktype: ssd
+      disktype: ssd
 ```
 
 #### preferences
@@ -96,16 +96,16 @@ by a list or a map with string values.
 
 ```yml
 deploy:
-    placement:
+  placement:
     preferences:
-        - datacenter=us-east
+      - datacenter=us-east
 ```
 
 ```yml
 deploy:
-    placement:
+  placement:
     preferences:
-        datacenter: us-east
+      datacenter: us-east
 ```
 
 ### replicas
@@ -249,11 +249,11 @@ deploy:
 
 ```yml
 deploy:
-    restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+  restart_policy:
+    condition: on-failure
+    delay: 5s
+    max_attempts: 3
+    window: 120s
 ```
 
 ### rollback_config
@@ -282,8 +282,8 @@ deploy:
 
 ```yml
 deploy:
-    update_config:
-        parallelism: 2
-        delay: 10s
-        order: stop-first
+  update_config:
+    parallelism: 2
+    delay: 10s
+    order: stop-first
 ```
