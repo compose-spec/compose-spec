@@ -1432,9 +1432,9 @@ be within [-1000,1000] range.
 `pid` sets the PID mode for container created by the Compose implementation.
 Supported values are platform specific.
 
-### pid_limit
+### pids_limit
 
-`pid_limit` tunes a container’s PIDs limit. Set to -1 for unlimited PIDs.
+`pids_limit` tunes a container’s PIDs limit. Set to -1 for unlimited PIDs.
 
 ```yml
 pids_limit: 10
