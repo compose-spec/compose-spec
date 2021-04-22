@@ -1,6 +1,10 @@
 # The Compose Specification - Build support
+{:.no_toc}
 
 *Note:* Build is an OPTIONAL part of the Compose Specification
+
+* ToC
+{:toc}
 
 ## Introduction
 

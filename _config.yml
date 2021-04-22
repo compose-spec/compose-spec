@@ -1,0 +1,15 @@
+theme: jekyll-theme-cayman
+title: Compose Specification
+description: >
+  A specification for developer-centric application definition used in Cloud
+  Native Applications.
+markdown: kramdown
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "page"
+github:
+  repository_name: Compose Specification
+  owner_url: https://github.com/compose-spec/compose-spec/blob/master/OWNERS.md
+  owner_name: these members of the community

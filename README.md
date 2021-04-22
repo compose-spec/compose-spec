@@ -1,18 +1,12 @@
 # Compose Specification
+{:.no_toc}
 
 The Compose specification establishes a standard for the definition of
 multi-container platform-agnostic applications. The specification can be found
 [here](spec.md).
 
-<!-- Logo coming soon! -->
-
-## Table of Contents
-
-Additional documentation about how this group operates:
-* [Governance](GOVERNANCE.md)
-* [Contribution Guidelines](CONTRIBUTING.md)
-* [Implementations](#Implementations)
-* [Releases](https://github.com/docker/compose-spec/releases)
+* ToC
+{:toc}
 
 ## Use cases
 

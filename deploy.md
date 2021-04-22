@@ -1,6 +1,10 @@
 # The Compose Specification - Deployment support
+{:.no_toc}
 
 *Note:* Deployment is an OPTIONAL part of the Compose Specification
+
+* ToC
+{:toc}
 
 ## Introduction
 
