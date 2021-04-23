@@ -60,6 +60,7 @@ The specification and code is licensed under the Apache 2.0 license found in the
 * Docker CLI (`docker stack` command)
 * [Compose on Kubernetes](https://github.com/docker/compose-on-kubernetes)
 * [Kompose](https://github.com/kubernetes/kompose)
+* [containerd/nerdctl](https://github.com/containerd/nerdctl)
 
 | Metadata |                  |
 | -------- | ---------------: |
