@@ -1811,6 +1811,9 @@ expressed in the short form.
 - `read_only`: flag to set the volume as read-only
 - `bind`: configure additional bind options
   - `propagation`: the propagation mode used for the bind
+  - `create_host_path`: create a directory at the source path on host if there is nothing present. 
+    Do nothing if there is something present at the path. This is automatically implied by short syntax
+    for backward compatibility with docker-compose legacy.
 - `volume`: configure additional volume options
   - `nocopy`: flag to disable copying of data from a container when a volume is created
 - `tmpfs`: configure additional tmpfs options
