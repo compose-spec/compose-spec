@@ -30,7 +30,6 @@ APIs to manage networking services, container deployments and their lifecycles.
 While this offers flexibility to address many operator use cases, it makes
 simple use cases, like the developer use case, more complicated to express than
 they need to be. Projects like [Kompose](https://github.com/kubernetes/kompose)
-and [Compose on Kubernetes](https://github.com/docker/compose-on-kubernetes)
 show how the simpler Compose model can be translated into Kubernetes API
 payloads and make the Compose file the source of truth for development and
 deployment.
@@ -58,7 +57,6 @@ The specification and code is licensed under the Apache 2.0 license found in the
 
 * [docker-compose](https://github.com/docker/compose)
 * Docker CLI (`docker stack` command)
-* [Compose on Kubernetes](https://github.com/docker/compose-on-kubernetes)
 * [Kompose](https://github.com/kubernetes/kompose)
 * [containerd/nerdctl](https://github.com/containerd/nerdctl)
 
