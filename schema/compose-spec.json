@@ -408,7 +408,8 @@
                   "bind": {
                     "type": "object",
                     "properties": {
-                      "propagation": {"type": "string"}
+                      "propagation": {"type": "string"},
+                      "create_host_path": {"type": "boolean"}
                     },
                     "additionalProperties": false,
                     "patternProperties": {"^x-": {}}
