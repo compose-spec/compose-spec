@@ -1491,12 +1491,14 @@ expressed in the short form.
 
 - `target`: the container port
 - `published`: the publicly exposed port
+- `host_ip`: the Host IP mapping, unspecified means all network interfaces (`0.0.0.0`) 
 - `protocol`: the port protocol (`tcp` or `udp`), unspecified means any protocol
 - `mode`: `host` for publishing a host port on each node, or `ingress` for a port to be load balanced.
 
 ```yml
 ports:
   - target: 80
+    host_ip: 127.0.0.1
     published: 8080
     protocol: tcp
     mode: host
