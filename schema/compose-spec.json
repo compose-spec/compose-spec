@@ -316,6 +316,7 @@
                 "type": "object",
                 "properties": {
                   "mode": {"type": "string"},
+                  "host_ip": {"type": "string"},
                   "target": {"type": "integer"},
                   "published": {"type": "integer"},
                   "protocol": {"type": "string"}
