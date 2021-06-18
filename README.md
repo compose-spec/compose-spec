@@ -30,9 +30,9 @@ APIs to manage networking services, container deployments and their lifecycles.
 While this offers flexibility to address many operator use cases, it makes
 simple use cases, like the developer use case, more complicated to express than
 they need to be. Projects like [Kompose](https://github.com/kubernetes/kompose)
-show how the simpler Compose model can be translated into Kubernetes API
-payloads and make the Compose file the source of truth for development and
-deployment.
+or [Okteto Stacks](https://okteto.com/docs/reference/stacks) show how the
+simpler Compose model can be translated into Kubernetes API payloads and make
+the Compose file the source of truth for development and deployment.
 
 ### Cloud providers
 
@@ -59,6 +59,7 @@ The specification and code is licensed under the Apache 2.0 license found in the
 * Docker CLI (`docker stack` command)
 * [Kompose](https://github.com/kubernetes/kompose)
 * [containerd/nerdctl](https://github.com/containerd/nerdctl)
+* [Okteto Stacks](https://okteto.com/docs/reference/stacks)
 
 | Metadata |                  |
 | -------- | ---------------: |
