@@ -60,6 +60,7 @@ The specification and code is licensed under the Apache 2.0 license found in the
 * [Kompose](https://github.com/kubernetes/kompose)
 * [containerd/nerdctl](https://github.com/containerd/nerdctl)
 * [Okteto Stacks](https://okteto.com/docs/reference/stacks)
+* [docker/compose-cli](https://github.com/docker/compose-cli)
 
 | Metadata |                  |
 | -------- | ---------------: |
