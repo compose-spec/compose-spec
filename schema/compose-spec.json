@@ -331,7 +331,7 @@
         "privileged": {"type": "boolean"},
         "profiles": {"$ref": "#/definitions/list_of_strings"},
         "pull_policy": {"type": "string", "enum": [
-          "always", "never", "if_not_present", "build"
+          "always", "never", "if_not_present", "build", "missing"
         ]},
         "read_only": {"type": "boolean"},
         "restart": {"type": "string"},
