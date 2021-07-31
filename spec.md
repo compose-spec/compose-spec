@@ -2207,7 +2207,7 @@ configs:
     file: ./httpd.conf
 ```
 
-Alternatively, `http_config` can be declared as external, doing so Compose implementation will lookup `server-certificate` to expose configuration data to relevant services.
+Alternatively, `http_config` can be declared as external, doing so Compose implementation will lookup `http_config` to expose configuration data to relevant services.
 
 ```yml
 configs:
