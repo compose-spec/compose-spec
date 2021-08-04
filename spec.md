@@ -754,7 +754,7 @@ VAR="quoted"
 ### environment
 
 `environment` defines environment variables set in the container. `environment` can use either an array or a
-map. Any boolean values; true, false, yes, no, MUST be enclosed in quotes to ensure
+map. Any boolean values; true, false, yes, no, SHOULD be enclosed in quotes to ensure
 they are not converted to True or False by the YAML parser.
 
 Environment variables MAY be declared by a single key (no value to equals sign). In such a case Compose
