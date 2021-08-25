@@ -1097,7 +1097,7 @@ as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
 ```yml
     image: redis
     image: redis:5
-    image: redis@sha356:0ed5d5928d4737458944eb604cc8509e245c3e19d02ad83935398bc4b991aac7
+    image: redis@sha256:0ed5d5928d4737458944eb604cc8509e245c3e19d02ad83935398bc4b991aac7
     image: library/redis
     image: docker.io/library/redis
     image: my_private.registry:5000/redis
