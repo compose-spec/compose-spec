@@ -636,11 +636,13 @@ device_cgroup_rules:
 
 ### devices
 
-`devices` defines a list of device mappings for created containers.
+`devices` defines a list of device mappings for created containers in the form of
+`HOST_PATH:CONTAINER_PATH[:CGROUP_PERMISSIONS]`.
 
 ```yml
 devices:
   - "/dev/ttyUSB0:/dev/ttyUSB0"
+  - "/dev/sda:/dev/xvda:rwm"
 ```
 
 ### dns
