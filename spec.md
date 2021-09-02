@@ -1448,7 +1448,7 @@ Port mapping MUST NOT be used with `network_mode: host` and doing so MUST result
 
 #### Short syntax
 
-The short syntax is a comma-separated string to set host IP, host port and container port
+The short syntax is a colon-separated string to set host IP, host port and container port
 in the form:
 
 `[HOST:]CONTAINER[/PROTOCOL]` where:
@@ -1788,7 +1788,7 @@ volumes:
 
 #### Short syntax
 
-The short syntax uses a single string with comma-separated values to specify a volume mount
+The short syntax uses a single string with colon-separated values to specify a volume mount
 (`VOLUME:CONTAINER_PATH`), or an access mode (`VOLUME:CONTAINER:ACCESS_MODE`).
 
 `VOLUME` MAY be either a host path on the platform hosting containers (bind mount) or a volume name.
