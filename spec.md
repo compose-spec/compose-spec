@@ -2054,8 +2054,8 @@ Volumes are persistent data stores implemented by the platform. The Compose spec
 for services to mount volumes, and configuration parameters to allocate them on infrastructure.
 
 The `volumes` section allows the configuration of named volumes that can be reused across multiple services. Here's
-an example of a two-service setup where a database's data directory is shared with another service as a volume so
-that it can be periodically backed up:
+an example of a two-service setup where a database's data directory is shared with another service as a volume named
+`db-data` so that it can be periodically backed up:
 
 ```yml
 services:
@@ -2104,8 +2104,8 @@ of that of the application. Compose implementations MUST NOT attempt to create t
 do not exist.
 
 In the example below, instead of attempting to create a volume called
-`{project_name}_data`, Compose looks for an existing volume simply
-called `data` and mount it into the `db` service's containers.
+`{project_name}_db-data`, Compose looks for an existing volume simply
+called `db-data` and mounts it into the `backend` service's containers.
 
 ```yml
 services:
