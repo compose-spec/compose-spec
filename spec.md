@@ -1635,7 +1635,7 @@ secrets:
 ```
 
 Services MAY be granted access to multiple secrets. Long and short syntax for secrets MAY be used in the
-same Compose file. Defining a secret in the top-level `secrets` MUTS NOT imply granting any service access to it.
+same Compose file. Defining a secret in the top-level `secrets` MUST NOT imply granting any service access to it.
 Such grant must be explicit within service specification as [secrets](#secrets) service element.
 
 ### security_opt
