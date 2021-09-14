@@ -754,7 +754,7 @@ VAR="quoted"
 ### environment
 
 `environment` defines environment variables set in the container. `environment` can use either an array or a
-map. Any boolean values; true, false, yes, no, MUST be enclosed in quotes to ensure
+map. Any boolean values; true, false, yes, no, SHOULD be enclosed in quotes to ensure
 they are not converted to True or False by the YAML parser.
 
 Environment variables MAY be declared by a single key (no value to equals sign). In such a case Compose
@@ -1097,7 +1097,7 @@ as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
 ```yml
     image: redis
     image: redis:5
-    image: redis@sha356:0ed5d5928d4737458944eb604cc8509e245c3e19d02ad83935398bc4b991aac7
+    image: redis@sha256:0ed5d5928d4737458944eb604cc8509e245c3e19d02ad83935398bc4b991aac7
     image: library/redis
     image: docker.io/library/redis
     image: my_private.registry:5000/redis
@@ -1448,7 +1448,7 @@ Port mapping MUST NOT be used with `network_mode: host` and doing so MUST result
 
 #### Short syntax
 
-The short syntax is a comma-separated string to set host IP, host port and container port
+The short syntax is a colon-separated string to set host IP, host port and container port
 in the form:
 
 `[HOST:]CONTAINER[/PROTOCOL]` where:
@@ -1635,7 +1635,7 @@ secrets:
 ```
 
 Services MAY be granted access to multiple secrets. Long and short syntax for secrets MAY be used in the
-same Compose file. Defining a secret in the top-level `secrets` MUTS NOT imply granting any service access to it.
+same Compose file. Defining a secret in the top-level `secrets` MUST NOT imply granting any service access to it.
 Such grant must be explicit within service specification as [secrets](#secrets) service element.
 
 ### security_opt
@@ -1788,7 +1788,7 @@ volumes:
 
 #### Short syntax
 
-The short syntax uses a single string with comma-separated values to specify a volume mount
+The short syntax uses a single string with colon-separated values to specify a volume mount
 (`VOLUME:CONTAINER_PATH`), or an access mode (`VOLUME:CONTAINER:ACCESS_MODE`).
 
 `VOLUME` MAY be either a host path on the platform hosting containers (bind mount) or a volume name.
