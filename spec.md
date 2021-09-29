@@ -1819,7 +1819,7 @@ expressed in the short form.
 - `volume`: configure additional volume options
   - `nocopy`: flag to disable copying of data from a container when a volume is created
 - `tmpfs`: configure additional tmpfs options
-  - `size`: the size for the tmpfs mount in bytes
+  - `size`: the size for the tmpfs mount in bytes (either numeric or as bytes unit)
 - `consistency`: the consistency requirements of the mount. Available values are platform specific
 
 ### volumes_from
