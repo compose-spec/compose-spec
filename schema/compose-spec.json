@@ -427,8 +427,10 @@
                     "type": "object",
                     "properties": {
                       "size": {
-                        "type": "integer",
-                        "minimum": 0
+                        "oneOf": [
+                          {"type": "integer", "minimum": 0},
+                          {"type": "string"}
+                        ]
                       }
                     },
                     "additionalProperties": false,
