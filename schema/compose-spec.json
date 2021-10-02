@@ -8,7 +8,12 @@
   "properties": {
     "version": {
       "type": "string",
-      "description": "Version of the Compose specification used. Tools not implementing required version MUST reject the configuration file."
+      "description": "declared for backward compatibility, ignored."
+    },
+
+    "name": {
+      "type": "string",
+      "description": "define the Compose project name, until user defines one explicitly."
     },
 
     "services": {
