@@ -49,6 +49,8 @@ A **Project** is an individual deployment of an application specification on a p
 resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. A Compose implementation creating resources on a platform MUST prefix resource names by project and
 set the label `com.docker.compose.project`.
 
+Project name can be set explicitely by top-level `name` attribute. Compose implementation MUST offer a way for user to set a custom project name and override this name, so that the same `compose.yaml` file can be deployed twice on the same infrastructure, without changes, by just passing a distinct name.
+
 ### Illustrative example
 
 The following example illustrates Compose specification concepts with a concrete example application. The example is non-normative.
@@ -222,6 +224,12 @@ prefer the most recent schema at the time it has been designed.
 Compose implementations SHOULD validate whether they can fully parse the Compose file. If some fields are unknown, typically
 because the Compose file was written with fields defined by a newer version of the specification, Compose implementations
 SHOULD warn the user. Compose implementations MAY offer options to ignore unknown fields (as defined by ["loose"](#Requirements-and-optional-attributes) mode).
+
+## Name top-level element
+
+Top-level `name` property is defined by the specification as project name to be used if user don't se one explicitly. 
+Compose implementations MUST offer a way for user to override this name, and SHOULD define a mechanism to compute a
+default project name, to be used only if the top-level `name` element is not set.
 
 ## Services top-level element
 
