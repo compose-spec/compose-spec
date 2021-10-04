@@ -219,7 +219,7 @@ Top-level `version` property is defined by the specification for backward compat
 A Compose implementation SHOULD NOT use this version to select an exact schema to validate the Compose file, but
 prefer the most recent schema at the time it has been designed.
 
-Compose implementations SHOULD validate they can fully parse the Compose file. If some fields are unknown, typically
+Compose implementations SHOULD validate before they can fully parse the Compose file. If some fields are unknown, typically
 because the Compose file was written with fields defined by a newer version of the specification, Compose implementations
 SHOULD warn the user. Compose implementations MAY offer options to ignore unknown fields (as defined by ["loose"](#Requirements-and-optional-attributes) mode).
 
