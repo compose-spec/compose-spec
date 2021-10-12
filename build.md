@@ -64,8 +64,8 @@ services:
   backend:
     image: awesome/database
     build:
-        context: backend
-        dockerfile: ../backend.Dockerfile
+      context: backend
+      dockerfile: ../backend.Dockerfile
 
   custom:
     build: ~/custom
