@@ -93,6 +93,7 @@
                 "args": {"$ref": "#/definitions/list_or_dict"},
                 "labels": {"$ref": "#/definitions/list_or_dict"},
                 "cache_from": {"type": "array", "items": {"type": "string"}},
+                "cache_to": {"type": "array", "items": {"type": "string"}},
                 "network": {"type": "string"},
                 "target": {"type": "string"},
                 "shm_size": {"type": ["integer", "string"]},

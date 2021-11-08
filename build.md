@@ -157,15 +157,39 @@ args:
 
 ### cache_from
 
-`cache_from` defines a list of images that the Image builder SHOULD use for cache resolution.
+`cache_from` defines a list of sources the Image builder SHOULD use for cache resolution.
+
+Cache location syntax MUST follow the global format `[NAME|type=TYPE[,KEY=VALUE]]`. Simple `NAME` is actually a shortcut notation for `type=registry,ref=NAME`.
+
+Compose Builder implementations MAY support custom types, the compose specification defineds canonical types which MUST be supported:
+
+- `registry` to retrieve build cache from an OCI image set by key `ref`
+
 
 ```yml
 build:
   context: .
   cache_from:
     - alpine:latest
-    - corp/web_app:3.14
+    - type=local,src=path/to/cache
+    - type=gha
 ```
+
+Unsupported caches MUST be ignored and not prevent user for building image.
+
+### cache_to
+
+`cache_to` defines a list of export locations to be used to share build cache with future builds.
+
+```yml
+build:
+  context: .
+  cache_to: 
+   - user/app:cache
+   - type=local,dest=path/to/cache
+```
+
+Cache target is defined using the same `type=TYPE[,KEY=VALUE]` syntax defined by [`cache_from`](#cache_from). 
 
 ### extra_hosts
 
