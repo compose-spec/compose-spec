@@ -636,11 +636,13 @@ device_cgroup_rules:
 
 ### devices
 
-`devices` defines a list of device mappings for created containers.
+`devices` defines a list of device mappings for created containers in the form of
+`HOST_PATH:CONTAINER_PATH[:CGROUP_PERMISSIONS]`.
 
 ```yml
 devices:
   - "/dev/ttyUSB0:/dev/ttyUSB0"
+  - "/dev/sda:/dev/xvda:rwm"
 ```
 
 ### dns
@@ -1097,7 +1099,7 @@ as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
 ```yml
     image: redis
     image: redis:5
-    image: redis@sha356:0ed5d5928d4737458944eb604cc8509e245c3e19d02ad83935398bc4b991aac7
+    image: redis@sha256:0ed5d5928d4737458944eb604cc8509e245c3e19d02ad83935398bc4b991aac7
     image: library/redis
     image: docker.io/library/redis
     image: my_private.registry:5000/redis
@@ -1448,7 +1450,7 @@ Port mapping MUST NOT be used with `network_mode: host` and doing so MUST result
 
 #### Short syntax
 
-The short syntax is a comma-separated string to set host IP, host port and container port
+The short syntax is a colon-separated string to set host IP, host port and container port
 in the form:
 
 `[HOST:]CONTAINER[/PROTOCOL]` where:
@@ -1635,7 +1637,7 @@ secrets:
 ```
 
 Services MAY be granted access to multiple secrets. Long and short syntax for secrets MAY be used in the
-same Compose file. Defining a secret in the top-level `secrets` MUTS NOT imply granting any service access to it.
+same Compose file. Defining a secret in the top-level `secrets` MUST NOT imply granting any service access to it.
 Such grant must be explicit within service specification as [secrets](#secrets) service element.
 
 ### security_opt
@@ -1788,7 +1790,7 @@ volumes:
 
 #### Short syntax
 
-The short syntax uses a single string with comma-separated values to specify a volume mount
+The short syntax uses a single string with colon-separated values to specify a volume mount
 (`VOLUME:CONTAINER_PATH`), or an access mode (`VOLUME:CONTAINER:ACCESS_MODE`).
 
 `VOLUME` MAY be either a host path on the platform hosting containers (bind mount) or a volume name.
@@ -1819,7 +1821,7 @@ expressed in the short form.
 - `volume`: configure additional volume options
   - `nocopy`: flag to disable copying of data from a container when a volume is created
 - `tmpfs`: configure additional tmpfs options
-  - `size`: the size for the tmpfs mount in bytes
+  - `size`: the size for the tmpfs mount in bytes (either numeric or as bytes unit)
 - `consistency`: the consistency requirements of the mount. Available values are platform specific
 
 ### volumes_from
@@ -2415,6 +2417,12 @@ Similarly, the following syntax allows you to specify mandatory variables:
   `VARIABLE` is unset or empty in the environment.
 - `${VARIABLE?err}` exits with an error message containing `err` if
   `VARIABLE` is unset in the environment.
+
+Interpolation can also be nested:
+
+- `${VARIABLE:-${FOO}}`
+- `${VARIABLE?$FOO}`
+- `${VARIABLE:-${FOO:-default}}`
 
 Other extended shell-style features, such as `${VARIABLE/foo/bar}`, are not
 supported by the Compose specification.
