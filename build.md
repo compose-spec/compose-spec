@@ -161,7 +161,7 @@ args:
 
 Cache location syntax MUST follow the global format `[NAME|type=TYPE[,KEY=VALUE]]`. Simple `NAME` is actually a shortcut notation for `type=registry,ref=NAME`.
 
-Compose Builder implementations MAY support custom types, the compose specification defineds canonical types which MUST be supported:
+Compose Builder implementations MAY support custom types, the Compose Specification defines canonical types which MUST be supported:
 
 - `registry` to retrieve build cache from an OCI image set by key `ref`
 
@@ -175,7 +175,7 @@ build:
     - type=gha
 ```
 
-Unsupported caches MUST be ignored and not prevent user for building image.
+Unsupported caches MUST be ignored and not prevent user from building image.
 
 ### cache_to
 
@@ -190,6 +190,8 @@ build:
 ```
 
 Cache target is defined using the same `type=TYPE[,KEY=VALUE]` syntax defined by [`cache_from`](#cache_from). 
+
+Unsupported cache target MUST be ignored and not prevent user from building image.
 
 ### extra_hosts
 
