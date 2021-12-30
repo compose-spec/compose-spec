@@ -157,7 +157,7 @@ args:
 
 ### cache_from
 
-`cache_from` defines a list of images that the Image builder SHOULD uses for cache resolution.
+`cache_from` defines a list of images that the Image builder SHOULD use for cache resolution.
 
 ```yml
 build:
