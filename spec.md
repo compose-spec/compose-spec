@@ -1826,6 +1826,7 @@ expressed in the short form.
   - `create_host_path`: create a directory at the source path on host if there is nothing present. 
     Do nothing if there is something present at the path. This is automatically implied by short syntax
     for backward compatibility with docker-compose legacy.
+  - `selinux`: the SELinux re-labeling option `z` (shared) or `Z` (private)
 - `volume`: configure additional volume options
   - `nocopy`: flag to disable copying of data from a container when a volume is created
 - `tmpfs`: configure additional tmpfs options
