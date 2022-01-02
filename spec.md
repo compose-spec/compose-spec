@@ -1796,7 +1796,11 @@ The short syntax uses a single string with colon-separated values to specify a v
 (`VOLUME:CONTAINER_PATH`), or an access mode (`VOLUME:CONTAINER:ACCESS_MODE`).
 
 `VOLUME` MAY be either a host path on the platform hosting containers (bind mount) or a volume name.
-`ACCESS_MODE` MAY be set as read-only by using `ro` or read and write by using `rw` (default).
+`ACCESS_MODE` is a comma-separated `,` list of options and MAY be set as read-only by using `ro`,
+read and write by using `rw` (default) or SELinux re-labeling bind mount option for shared host content
+access among multiple containers by using `z` or private and unshared access for other containers by using `Z`.
+
+> **Note**: The SELinux re-labeling bind mount option is ignored on platforms without SELinux.
 
 > **Note**: Relative host paths MUST only be supported by Compose implementations that deploy to a
 > local container runtime. This is because the relative path is resolved from the Compose file’s parent
