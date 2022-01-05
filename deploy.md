@@ -159,7 +159,7 @@ services:
 
 #### pids
 
-`pids_limit` tunes a container’s PIDs limit, set as an integer.
+`pids` tunes a container’s PIDs limit, set as an integer.
 
 #### devices
 
