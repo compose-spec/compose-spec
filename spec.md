@@ -1799,12 +1799,15 @@ volumes:
 #### Short syntax
 
 The short syntax uses a single string with colon-separated values to specify a volume mount
-(`VOLUME:CONTAINER_PATH`), or an access mode (`VOLUME:CONTAINER:ACCESS_MODE`).
+(`VOLUME:CONTAINER_PATH`), or an access mode (`VOLUME:CONTAINER_PATH:ACCESS_MODE`).
 
-`VOLUME` MAY be either a host path on the platform hosting containers (bind mount) or a volume name.
-`ACCESS_MODE` is a comma-separated `,` list of options and MAY be set as read-only by using `ro`,
-read and write by using `rw` (default) or SELinux re-labeling bind mount option for shared host content
-access among multiple containers by using `z` or private and unshared access for other containers by using `Z`.
+- `VOLUME`: MAY be either a host path on the platform hosting containers (bind mount) or a volume name
+- `CONTAINER_PATH`: the path in the container where the volume is mounted
+- `ACCESS_MODE`: is a comma-separated `,` list of options and MAY be set to:
+  - `rw`: read and write access (default)
+  - `ro`: read-only access
+  - `z`: SELinux option indicates that the bind mount host content is shared among multiple containers
+  - `Z`: SELinux option indicates that the bind mount host content is private and unshared for other containers
 
 > **Note**: The SELinux re-labeling bind mount option is ignored on platforms without SELinux.
 
