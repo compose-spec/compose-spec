@@ -47,7 +47,7 @@ services:
 ### labels
 
 `labels` specifies metadata for the service. These labels MUST *only* be set on the service and *not* on any containers for the service.
-This assumes the platform as some native concept of "service" that can match Compose application model.
+This assumes the platform has some native concept of "service" that can match Compose application model.
 
 ```yml
 services:
