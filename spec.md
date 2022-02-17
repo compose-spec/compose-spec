@@ -49,6 +49,8 @@ A **Project** is an individual deployment of an application specification on a p
 resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. A Compose implementation creating resources on a platform MUST prefix resource names by project and
 set the label `com.docker.compose.project`.
 
+Project name can be set explicitly by top-level `name` attribute. Compose implementation MUST offer a way for user to set a custom project name and override this name, so that the same `compose.yaml` file can be deployed twice on the same infrastructure, without changes, by just passing a distinct name.
+
 ### Illustrative example
 
 The following example illustrates Compose specification concepts with a concrete example application. The example is non-normative.
@@ -222,6 +224,24 @@ prefer the most recent schema at the time it has been designed.
 Compose implementations SHOULD validate whether they can fully parse the Compose file. If some fields are unknown, typically
 because the Compose file was written with fields defined by a newer version of the specification, Compose implementations
 SHOULD warn the user. Compose implementations MAY offer options to ignore unknown fields (as defined by ["loose"](#Requirements-and-optional-attributes) mode).
+
+## Name top-level element
+
+Top-level `name` property is defined by the specification as project name to be used if user doesn't set one explicitly. 
+Compose implementations MUST offer a way for user to override this name, and SHOULD define a mechanism to compute a
+default project name, to be used if the top-level `name` element is not set.
+
+Whenever project name is defined by top-level `name` or by some custom mechanism, it MUST be exposed for 
+[interpolation](#Interpolation) and environment variable resolution as `COMPOSE_PROJECT_NAME`
+
+```yml
+services:
+  foo:
+    image: busybox
+    environment:
+      - COMPOSE_PROJECT_NAME
+    command: echo "I'm running ${COMPOSE_PROJECT_NAME}"
+```
 
 ## Services top-level element
 
@@ -1494,7 +1514,7 @@ The long form syntax allows the configuration of additional fields that can't be
 expressed in the short form.
 
 - `target`: the container port
-- `published`: the publicly exposed port
+- `published`: the publicly exposed port. Can be set as a range using syntax `start-end`, then actual port SHOULD be assigned within this range based on available ports.
 - `host_ip`: the Host IP mapping, unspecified means all network interfaces (`0.0.0.0`) 
 - `protocol`: the port protocol (`tcp` or `udp`), unspecified means any protocol
 - `mode`: `host` for publishing a host port on each node, or `ingress` for a port to be load balanced.
@@ -1504,6 +1524,12 @@ ports:
   - target: 80
     host_ip: 127.0.0.1
     published: 8080
+    protocol: tcp
+    mode: host
+
+  - target: 80
+    host_ip: 127.0.0.1
+    published: 8000-9000
     protocol: tcp
     mode: host
 ```
@@ -1793,10 +1819,17 @@ volumes:
 #### Short syntax
 
 The short syntax uses a single string with colon-separated values to specify a volume mount
-(`VOLUME:CONTAINER_PATH`), or an access mode (`VOLUME:CONTAINER:ACCESS_MODE`).
+(`VOLUME:CONTAINER_PATH`), or an access mode (`VOLUME:CONTAINER_PATH:ACCESS_MODE`).
 
-`VOLUME` MAY be either a host path on the platform hosting containers (bind mount) or a volume name.
-`ACCESS_MODE` MAY be set as read-only by using `ro` or read and write by using `rw` (default).
+- `VOLUME`: MAY be either a host path on the platform hosting containers (bind mount) or a volume name
+- `CONTAINER_PATH`: the path in the container where the volume is mounted
+- `ACCESS_MODE`: is a comma-separated `,` list of options and MAY be set to:
+  - `rw`: read and write access (default)
+  - `ro`: read-only access
+  - `z`: SELinux option indicates that the bind mount host content is shared among multiple containers
+  - `Z`: SELinux option indicates that the bind mount host content is private and unshared for other containers
+
+> **Note**: The SELinux re-labeling bind mount option is ignored on platforms without SELinux.
 
 > **Note**: Relative host paths MUST only be supported by Compose implementations that deploy to a
 > local container runtime. This is because the relative path is resolved from the Compose file’s parent
@@ -1820,6 +1853,7 @@ expressed in the short form.
   - `create_host_path`: create a directory at the source path on host if there is nothing present. 
     Do nothing if there is something present at the path. This is automatically implied by short syntax
     for backward compatibility with docker-compose legacy.
+  - `selinux`: the SELinux re-labeling option `z` (shared) or `Z` (private)
 - `volume`: configure additional volume options
   - `nocopy`: flag to disable copying of data from a container when a volume is created
 - `tmpfs`: configure additional tmpfs options
