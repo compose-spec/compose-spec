@@ -240,6 +240,16 @@ build:
     - "com.example.label-with-empty-value"
 ```
 
+### no_cache
+
+`no_cache` disables image builder cache and enforce a full rebuild from source for all image layers. This only
+applies to layers declared in the Dockerfile, base image COULD be retrieved from local image store whenever tag
+has been updated on registry (see #pull).
+
+### pull
+
+`pull` require the image builder to pull a newer image of the base image, even if it is already available in the local image cache.
+
 ### shm_size
 
 `shm_size` set the size of the shared memory (`/dev/shm` partition on Linux) allocated for building Docker image. Specify
