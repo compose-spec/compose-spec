@@ -155,6 +155,33 @@ args:
   - GIT_COMMIT
 ```
 
+### ssh
+
+`ssh` defines an SSH authentication that the image builder SHOULD use during image build (e.g., cloning private repository)
+
+ssh property syntax MUST follow the global format `[default|<ID>[=<socket>|<KEY>[,<KEY>]]]`. 
+Using the `ssh` without any parameter or just `default` is actually a shortcut notation for `default=${SSH_AUTH_SOCK}`.
+
+`ssh` without any parameter
+```yaml
+build:
+  context: .
+  ssh:   # mount the default ssh agent
+```
+
+Simple`default` sample
+```yaml
+build:
+  context: .
+  ssh: default   # mount the default ssh agent
+```
+Using a custom id `myproject` which will be use in the Dockerfile (i.e., `RUN --mount=type=ssh,id=myproject git clone ...`)
+```yaml
+build:
+  context: .
+  ssh: myproject=~/.ssh/myproject.pem
+```
+
 ### cache_from
 
 `cache_from` defines a list of sources the Image builder SHOULD use for cache resolution.
