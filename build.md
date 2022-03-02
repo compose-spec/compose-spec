@@ -159,8 +159,10 @@ args:
 
 `ssh` defines an SSH authentication that the image builder SHOULD use during image build (e.g., cloning private repository)
 
-ssh property syntax MUST follow the global format `[default|<ID>[=<socket>|<KEY>[,<KEY>]]]`. 
-Using the `ssh` without any parameter or just `default` is actually a shortcut notation for `default=${SSH_AUTH_SOCK}`.
+`ssh` property syntax can be either:
+* `default` - let the builder connect to the ssh-agent.
+* `ID=socket` - a key/value definition of an ID and the associated socket
+* `ssh` without any value which is a shortcut of the `default` configuration
 
 `ssh` without any parameter
 ```yaml
