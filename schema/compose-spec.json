@@ -416,8 +416,7 @@
                     "type": "object",
                     "properties": {
                       "propagation": {"type": "string"},
-                      "create_host_path": {"type": "boolean"},
-                      "selinux": {"type": "string", "enum": ["z", "Z"]}
+                      "create_host_path": {"type": "boolean"}
                     },
                     "additionalProperties": false,
                     "patternProperties": {"^x-": {}}
