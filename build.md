@@ -162,14 +162,6 @@ args:
 `ssh` property syntax can be either:
 * `default` - let the builder connect to the ssh-agent.
 * `ID=path` - a key/value definition of an ID and the associated path. Can be either a [PEM](https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail) file, or path to ssh-agent socket
-* `{}` (no value) which is a shortcut of the `default` configuration
-
-`ssh` without any parameter
-```yaml
-build:
-  context: .
-  ssh:   # mount the default ssh agent
-```
 
 Simple`default` sample
 ```yaml
