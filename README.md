@@ -55,12 +55,14 @@ The specification and code is licensed under the Apache 2.0 license found in the
 
 ## Implementations
 
-* [docker-compose](https://github.com/docker/compose)
-* Docker CLI (`docker stack` command)
+[Docker Compose](https://github.com/docker/compose) is the Reference Implementation of the Compose Specification.
+
+Compose Specification is also implemented by:
+
 * [Kompose](https://github.com/kubernetes/kompose)
-* [containerd/nerdctl](https://github.com/containerd/nerdctl)
+* [Nerdctl](https://github.com/containerd/nerdctl)
 * [Okteto Stacks](https://okteto.com/docs/reference/stacks)
-* [docker/compose-cli](https://github.com/docker/compose-cli)
+* [Docker Cloud Integrations](https://github.com/docker/compose-cli)
 
 | Metadata |                  |
 | -------- | ---------------: |

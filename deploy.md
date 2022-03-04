@@ -47,7 +47,7 @@ services:
 ### labels
 
 `labels` specifies metadata for the service. These labels MUST *only* be set on the service and *not* on any containers for the service.
-This assumes the platform as some native concept of "service" that can match Compose application model.
+This assumes the platform has some native concept of "service" that can match Compose application model.
 
 ```yml
 services:
@@ -143,6 +143,7 @@ services:
         limits:
           cpus: '0.50'
           memory: 50M
+          pids: 1
         reservations:
           cpus: '0.25'
           memory: 20M
@@ -155,6 +156,10 @@ services:
 #### memory
 
 `memory` configures a limit or reservation on the amount of memory a container can allocate, set as a string expressing a [byte value](spec.md#specifying-byte-values).
+
+#### pids
+
+`pids` tunes a container’s PIDs limit, set as an integer.
 
 #### devices
 
