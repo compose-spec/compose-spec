@@ -163,7 +163,7 @@ args:
 * `default` - let the builder connect to the ssh-agent.
 * `ID=path` - a key/value definition of an ID and the associated path. Can be either a [PEM](https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail) file, or path to ssh-agent socket
 
-Simple`default` sample
+Simple `default` sample
 ```yaml
 build:
   context: .
@@ -174,7 +174,7 @@ or
 ```yaml
 build:
   context: .
-  ssh: [default]   # mount the default ssh agent
+  ssh: ["default"]   # mount the default ssh agent
 ```
 
 Using a custom id `myproject` with path to a local SSH key:
@@ -185,7 +185,7 @@ build:
     - myproject=~/.ssh/myproject.pem
 ```
 Image builder can then rely on this to mount SSH key during build.
-For illustration, [Buildkit extended syntax](https://github.com/compose-spec/compose-spec/pull/234/%5Bmoby/buildkit@master/frontend/dockerfile/docs/syntax.md#run---mounttypessh%5D(https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md#run---mounttypessh)) can be used to mount ssh key set by ID and access a secured resource:
+For illustration, [BuildKit extended syntax](https://github.com/compose-spec/compose-spec/pull/234/%5Bmoby/buildkit@master/frontend/dockerfile/docs/syntax.md#run---mounttypessh%5D(https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md#run---mounttypessh)) can be used to mount ssh key set by ID and access a secured resource:
 
 `RUN --mount=type=ssh,id=myproject git clone ...`
 
