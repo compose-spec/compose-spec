@@ -268,9 +268,11 @@ available resources.
 Deploy support is an OPTIONAL aspect of the Compose specification, and is described in detail [here](deploy.md). If
 not implemented the Deploy section SHOULD be ignored and the Compose file MUST still be considered valid.
 
-### deploy
 
-`deploy` specifies the configuration for the deployment and lifecycle of services, as defined [here](deploy.md).
+### build
+
+`build` specifies the build configuration for creating container image from source, as defined [here](build.md).
+
 
 ### blkio_config
 
@@ -380,9 +382,6 @@ _DEPRECATED: use [deploy.reservations.cpus](deploy.md#cpus)_
 
 `cpuset` defines the explicit CPUs in which to allow execution. Can be a range `0-3` or a list `0,1`
 
-### build
-
-`build` specifies the build configuration for creating container image from source, as defined [here](build.md).
 
 ### cap_add
 
@@ -641,6 +640,12 @@ Compose implementations MUST guarantee dependency services have been started bef
 starting a dependent service.
 Compose implementations MUST guarantee dependency services marked with
 `service_healthy` are "healthy" before starting a dependent service.
+
+
+### deploy
+
+`deploy` specifies the configuration for the deployment and lifecycle of services, as defined [here](deploy.md).
+
 
 ### device_cgroup_rules
 
