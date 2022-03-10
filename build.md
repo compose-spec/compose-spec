@@ -305,7 +305,7 @@ build:
 `secrets` grants access to sensitive data defined by [secrets](secrets) on a per-service build basis. Two
 different syntax variants are supported: the short syntax and the long syntax.
 
-Compose implementations MUST report an error if the secret doesn't exist on the platform or isn't defined in the
+Compose implementations MUST report an error if the secret isn't defined in the
 [`secrets`](#secrets-top-level-element) section of this Compose file.
 
 #### Short syntax
