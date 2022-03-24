@@ -20,7 +20,7 @@ is Platform dependent and can only be confirmed at runtime. The definition of a 
 properties in a Compose file, established by the [docker-compose](https://github.com/docker/compose) tool where the Compose
 file format was designed, doesn't offer any guarantee to the end-user attributes will be actually implemented.
 
-The specification defines the expected configuration syntax and behaviour, but - until noted - supporting any of those is OPTIONAL.
+The specification defines the expected configuration syntax and behavior, but - until noted - supporting any of those is OPTIONAL.
 
 A Compose implementation to parse a Compose file using unsupported attributes SHOULD warn user. We recommend implementors
 to support those running modes:
@@ -33,15 +33,15 @@ to support those running modes:
 
 The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
 
-Computing components of an application are defined as [Services](#Services-top-level-element). A Service is an abstract concept implemented on platforms by running the same container image (and configuration) one or more times.
+Computing components of an application are defined as [Services](#services-top-level-element). A Service is an abstract concept implemented on platforms by running the same container image (and configuration) one or more times.
 
-Services communicate with each other through [Networks](#Networks-top-level-element). In this specification, a Network is a platform capability abstraction to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and MAY be partially implemented on some platforms.
+Services communicate with each other through [Networks](#networks-top-level-element). In this specification, a Network is a platform capability abstraction to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and MAY be partially implemented on some platforms.
 
-Services store and share persistent data into [Volumes](#Volumes-top-level-element). The specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platforms.
+Services store and share persistent data into [Volumes](#volumes-top-level-element). The specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platforms.
 
-Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](#Configs-top-level-element). From a Service container point of view, Configs are comparable to Volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
+Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](#configs-top-level-element). From a Service container point of view, Configs are comparable to Volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
 
-A [Secret](#Secrets-top-level-element) is a specific flavour of configuration data for sensitive data that SHOULD NOT be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
+A [Secret](#secrets-top-level-element) is a specific flavor of configuration data for sensitive data that SHOULD NOT be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
 
 Distinction within Volumes, Configs and Secret allows implementations to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
 
@@ -223,7 +223,7 @@ prefer the most recent schema at the time it has been designed.
 
 Compose implementations SHOULD validate whether they can fully parse the Compose file. If some fields are unknown, typically
 because the Compose file was written with fields defined by a newer version of the specification, Compose implementations
-SHOULD warn the user. Compose implementations MAY offer options to ignore unknown fields (as defined by ["loose"](#Requirements-and-optional-attributes) mode).
+SHOULD warn the user. Compose implementations MAY offer options to ignore unknown fields (as defined by ["loose"](#requirements-and-optional-attributes) mode).
 
 ## Name top-level element
 
@@ -232,7 +232,7 @@ Compose implementations MUST offer a way for user to override this name, and SHO
 default project name, to be used if the top-level `name` element is not set.
 
 Whenever project name is defined by top-level `name` or by some custom mechanism, it MUST be exposed for 
-[interpolation](#Interpolation) and environment variable resolution as `COMPOSE_PROJECT_NAME`
+[interpolation](#interpolation) and environment variable resolution as `COMPOSE_PROJECT_NAME`
 
 ```yml
 services:
@@ -259,19 +259,20 @@ Each service MAY also include a Build section, which defines how to create the D
 Compose implementations MAY support building docker images using this service definition. If not implemented
 the Build section SHOULD be ignored and the Compose file MUST still be considered valid.
 
-Build support is an OPTIONAL aspect of the Compose specification, and is described in detail [here](build.md)
+Build support is an OPTIONAL aspect of the Compose specification, and is
+described in detail in the [Build support](build.md) documentation.
 
 Each Service defines runtime constraints and requirements to run its containers. The `deploy` section groups
 these constraints and allows the platform to adjust the deployment strategy to best match containers' needs with
 available resources.
 
-Deploy support is an OPTIONAL aspect of the Compose specification, and is described in detail [here](deploy.md). If
+Deploy support is an OPTIONAL aspect of the Compose specification, and is
+described in detail in the [Deployment support](deploy.md) documentation.
 not implemented the Deploy section SHOULD be ignored and the Compose file MUST still be considered valid.
-
 
 ### build
 
-`build` specifies the build configuration for creating container image from source, as defined [here](build.md).
+`build` specifies the build configuration for creating container image from source, as defined in the [Build support](build.md) documentation.
 
 
 ### blkio_config
