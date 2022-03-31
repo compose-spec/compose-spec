@@ -1220,7 +1220,7 @@ if no alias was specified.
 Links are not required to enable services to communicate - when no specific network configuration is set,
 any service MUST be able to reach any other service at that service’s name on the `default` network. If services
 do declare networks they are attached to, `links` SHOULD NOT override the network configuration and services not
-attached to a shared network SHOULD NOT be able to communicate. Compose implementations MAY NOT warn the user
+attached to a shared network SHOULD NOT be able to communicate. Compose implementations MAY not warn the user
 about this configuration mismatch.
 
 Links also express implicit dependency between services in the same way as
