@@ -2049,6 +2049,9 @@ Compose implementations MUST set `com.docker.compose.project` and `com.docker.co
 If set to `true`, `external` specifies that this network’s lifecycle is maintained outside of that of the application.
 Compose Implementations SHOULD NOT attempt to create these networks, and raises an error if one doesn't exist.
 
+If `external` is set to `true` and network configuration has other but `name` attributes set, considering resource is
+not managed by compose lifecycle, Compose Implementations SHOULD reject a Compose file as invalid.
+
 In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network, Compose
 implementations SHOULD interrogate the platform for an existing network simply called `outside` and connect the
 `proxy` service's containers to it.
@@ -2146,6 +2149,10 @@ volumes:
 If set to `true`, `external` specifies that this volume already exist on the platform and its lifecycle is managed outside
 of that of the application. Compose implementations MUST NOT attempt to create these volumes, and MUST return an error if they
 do not exist.
+
+If `external` is set to `true` and volume configuration has other but `name` attributes set, considering resource is
+not managed by compose lifecycle, Compose Implementations SHOULD reject a Compose file as invalid.
+
 
 In the example below, instead of attempting to create a volume called
 `{project_name}_db-data`, Compose looks for an existing volume simply
@@ -2271,6 +2278,9 @@ configs:
     name: "${HTTP_CONFIG_KEY}"
 ```
 
+If `external` is set to `true` and secret configuration has other but `name` attributes set, considering resource is
+not managed by compose lifecycle, Compose Implementations SHOULD reject a Compose file as invalid.
+
 Compose file need to explicitly grant access to the configs to relevant services in the application.
 
 ## Secrets top-level element
@@ -2315,6 +2325,9 @@ secrets:
     external: true
     name: "${CERTIFICATE_KEY}"
 ```
+
+If `external` is set to `true` and secret configuration has other but `name` attributes set, considering resource is
+not managed by compose lifecycle, Compose Implementations SHOULD reject a Compose file as invalid.
 
 Compose file need to explicitly grant access to the secrets to relevant services in the application.
 
