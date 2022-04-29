@@ -469,22 +469,14 @@
       "type": ["object", "null"],
       "properties": {
         "watch": {
-          "type": "object",
-          "properties": {
-            "ignores": {"type": "array", "items": {"type": "string"}},
-            "quiet_period": {"type": "string"},
-            "trigger": {
-              "oneOf": [
-                {"type": "string"},
-                {
-                  "type": "object",
-                  "properties": {
-                    "strategy": {"type": "string"},
-                    "paths": {"type": "array", "items": {"type": "string"}},
-                    "signal": {"type": "string"}
-                  }
-                }
-              ]
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ignore": {"type": "array", "items": {"type": "string"}},
+              "path": {"type": "string"},
+              "action": {"type": "string", "enum": ["rebuild", "sync"]},
+              "target": {"type": "string"}
             }
           },
           "additionalProperties": false,

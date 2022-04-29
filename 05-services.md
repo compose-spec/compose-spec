@@ -418,6 +418,10 @@ Compose guarantees dependency services marked with
 
 `deploy` specifies the configuration for the deployment and lifecycle of services, as defined [in the Compose Deploy Specification](deploy.md).
 
+### develop
+
+`develop` specifies the development configuration for maintaining a container in sync with source, as defined in the [Development Section](develop.md).
+
 ### device_cgroup_rules
 
 `device_cgroup_rules` defines a list of device cgroup rules for this container.

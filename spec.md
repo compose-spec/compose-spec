@@ -225,16 +225,7 @@ Each service may also include a `build` section, which defines how to create the
 Compose supports building docker images using this service definition. If not used, the `build` section is ignored and the Compose file is still considered valid. Build support is an optional aspect of the Compose Specification, and is
 described in detail in the [Compose Build Specification](build.md) documentation.
 
-Build support is an OPTIONAL aspect of the Compose specification, and is
-described in detail in the [Build support](build.md) documentation.
-
-Service definition MAY include a Development section, which defines the inner-loop behavior for a developer of the service. The Development section SHOULD be ignored and the Compose file MUST still be considered valid.
-
-Development support is an OPTIONAL aspect of the Compose specification, and is
-described in detail in the [Development support](development.md) documentation.
-
-
-Each Service defines runtime constraints and requirements to run its containers. The `deploy` section groups
+Each service defines runtime constraints and requirements to run its containers. The `deploy` section groups
 these constraints and allows the platform to adjust the deployment strategy to best match containers' needs with
 available resources. Deploy support is an optional aspect of the Compose Specification, and is
 described in detail in the [Compose Deploy Specification](deploy.md) documentation.
@@ -637,6 +628,10 @@ Compose guarantees dependency services marked with
 ### deploy
 
 `deploy` specifies the configuration for the deployment and lifecycle of services, as defined [in the Compose Deploy Specification](deploy.md).
+
+### develop
+
+`develop` specifies the development configuration for maintaining a container in sync with source, as defined in the [Development Section](develop.md).
 
 ### device_cgroup_rules
 
