@@ -278,7 +278,7 @@ build:
 
 `no_cache` disables image builder cache and enforce a full rebuild from source for all image layers. This only
 applies to layers declared in the Dockerfile, referenced images COULD be retrieved from local image store whenever tag
-has been updated on registry (see #pull).
+has been updated on registry (see [pull](#pull)).
 
 ### pull
 
