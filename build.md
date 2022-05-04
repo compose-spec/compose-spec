@@ -384,16 +384,14 @@ Such grant must be explicit within service specification as [secrets](spec.md#se
 
 ### tags
 
-`tags` defines a list of tag mappings that MUST be associated to the build image.
+`tags` defines a list of tag mappings that MUST be associated to the build image. This list come in addition of 
+the `image` [property defined in the service section](spec.md#image)
 
 ```yml
 tags:
-  "myimage:mytag"
+  - "myimage:mytag"
   "registry/username/myrepos:my-other-tag"
 ```
-
-Compose implementations MUST create matching entry with the IP address and hostname in the container's network
-configuration, which means for Linux `/etc/hosts` will get extra lines:
 
 ## Implementations
 
