@@ -1864,6 +1864,7 @@ expressed in the short form.
   - `nocopy`: flag to disable copying of data from a container when a volume is created
 - `tmpfs`: configure additional tmpfs options
   - `size`: the size for the tmpfs mount in bytes (either numeric or as bytes unit)
+  - `mode`: the filemode for the tmpfs mount as Unix permission bits as an octal number
 - `consistency`: the consistency requirements of the mount. Available values are platform specific
 
 ### volumes_from
