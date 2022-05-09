@@ -390,7 +390,7 @@ the `image` [property defined in the service section](spec.md#image)
 ```yml
 tags:
   - "myimage:mytag"
-  "registry/username/myrepos:my-other-tag"
+  - "registry/username/myrepos:my-other-tag"
 ```
 
 ## Implementations
