@@ -384,7 +384,7 @@ Such grant must be explicit within service specification as [secrets](spec.md#se
 
 ### tags
 
-`tags` defines a list of tag mappings that MUST be associated to the build image. This list come in addition of 
+`tags` defines a list of tag mappings that MUST be associated to the build image. This list comes in addition of 
 the `image` [property defined in the service section](spec.md#image)
 
 ```yml
