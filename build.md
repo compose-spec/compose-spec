@@ -382,6 +382,17 @@ Service builds MAY be granted access to multiple secrets. Long and short syntax 
 same Compose file. Defining a secret in the top-level `secrets` MUST NOT imply granting any service build access to it.
 Such grant must be explicit within service specification as [secrets](spec.md#secrets) service element.
 
+### tags
+
+`tags` defines a list of tag mappings that MUST be associated to the build image. This list comes in addition of 
+the `image` [property defined in the service section](spec.md#image)
+
+```yml
+tags:
+  - "myimage:mytag"
+  - "registry/username/myrepos:my-other-tag"
+```
+
 ## Implementations
 
 * [docker-compose](https://docs.docker.com/compose)
