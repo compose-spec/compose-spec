@@ -2292,19 +2292,29 @@ The top-level `secrets` declaration defines or references sensitive data that ca
 application. The source of the secret is either `file` or `external`.
 
 - `file`: The secret is created with the contents of the file at the specified path.
+- `environment`: The secret is created with the value of an environment variable.
 - `external`: If set to true, specifies that this secret has already been created. Compose implementation does
   not attempt to create it, and if it does not exist, an error occurs.
 - `name`: The name of the secret object in Docker. This field can be used to
   reference secrets that contain special characters. The name is used as is
   and will **not** be scoped with the project name.
 
-In this example, `server-certificate` is created as `<project_name>_server-certificate` when the application is deployed,
+In this example, `server-certificate` secret is created as `<project_name>_server-certificate` when the application is deployed,
 by registering content of the `server.cert` as a platform secret.
 
 ```yml
 secrets:
   server-certificate:
     file: ./server.cert
+```
+
+In this example, `token` secret  is created as `<project_name>_token` when the application is deployed,
+by registering content of the `OAUTH_TOKEN` environment variable as a platform secret.
+
+```yml
+secrets:
+  token:
+    environment: "OAUTH_TOKEN"
 ```
 
 Alternatively, `server-certificate` can be declared as external, doing so Compose implementation will lookup `server-certificate` to expose secret to relevant services.
