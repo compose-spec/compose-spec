@@ -4,3 +4,4 @@ maintainers:
 - justincormack 
 - EricHripko
 - ulyssessouza
+- glours
