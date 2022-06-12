@@ -374,7 +374,7 @@ an integer value using microseconds as unit or a [duration](#specifying-duration
 
 ### cpus
 
-_DEPRECATED: use [deploy.reservations.cpus](deploy.md#cpus)_
+_DEPRECATED: use [deploy.limits.cpus](deploy.md#cpus)_
 
 `cpus` define the number of (potentially virtual) CPUs to allocate to service containers. This is a fractional number.
 `0.000` means no limit.
