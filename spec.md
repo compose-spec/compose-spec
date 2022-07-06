@@ -1463,11 +1463,13 @@ pids_limit: 10
 ### platform
 
 `platform` defines the target platform containers for this service will run on, using the `os[/arch[/variant]]` syntax.
+The values of `os`, `arch`, and `variant` MUST conform to the convention used by the [OCI Image Spec](https://github.com/opencontainers/image-spec/blob/v1.0.2/image-index.md).
+
 Compose implementation MUST use this attribute when declared to determine which version of the image will be pulled
 and/or on which platform the service’s build will be performed.
 
 ```yml
-platform: osx
+platform: darwin
 platform: windows/amd64
 platform: linux/arm64/v8
 ```
