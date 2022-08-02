@@ -393,6 +393,42 @@ tags:
   - "registry/username/myrepos:my-other-tag"
 ```
 
+### platforms
+
+`platforms` defines a list of target [platforms](spec.md#platform).
+
+```yml
+build:
+  context: "."
+  platforms:
+    - "linux/amd64"
+    - "linux/arm64"
+```
+
+When the `platforms` attribute is omitted, Compose implementations MUST include the service's platform
+in the list of the default build target platforms.
+
+Compose implementations SHOULD report an error in the following cases:
+* when the list contains multiple platforms but the implementation is incapable of storing multi-platform images
+* when the list contains an unsupported platform
+```yml
+build:
+  context: "."
+  platforms:
+    - "linux/amd64"
+    - "unsupported/unsupported"
+```
+* when the list is non-empty and does not contain the service's platform
+```yml
+services:
+  frontend:
+    platform: "linux/amd64"
+    build:
+      context: "."
+      platforms:
+        - "linux/arm64"
+```
+
 ## Implementations
 
 * [docker-compose](https://docs.docker.com/compose)
