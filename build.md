@@ -9,7 +9,7 @@
 ## Introduction
 
 Compose specification is a platform-neutral way to define multi-container applications. A Compose implementation
-focussing on development use-case to run application on local machine will obviously also support (re)building
+focusing on development use-case to run application on local machine will obviously also support (re)building
 application from sources. The Compose Build specification allows to define the build process within a Compose file
 in a portable way.
 
@@ -73,9 +73,9 @@ services:
 
 When used to build service images from source, such a Compose file will create three docker images:
 
-* `awesome/webapp` docker image is build using `webapp` sub-directory within Compose file parent folder as docker build context. Lack of a `Dockerfile` within this folder will throw an error.
-* `awesome/database` docker image is build using `backend` sub-directory within Compose file parent folder. `backend.Dockerfile` file is used to define build steps, this file is searched relative to context path, which means for this sample `..` will resolve to Compose file parent folder, so `backend.Dockerfile` is a sibling file.
-* a docker image is build using `custom` directory within user's HOME as docker context. Compose implementation warn user about non-portable path used to build image.
+* `awesome/webapp` docker image is built using `webapp` sub-directory within Compose file parent folder as docker build context. Lack of a `Dockerfile` within this folder will throw an error.
+* `awesome/database` docker image is built using `backend` sub-directory within Compose file parent folder. `backend.Dockerfile` file is used to define build steps, this file is searched relative to context path, which means for this sample `..` will resolve to Compose file parent folder, so `backend.Dockerfile` is a sibling file.
+* a docker image is built using `custom` directory within user's HOME as docker context. Compose implementation warn user about non-portable path used to build image.
 
 On push, both `awesome/webapp` and `awesome/database` docker images are pushed to (default) registry. `custom` service image is skipped as no `Image` attribute is set and user is warned about this missing attribute.
 
@@ -101,7 +101,7 @@ Alternatively `build` can be an object with fields defined as follow
 
 When the value supplied is a relative path, it MUST be interpreted as relative to the location of the Compose file.
 Compose implementations MUST warn user about absolute path used to define build context as those prevent Compose file
-for being portable.
+from being portable.
 
 ```yml
 build:
@@ -112,7 +112,7 @@ build:
 
 `dockerfile` allows to set an alternate Dockerfile. A relative path MUST be resolved from the build context.
 Compose implementations MUST warn user about absolute path used to define Dockerfile as those prevent Compose file
-for being portable.
+from being portable.
 
 ```yml
 build:
@@ -313,11 +313,11 @@ build:
 ```
 
 ### secrets
-`secrets` grants access to sensitive data defined by [secrets](secrets) on a per-service build basis. Two
+`secrets` grants access to sensitive data defined by [secrets](spec.md#secrets) on a per-service build basis. Two
 different syntax variants are supported: the short syntax and the long syntax.
 
 Compose implementations MUST report an error if the secret isn't defined in the
-[`secrets`](#secrets-top-level-element) section of this Compose file.
+[`secrets`](spec.md#secrets-top-level-element) section of this Compose file.
 
 #### Short syntax
 
