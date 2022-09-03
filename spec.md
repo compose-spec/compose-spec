@@ -1528,6 +1528,7 @@ ports:
   - "8000:8000"
   - "9090-9091:8080-8081"
   - "49100:22"
+  - "8000-9000:80"
   - "127.0.0.1:8001:8001"
   - "127.0.0.1:5000-5010:5000-5010"
   - "6060:6060/udp"
@@ -1542,7 +1543,7 @@ The long form syntax allows the configuration of additional fields that can't be
 expressed in the short form.
 
 - `target`: the container port
-- `published`: the publicly exposed port. Can be set as a range using syntax `start-end`, then actual port SHOULD be assigned within this range based on available ports.
+- `published`: the publicly exposed port. Can be set as a range using syntax `start-end`,so it is defined as a string, then actual port SHOULD be assigned within this range based on available ports.
 - `host_ip`: the Host IP mapping, unspecified means all network interfaces (`0.0.0.0`) 
 - `protocol`: the port protocol (`tcp` or `udp`), unspecified means any protocol
 - `mode`: `host` for publishing a host port on each node, or `ingress` for a port to be load balanced.
@@ -1551,13 +1552,13 @@ expressed in the short form.
 ports:
   - target: 80
     host_ip: 127.0.0.1
-    published: 8080
+    published: "8080"
     protocol: tcp
     mode: host
 
   - target: 80
     host_ip: 127.0.0.1
-    published: 8000-9000
+    published: "8000-9000"
     protocol: tcp
     mode: host
 ```
