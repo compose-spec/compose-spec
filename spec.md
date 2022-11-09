@@ -2567,6 +2567,10 @@ web:
   command: "$$VAR_NOT_INTERPOLATED_BY_COMPOSE"
 ```
 
+It is possible to use builtin shell variables:
+- `$UID` - a number assigned by Linux to current user on the system. On Windows returns empty string ""
+- `$GID` - a number of group assigned by Linux to current user on the system. On Windows returns empty string "".
+
 If the Compose implementation can't resolve a substituted variable and no default value is defined, it MUST warn
 the user and substitute the variable with an empty string.
 
