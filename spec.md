@@ -1032,12 +1032,23 @@ external_links:
 ### extra_hosts
 
 `extra_hosts` adds hostname mappings to the container network interface configuration (`/etc/hosts` for Linux).
-Values MUST set hostname and IP address for additional hosts in the form of `HOSTNAME:IP`.
+
+#### Short syntax
+Short syntax use plain strings in a list. Values MUST set hostname and IP address for additional hosts in the form of `HOSTNAME:IP`.
 
 ```yml
 extra_hosts:
   - "somehost:162.242.195.82"
   - "otherhost:50.31.209.229"
+```
+
+#### Long syntax
+Alternatively, `extra_hosts` can be set as a mapping between hostname(s) and IP(s)
+
+```yml
+extra_hosts:
+  somehost: "162.242.195.82"
+  otherhost: "50.31.209.229"
 ```
 
 Compose implementations MUST create matching entry with the IP address and hostname in the container's network
