@@ -657,6 +657,7 @@
       "type": ["object", "null"],
       "properties": {
         "name": {"type": "string"},
+        "content": "$ref": "#/definitions/content"},
         "driver": {"type": "string"},
         "driver_opts": {
           "type": "object",
@@ -679,6 +680,18 @@
       },
       "additionalProperties": false,
       "patternProperties": {"^x-": {}}
+    },
+
+    "content": {
+      "id": "#/definitions/content",
+      "type": ["object", "null"],
+      "properties": {
+        "artifact": {"type": "string"},
+        "file": {"type": "string"},
+        "pull_policy": {"type": "string", "enum": [
+          "always", "missing", "never"
+        ]}
+      }
     },
 
     "secret": {

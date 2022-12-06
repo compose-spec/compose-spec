@@ -2127,6 +2127,46 @@ volumes:
 An entry under the top-level `volumes` key can be empty, in which case it uses the platform's default configuration for
 creating a volume. Optionally, you can configure it with the following keys:
 
+### content
+
+Specify an initial content to set in the volume once created and before being mounted
+by serice containers.
+
+```yml
+volumes:
+  example:
+    content:
+      artifact: "registry-1.docker.io/docker/demo:0.0.1"
+      pull_policy: always
+```
+
+Child attributes `artifact` and `file` are exclusive. A Compose implementation SHOULD report an error if both are set.
+
+#### artifact
+
+Specify reference to an [OCI artifact](https://github.com/opencontainers/artifacts) used to populate volume when created.
+When set, a Compose implementation MUST pull the OCI artifact from reference and populate newly created volume with content.
+
+`artifact` MUST define an OCI registry reference for an OCI artifact with media-type `application/vnd.docker.volume.v1+tar.gz`.
+If media-type doesn't match, a Compose implementation SHOULD report an error to the user.
+
+#### pull_policy
+
+Define policy used to pull the specified OCI artifact. Comparable to image [pull_policy](#pull_policy), only accepts values `always`, `missing` or `never`.
+
+#### file
+
+```yml
+volumes:
+  example:
+    content:
+      file: ./example_data.tar.gz
+```
+
+Specify path to a gzip compressed POSIX tar archive used to populate volume when created.
+When set, a Compose implementation MUST populate newly created volume with archive content.
+
+
 ### driver
 
 Specify which volume driver should be used for this volume. Default and available values are platform specific. If the driver is not available, the Compose implementation MUST return an error and stop application deployment.
