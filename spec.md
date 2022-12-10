@@ -1113,6 +1113,25 @@ healthcheck:
   disable: true
 ```
 
+### hooks
+
+`hooks` declares additional commands to run inside service container(s) during lifecycle. 
+Hooks are commands, and as such can be defined either as a single string, or as a list, in a manner similar to service's [#command](command).
+
+```yml
+services:
+  database:
+    image: foosql
+    hooks:
+      on_create: ./generate_server_certificate.sh
+      on_stop: ["/bin/sh", "echo", "Good bye!"]
+```
+
+- `on_start` hooks defines command a Compose implementation MUST execute after container has been started. There's no guarantee this hook will execute before container's ENTRYPOINT completed. This hook is executed any time a service container is started or restarted.
+- `on_stop` hooks defines command a Compose implementation MUST execute before container get stopped.
+
+If hook execution fails (return code != 0) a Compose implementation SHOULD consider the container to be in a failing state, and stop the Compose application before reporting an error to the user.
+
 ### hostname
 
 `hostname` declares a custom host name to use for the service container. MUST be a valid RFC 1123 hostname.

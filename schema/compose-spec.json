@@ -237,6 +237,7 @@
           "uniqueItems": true
         },
         "healthcheck": {"$ref": "#/definitions/healthcheck"},
+        "hooks": {"$ref": "#/definitions/hooks"},
         "hostname": {"type": "string"},
         "image": {"type": "string"},
         "init": {"type": "boolean"},
@@ -449,6 +450,28 @@
       "additionalProperties": false,
       "patternProperties": {"^x-": {}}
     },
+
+    "hooks": {
+      "id": "#/definitions/hooks",
+      "type": "object",
+      "properties": {
+        "on_start": {
+          "oneOf": [
+            {"type": "string"},
+            {"type": "array", "items": {"type": "string"}}
+          ]
+        },
+        "on_stop": {
+          "oneOf": [
+            {"type": "string"},
+            {"type": "array", "items": {"type": "string"}}
+          ]
+        },
+      },
+      "additionalProperties": false,
+      "patternProperties": {"^x-": {}}
+    },
+
     "deployment": {
       "id": "#/definitions/deployment",
       "type": ["object", "null"],
