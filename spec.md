@@ -1763,6 +1763,12 @@ tmpfs:
   - /tmp
 ```
 
+Additional options can be specified after a colon (`:`)
+
+```yml
+tmpfs: /run:rw,noexec,nosuid,size=65536k
+```
+
 ### tty
 
 `tty` configure service container to run with a TTY.
