@@ -405,6 +405,14 @@ cap_drop:
   - SYS_ADMIN
 ```
 
+### cgroup
+
+`cgroup` specifies the cgroup namespace to join. When unset, it is container runtime decision to
+select cgroup namespace to use, if supported.
+
+- `host`: Run the container in the Container runtime cgroup namespace
+- `private`: Run the container in its own private cgroup namespace
+
 ### cgroup_parent
 
 `cgroup_parent` specifies an OPTIONAL parent [cgroup](http://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
