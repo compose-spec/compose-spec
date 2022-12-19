@@ -250,6 +250,16 @@ configuration, which means for Linux `/etc/hosts` will get extra lines:
 `isolation` specifies a build’s container isolation technology. Like [isolation](spec.md#isolation) supported values
 are platform-specific.
 
+### privileged
+
+`privileged` configures the service image to build with elevated privileges. Support and actual impacts are platform-specific.
+
+```yml
+build:
+  context: .
+  privileged: true
+```
+
 ### labels
 
 `labels` add metadata to the resulting image. `labels` can be set either as an array or a map.
