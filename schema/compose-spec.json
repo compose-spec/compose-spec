@@ -104,7 +104,8 @@
                 "isolation": {"type": "string"},
                 "privileged": {"type": "boolean"},
                 "secrets": {"$ref": "#/definitions/service_config_or_secret"},
-                "tags":{"type": "array", "items": {"type": "string"}}
+                "tags": {"type": "array", "items": {"type": "string"}},
+                "platforms": {"type": "array", "items": {"type": "string"}}
               },
               "additionalProperties": false,
               "patternProperties": {"^x-": {}}
