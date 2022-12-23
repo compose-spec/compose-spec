@@ -367,6 +367,7 @@
           }
         },
         "user": {"type": "string"},
+        "uts": {"type": "string"},
         "userns_mode": {"type": "string"},
         "volumes": {
           "type": "array",
