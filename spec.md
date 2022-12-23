@@ -405,6 +405,14 @@ cap_drop:
   - SYS_ADMIN
 ```
 
+### cgroup
+
+`cgroup` specifies the cgroup namespace to join. When unset, it is container runtime decision to
+select cgroup namespace to use, if supported.
+
+- `host`: Run the container in the Container runtime cgroup namespace
+- `private`: Run the container in its own private cgroup namespace
+
 ### cgroup_parent
 
 `cgroup_parent` specifies an OPTIONAL parent [cgroup](http://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
@@ -1178,6 +1186,17 @@ which MUST be implemented as described if supported:
 ```yml
     ipc: "shareable"
     ipc: "service:[service name]"
+```
+
+### uts
+
+`uts` configures the UTS namespace mode set for the service container. When unspecified
+it is the runtime's decision to assign a UTS namespace, if supported. Available values are:
+
+- `'host'` which results in the container using the same UTS namespace as the host.
+
+```yml
+    uts: "host"
 ```
 
 ### isolation
