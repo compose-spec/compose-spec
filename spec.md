@@ -405,6 +405,14 @@ cap_drop:
   - SYS_ADMIN
 ```
 
+### cgroup
+
+`cgroup` specifies the cgroup namespace to join. When unset, it is container runtime decision to
+select cgroup namespace to use, if supported.
+
+- `host`: Run the container in the Container runtime cgroup namespace
+- `private`: Run the container in its own private cgroup namespace
+
 ### cgroup_parent
 
 `cgroup_parent` specifies an OPTIONAL parent [cgroup](http://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
@@ -1169,6 +1177,17 @@ which MUST be implemented as described if supported:
     ipc: "service:[service name]"
 ```
 
+### uts
+
+`uts` configures the UTS namespace mode set for the service container. When unspecified
+it is the runtime's decision to assign a UTS namespace, if supported. Available values are:
+
+- `'host'` which results in the container using the same UTS namespace as the host.
+
+```yml
+    uts: "host"
+```
+
 ### isolation
 
 `isolation` specifies a container’s isolation technology. Supported values are platform-specific.
@@ -1646,7 +1665,7 @@ the service's containers.
 
 - `source`: The name of the secret as it exists on the platform.
 - `target`: The name of the file to be mounted in `/run/secrets/` in the
-  service's task containers. Defaults to `source` if not specified.
+  service's task container, or absolute path of the file if an alternate location is required. Defaults to `source` if not specified.
 - `uid` and `gid`: The numeric UID or GID that owns the file within
   `/run/secrets/` in the service's task containers. Default value is USER running container.
 - `mode`: The [permissions](http://permissions-calculator.org/) for the file to be mounted in `/run/secrets/`
