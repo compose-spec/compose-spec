@@ -1177,6 +1177,17 @@ which MUST be implemented as described if supported:
     ipc: "service:[service name]"
 ```
 
+### uts
+
+`uts` configures the UTS namespace mode set for the service container. When unspecified
+it is the runtime's decision to assign a UTS namespace, if supported. Available values are:
+
+- `'host'` which results in the container using the same UTS namespace as the host.
+
+```yml
+    uts: "host"
+```
+
 ### isolation
 
 `isolation` specifies a container’s isolation technology. Supported values are platform-specific.
