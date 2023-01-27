@@ -16,6 +16,17 @@
       "description": "define the Compose project name, until user defines one explicitly."
     },
 
+    "naming_schema": {
+      "type": "object",
+      "id": "#/properties/naming_schema",
+      "patternProperties": {
+        "^[a-zA-Z0-9._-]+$": {
+          "$ref": "#/definitions/naming_schema"
+        }
+      },
+      "additionalProperties": false
+    },
+
     "services": {
       "id": "#/properties/services",
       "type": "object",
@@ -75,6 +86,14 @@
   "additionalProperties": false,
 
   "definitions": {
+    "naming_schema": {
+      "id": "#/definitions/naming_schema",
+      "type": "object",
+      "properties": {
+        "prefix": {"type": "string"},
+        "suffix": {"type": "string"}
+      }
+    },
 
     "service": {
       "id": "#/definitions/service",

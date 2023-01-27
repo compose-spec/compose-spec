@@ -243,6 +243,16 @@ services:
     command: echo "I'm running ${COMPOSE_PROJECT_NAME}"
 ```
 
+## Naming schema top-level element
+Top-level `naming_schema` property is defined by the specification as the containers and other entities, such as volumes, networks, etc..., naming schema.
+Compose implementations MUST offer a way for the user to override the prefix or add the suffix of the created entities' names.
+
+### Prefix
+`prefix` defines a custom prefix of the created entites' names.
+
+### Suffix
+`suffix` defines a custom suffix of the created entites' names.
+
 ## Services top-level element
 
 A Service is an abstract definition of a computing resource within an application which can be scaled/replaced
