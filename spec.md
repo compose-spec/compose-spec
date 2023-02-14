@@ -609,6 +609,10 @@ starting a dependent service.
 The long form syntax enables the configuration of additional fields that can't be
 expressed in the short form.
 
+- `restart`: when `true` a Compose implementation MUST restart this service after it updated the dependency service.
+  This applies to an explicit restart controlled by a Compose operation, and excludes automated restart by the container runtime
+  after container died.
+
 - `condition`: condition under which dependency is considered satisfied
   - `service_started`: is an equivalent of the short syntax described above
   - `service_healthy`: specifies that a dependency is expected to be "healthy"
@@ -638,6 +642,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+        restart: true
       redis:
         condition: service_started
   redis:

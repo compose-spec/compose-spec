@@ -181,6 +181,7 @@
                   "type": "object",
                   "additionalProperties": false,
                   "properties": {
+                    "restart": {"type": "boolean"},
                     "condition": {
                       "type": "string",
                       "enum": ["service_started", "service_healthy", "service_completed_successfully"]
