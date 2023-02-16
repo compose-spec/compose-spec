@@ -227,6 +227,36 @@ Cache target is defined using the same `type=TYPE[,KEY=VALUE]` syntax defined by
 
 Unsupported cache target MUST be ignored and not prevent user from building image.
 
+### additional_contexts
+
+`additional_contexts` defines a list of named contexts the image builder SHOULD use during image build.
+
+`additional_contexts` can be a mapping or a list:
+
+```yml
+build:
+  context: .
+  additional_contexts:
+    - resources=/path/to/resources
+    - app=docker-image://my-app:latest
+    - source=https://github.com/myuser/project.git
+```
+
+```yml
+build:
+  context: .
+  additional_contexts:
+    resources: /path/to/resources
+    app: docker-image://my-app:latest
+    source: https://github.com/myuser/project.git
+```
+
+When used as a list, the syntax should follow the `NAME=VALUE` format, where `VALUE` is a string. Validation beyond that is the responsibility of the image builder (and is builder specific).
+
+The Compose implementation SHOULD warn the user if the image builder does not support additional contexts and MAY list the unused contexts.
+
+Illustrative examples of how this is used in Buildx can be found [here](https://github.com/docker/buildx/blob/master/docs/reference/buildx_build.md#-additional-build-contexts---build-context).
+
 ### extra_hosts
 
 `extra_hosts` adds hostname mappings at build-time. Use the same syntax as [extra_hosts](spec.md#extra_hosts).

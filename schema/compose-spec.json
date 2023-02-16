@@ -97,6 +97,7 @@
                 "cache_from": {"type": "array", "items": {"type": "string"}},
                 "cache_to": {"type": "array", "items": {"type": "string"}},
                 "no_cache": {"type": "boolean"},
+                "additional_contexts": {"$ref": "#/definitions/list_or_dict"},
                 "network": {"type": "string"},
                 "pull": {"type": "boolean"},
                 "target": {"type": "string"},
