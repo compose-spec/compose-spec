@@ -146,12 +146,7 @@
         "cap_drop": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "cgroup": {"type": "string", "enum": ["host", "private"]},
         "cgroup_parent": {"type": "string"},
-        "command": {
-          "oneOf": [
-            {"type": "string"},
-            {"type": "array", "items": {"type": "string"}}
-          ]
-        },
+        "command": {"$ref": "#/definitions/command"},
         "configs": {"$ref": "#/definitions/service_config_or_secret"},
         "container_name": {"type": "string"},
         "cpu_count": {"type": "integer", "minimum": 0},
@@ -202,12 +197,7 @@
         "dns_opt": {"type": "array","items": {"type": "string"}, "uniqueItems": true},
         "dns_search": {"$ref": "#/definitions/string_or_list"},
         "domainname": {"type": "string"},
-        "entrypoint": {
-          "oneOf": [
-            {"type": "string"},
-            {"type": "array", "items": {"type": "string"}}
-          ]
-        },
+        "entrypoint": {"$ref": "#/definitions/command"},
         "env_file": {"$ref": "#/definitions/string_or_list"},
         "environment": {"$ref": "#/definitions/list_or_dict"},
 
@@ -736,6 +726,14 @@
       },
       "additionalProperties": false,
       "patternProperties": {"^x-": {}}
+    },
+
+    "command": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string"},
+        {"type": "array","items": {"type": "string"}}
+      ]
     },
 
     "string_or_list": {
