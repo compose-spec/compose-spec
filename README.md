@@ -3,7 +3,7 @@
 
 The Compose specification establishes a standard for the definition of
 multi-container platform-agnostic applications. The specification can be found
-[here](overview.md).
+[here](spec/overview.md).
 
 * ToC
 {:toc}
