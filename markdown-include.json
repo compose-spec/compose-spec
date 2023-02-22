@@ -1,0 +1,4 @@
+{
+  "build": "spec.md",
+  "files": ["spec.template.md"]
+}
