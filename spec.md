@@ -1,3 +1,7 @@
+<!---
+This file is generated, changes will be overwritten or CI specification check will fail
+All changes should be done in the markdown files located in the spec directory
+-->
 # The Compose Specification
 {:.no_toc}
 
@@ -33,15 +37,15 @@ to support those running modes:
 
 The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
 
-Computing components of an application are defined as [Services](#services-top-level-element). A Service is an abstract concept implemented on platforms by running the same container image (and configuration) one or more times.
+Computing components of an application are defined as [Services](05-services.md). A Service is an abstract concept implemented on platforms by running the same container image (and configuration) one or more times.
 
-Services communicate with each other through [Networks](#networks-top-level-element). In this specification, a Network is a platform capability abstraction to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and MAY be partially implemented on some platforms.
+Services communicate with each other through [Networks](06-networks.md). In this specification, a Network is a platform capability abstraction to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and MAY be partially implemented on some platforms.
 
-Services store and share persistent data into [Volumes](#volumes-top-level-element). The specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platforms.
+Services store and share persistent data into [Volumes](07-volumes.md). The specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the Volumes definition and MAY be partially implemented on some platforms.
 
-Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](#configs-top-level-element). From a Service container point of view, Configs are comparable to Volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
+Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](08-configs.md). From a Service container point of view, Configs are comparable to Volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
 
-A [Secret](#secrets-top-level-element) is a specific flavor of configuration data for sensitive data that SHOULD NOT be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
+A [Secret](09-secrets.md) is a specific flavor of configuration data for sensitive data that SHOULD NOT be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
 
 Distinction within Volumes, Configs and Secret allows implementations to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
 
@@ -138,12 +142,12 @@ will use a platform-specific lookup mechanism to retrieve runtime values.
 ## Compose file
 
 The Compose file is a [YAML](http://yaml.org/) file defining
-[version](#version-top-level-element) (DEPRECATED),
-[services](#services-top-level-element) (REQUIRED),
-[networks](#networks-top-level-element),
-[volumes](#volumes-top-level-element),
-[configs](#configs-top-level-element) and
-[secrets](#secrets-top-level-element).
+[version](04-version-and-name.md) (DEPRECATED),
+[services](05-services.md) (REQUIRED),
+[networks](06-networks.md),
+[volumes](07-volumes.md),
+[configs](08-configs.md) and
+[secrets](09-secrets.md).
 The default path for a Compose file is `compose.yaml` (preferred) or `compose.yml` in working directory.
 Compose implementations SHOULD also support `docker-compose.yaml` and `docker-compose.yml` for backward compatibility.
 If both files exist, Compose implementations MUST prefer canonical `compose.yaml` one.
@@ -223,16 +227,16 @@ prefer the most recent schema at the time it has been designed.
 
 Compose implementations SHOULD validate whether they can fully parse the Compose file. If some fields are unknown, typically
 because the Compose file was written with fields defined by a newer version of the specification, Compose implementations
-SHOULD warn the user. Compose implementations MAY offer options to ignore unknown fields (as defined by ["loose"](#requirements-and-optional-attributes) mode).
+SHOULD warn the user. Compose implementations MAY offer options to ignore unknown fields (as defined by ["loose"](01-status.md#requirements-and-optional-attributes) mode).
 
 ## Name top-level element
 
-Top-level `name` property is defined by the specification as project name to be used if user doesn't set one explicitly.
+Top-level `name` property is defined by the specification as project name to be used if user doesn't set one explicitly. 
 Compose implementations MUST offer a way for user to override this name, and SHOULD define a mechanism to compute a
 default project name, to be used if the top-level `name` element is not set.
 
-Whenever project name is defined by top-level `name` or by some custom mechanism, it MUST be exposed for
-[interpolation](#interpolation) and environment variable resolution as `COMPOSE_PROJECT_NAME`
+Whenever project name is defined by top-level `name` or by some custom mechanism, it MUST be exposed for 
+[interpolation](12-interpolation.md) and environment variable resolution as `COMPOSE_PROJECT_NAME`
 
 ```yml
 services:
@@ -355,7 +359,7 @@ on Linux kernel.
 ### cpu_rt_runtime
 
 `cpu_rt_runtime` configures CPU allocation parameters for platform with support for realtime scheduler. Can be either
-an integer value using microseconds as unit or a [duration](#specifying-durations).
+an integer value using microseconds as unit or a [duration](11-extension.md#specifying-durations).
 
 ```yml
  cpu_rt_runtime: '400ms'
@@ -365,7 +369,7 @@ an integer value using microseconds as unit or a [duration](#specifying-duration
 ### cpu_rt_period
 
 `cpu_rt_period` configures CPU allocation parameters for platform with support for realtime scheduler. Can be either
-an integer value using microseconds as unit or a [duration](#specifying-durations).
+an integer value using microseconds as unit or a [duration](11-extension.md#specifying-durations).
 
 ```yml
  cpu_rt_period: '1400us'
@@ -441,7 +445,7 @@ command: [ "bundle", "exec", "thin", "-p", "3000" ]
 configuration. Two different syntax variants are supported.
 
 Compose implementations MUST report an error if config doesn't exist on platform or isn't defined in the
-[`configs`](#configs-top-level-element) section of this Compose file.
+[`configs`](08-configs.md) section of this Compose file.
 
 There are two syntaxes defined for configs. To remain compliant to this specification, an implementation
 MUST support both syntaxes. Implementations MUST allow use of both short and long syntaxes within the same document.
@@ -614,12 +618,12 @@ expressed in the short form.
   after container died.
 
 - `condition`: condition under which dependency is considered satisfied
-    - `service_started`: is an equivalent of the short syntax described above
-    - `service_healthy`: specifies that a dependency is expected to be "healthy"
-      (as indicated by [healthcheck](#healthcheck)) before starting a dependent
-      service.
-    - `service_completed_successfully`: specifies that a dependency is expected to run
-      to successful completion before starting a dependent service.
+  - `service_started`: is an equivalent of the short syntax described above
+  - `service_healthy`: specifies that a dependency is expected to be "healthy"
+    (as indicated by [healthcheck](#healthcheck)) before starting a dependent
+    service.
+  - `service_completed_successfully`: specifies that a dependency is expected to run
+    to successful completion before starting a dependent service.
 
 Service dependencies cause the following behaviors:
 
@@ -871,9 +875,9 @@ Compose implementations MUST return an error in all of these cases.
 - Not present.
   This indicates that another service within the same Compose file is being referenced.
 - File path, which can be either:
-    - Relative path. This path is considered as relative to the location of the main Compose
-      file.
-    - Absolute path.
+  - Relative path. This path is considered as relative to the location of the main Compose
+    file.
+  - Absolute path.
 
 Service denoted by `service` MUST be present in the identified referenced Compose file.
 Compose implementations MUST return an error if:
@@ -1107,7 +1111,7 @@ healthcheck:
   start_period: 40s
 ```
 
-`interval`, `timeout` and `start_period` are [specified as durations](#specifying-durations).
+`interval`, `timeout` and `start_period` are [specified as durations](11-extension.md#specifying-durations).
 
 `test` defines the command the Compose implementation will run to check container health. It can be
 either a string or a list. If it's a list, the first item must be either `NONE`, `CMD` or `CMD-SHELL`.
@@ -1186,7 +1190,7 @@ which MUST be implemented as described if supported:
 - `shareable` which gives the container own private IPC namespace, with a
   possibility to share it with other containers.
 - `service:{name}` which makes the container join another (`shareable`)
-  container's IPC namespace.
+   container's IPC namespace.
 
 ```yml
     ipc: "shareable"
@@ -1260,7 +1264,7 @@ attached to a shared network SHOULD NOT be able to communicate. Compose implemen
 about this configuration mismatch.
 
 Links also express implicit dependency between services in the same way as
-[depends_on](#depends_on), so they determine the order of service startup.
+[depends_on](#dependson), so they determine the order of service startup.
 
 ### logging
 
@@ -1294,7 +1298,7 @@ specification define specific values which MUST be implemented as described if s
 ### networks
 
 `networks` defines the networks that service containers are attached to, referencing entries under the
-[top-level `networks` key](#networks-top-level-element).
+[top-level `networks` key](06-networks.md).
 
 ```yml
 services:
@@ -1366,7 +1370,7 @@ networks:
 
 Specify a static IP address for containers for this service when joining the network.
 
-The corresponding network configuration in the [top-level networks section](#networks) MUST have an
+The corresponding network configuration in the [top-level networks section](06-networks.md) MUST have an
 `ipam` block with subnet configurations covering each static address.
 
 ```yml
@@ -1560,7 +1564,7 @@ expressed in the short form.
 
 - `target`: the container port
 - `published`: the publicly exposed port. Can be set as a range using syntax `start-end`, so it is defined as a string, then actual port SHOULD be assigned within this range based on available ports.
-- `host_ip`: the Host IP mapping, unspecified means all network interfaces (`0.0.0.0`)
+- `host_ip`: the Host IP mapping, unspecified means all network interfaces (`0.0.0.0`) 
 - `protocol`: the port protocol (`tcp` or `udp`), unspecified means any protocol
 - `mode`: `host` for publishing a host port on each node, or `ingress` for a port to be load balanced.
 
@@ -1595,9 +1599,9 @@ If present, `profiles` SHOULD follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_
 
 * `always`: Compose implementations SHOULD always pull the image from the registry.
 * `never`: Compose implementations SHOULD NOT pull the image from a registry and SHOULD rely on the platform cached image.
-  If there is no cached image, a failure MUST be reported.
+   If there is no cached image, a failure MUST be reported.
 * `missing`: Compose implementations SHOULD pull the image only if it's not available in the platform cache.
-  This SHOULD be the default option for Compose implementations without build support.
+   This SHOULD be the default option for Compose implementations without build support.
   `if_not_present` SHOULD be considered an alias for this value for backward compatibility
 * `build`: Compose implementations SHOULD build the image. Compose implementations SHOULD rebuild the image if already present.
 
@@ -1646,11 +1650,11 @@ _DEPRECATED: use [deploy/replicas](deploy.md#replicas)_
 
 ### secrets
 
-`secrets` grants access to sensitive data defined by [secrets](#secrets) on a per-service basis. Two
+`secrets` grants access to sensitive data defined by [secrets](09-secrets.md) on a per-service basis. Two
 different syntax variants are supported: the short syntax and the long syntax.
 
 Compose implementations MUST report an error if the secret doesn't exist on the platform or isn't defined in the
-[`secrets`](#secrets-top-level-element) section of this Compose file.
+[`secrets`](09-secrets.md) section of this Compose file.
 
 #### Short syntax
 
@@ -1711,7 +1715,7 @@ secrets:
 
 Services MAY be granted access to multiple secrets. Long and short syntax for secrets MAY be used in the
 same Compose file. Defining a secret in the top-level `secrets` MUST NOT imply granting any service access to it.
-Such grant must be explicit within service specification as [secrets](#secrets) service element.
+Such grant must be explicit within service specification as [secrets](09-secrets.md) service element.
 
 ### security_opt
 
@@ -1726,7 +1730,7 @@ security_opt:
 ### shm_size
 
 `shm_size` configures the size of the shared memory (`/dev/shm` partition on Linux) allowed by the service container.
-Specified as a [byte value](#specifying-byte-values).
+Specified as a [byte value](11-extension.md#specifying-byte-values).
 
 ### stdin_open
 
@@ -1737,7 +1741,7 @@ Specified as a [byte value](#specifying-byte-values).
 `stop_grace_period` specifies how long the Compose implementation MUST wait when attempting to stop a container if it doesn't
 handle SIGTERM (or whichever stop signal has been specified with
 [`stop_signal`](#stopsignal)), before sending SIGKILL. Specified
-as a [duration](#specifying-durations).
+as a [duration](11-extension.md#specifying-durations).
 
 ```yml
     stop_grace_period: 1s
@@ -1838,7 +1842,7 @@ If the mount is a host path and only used by a single service, it MAY be declare
 definition instead of the top-level `volumes` key.
 
 To reuse a volume across multiple services, a named
-volume MUST be declared in the [top-level `volumes` key](#volumes-top-level-element).
+volume MUST be declared in the [top-level `volumes` key](07-volumes.md).
 
 This example shows a named volume (`db-data`) being used by the `backend` service,
 and a bind mount defined for a single service
@@ -1869,10 +1873,10 @@ The short syntax uses a single string with colon-separated values to specify a v
 - `VOLUME`: MAY be either a host path on the platform hosting containers (bind mount) or a volume name
 - `CONTAINER_PATH`: the path in the container where the volume is mounted
 - `ACCESS_MODE`: is a comma-separated `,` list of options and MAY be set to:
-    - `rw`: read and write access (default)
-    - `ro`: read-only access
-    - `z`: SELinux option indicates that the bind mount host content is shared among multiple containers
-    - `Z`: SELinux option indicates that the bind mount host content is private and unshared for other containers
+  - `rw`: read and write access (default)
+  - `ro`: read-only access
+  - `z`: SELinux option indicates that the bind mount host content is shared among multiple containers
+  - `Z`: SELinux option indicates that the bind mount host content is private and unshared for other containers
 
 > **Note**: The SELinux re-labeling bind mount option is ignored on platforms without SELinux.
 
@@ -1890,20 +1894,20 @@ expressed in the short form.
 - `type`: the mount type `volume`, `bind`, `tmpfs` or `npipe`
 - `source`: the source of the mount, a path on the host for a bind mount, or the
   name of a volume defined in the
-  [top-level `volumes` key](#volumes-top-level-element). Not applicable for a tmpfs mount.
+  [top-level `volumes` key](07-volumes.md). Not applicable for a tmpfs mount.
 - `target`: the path in the container where the volume is mounted
 - `read_only`: flag to set the volume as read-only
 - `bind`: configure additional bind options
-    - `propagation`: the propagation mode used for the bind
-    - `create_host_path`: create a directory at the source path on host if there is nothing present.
-      Do nothing if there is something present at the path. This is automatically implied by short syntax
-      for backward compatibility with docker-compose legacy.
-    - `selinux`: the SELinux re-labeling option `z` (shared) or `Z` (private)
+  - `propagation`: the propagation mode used for the bind
+  - `create_host_path`: create a directory at the source path on host if there is nothing present. 
+    Do nothing if there is something present at the path. This is automatically implied by short syntax
+    for backward compatibility with docker-compose legacy.
+  - `selinux`: the SELinux re-labeling option `z` (shared) or `Z` (private)
 - `volume`: configure additional volume options
-    - `nocopy`: flag to disable copying of data from a container when a volume is created
+  - `nocopy`: flag to disable copying of data from a container when a volume is created
 - `tmpfs`: configure additional tmpfs options
-    - `size`: the size for the tmpfs mount in bytes (either numeric or as bytes unit)
-    - `mode`: the filemode for the tmpfs mount as Unix permission bits as an octal number
+  - `size`: the size for the tmpfs mount in bytes (either numeric or as bytes unit)
+  - `mode`: the filemode for the tmpfs mount as Unix permission bits as an octal number
 - `consistency`: the consistency requirements of the mount. Available values are platform specific
 
 ### volumes_from
@@ -1927,6 +1931,7 @@ volumes_from:
 
 `working_dir` overrides the container's working directory from that specified by image (i.e. Dockerfile `WORKDIR`).
 
+
 ## Networks top-level element
 
 Networks are the layer that allow services to communicate with each other. The networking model exposed to a service
@@ -1934,7 +1939,7 @@ is limited to a simple IP connection with target services and external resources
 fine-tuning the actual implementation provided by the platform.
 
 Networks can be created by specifying the network name under a top-level `networks` section.
-Services can connect to networks by specifying the network name under the service [`networks`](#networks) subsection
+Services can connect to networks by specifying the network name under the service [`networks`](05-services.md#networks) subsection
 
 In the following example, at runtime, networks `front-tier` and `back-tier` will be created and the `frontend` service
 connected to the `front-tier` network and the `back-tier` network.
@@ -2033,10 +2038,10 @@ networks:
 
 - `driver`: Custom IPAM driver, instead of the default.
 - `config`: A list with zero or more configuration elements, each containing:
-    - `subnet`: Subnet in CIDR format that represents a network segment
-    - `ip_range`: Range of IPs from which to allocate container IPs
-    - `gateway`: IPv4 or IPv6 gateway for the master subnet
-    - `aux_addresses`: Auxiliary IPv4 or IPv6 addresses used by Network driver, as a mapping from hostname to IP
+  - `subnet`: Subnet in CIDR format that represents a network segment
+  - `ip_range`: Range of IPs from which to allocate container IPs
+  - `gateway`: IPv4 or IPv6 gateway for the master subnet
+  - `aux_addresses`: Auxiliary IPv4 or IPv6 addresses used by Network driver, as a mapping from hostname to IP
 - `options`: Driver-specific options as a key-value mapping.
 
 A full example:
@@ -2264,6 +2269,7 @@ volumes:
       name: ${DATABASE_VOLUME}
 ```
 
+
 ## Configs top-level element
 
 Configs allow services to adapt their behaviour without the need to rebuild a Docker image. Configs are comparable to Volumes from a service point of view as they are mounted into service's containers filesystem. The actual implementation detail to get configuration provided by the platform can be set from the Configuration definition.
@@ -2273,7 +2279,7 @@ When granted access to a config, the config content is mounted as a file in the 
 By default, the config MUST be owned by the user running the container command but can be overridden by service configuration.
 By default, the config MUST have world-readable permissions (mode 0444), unless service is configured to override this.
 
-Services can only access configs when explicitly granted by a [`configs`](#configs) subsection.
+Services can only access configs when explicitly granted by a [`configs`](05-services.md#configs) subsection.
 
 The top-level `configs` declaration defines or references
 configuration data that can be granted to the services in this
@@ -2308,7 +2314,7 @@ configs:
 
 External configs lookup can also use a distinct key by specifying a `name`. The following
 example modifies the previous one to lookup for config using a parameter `HTTP_CONFIG_KEY`. Doing
-so the actual lookup key will be set at deployment time by [interpolation](#interpolation) of
+so the actual lookup key will be set at deployment time by [interpolation](12-interpolation.md) of
 variables, but exposed to containers as hard-coded ID `http_config`.
 
 ```yml
@@ -2366,7 +2372,7 @@ secrets:
 
 External secrets lookup can also use a distinct key by specifying a `name`. The following
 example modifies the previous one to look up for secret using a parameter `CERTIFICATE_KEY`. Doing
-so the actual lookup key will be set at deployment time by [interpolation](#interpolation) of
+so the actual lookup key will be set at deployment time by [interpolation](12-interpolation.md) of
 variables, but exposed to containers as hard-coded ID `server-certificate`.
 
 ```yml
@@ -2381,6 +2387,7 @@ not managed by compose lifecycle, Compose Implementations SHOULD reject a Compos
 
 Compose file need to explicitly grant access to the secrets to relevant services in the application.
 
+
 ## Fragments
 
 It is possible to re-use configuration fragments using [YAML anchors](http://www.yaml.org/spec/1.2/spec.html#id2765878).
@@ -2393,7 +2400,7 @@ volumes:
 ```
 
 In previous sample, an _anchor_ is created as `default-volume` based on `db-data` volume specification. It is later reused by _alias_ `*default-volume` to define `metrics` volume. Same logic can apply to any element in a Compose file. Anchor resolution MUST take place
-before [variables interpolation](#interpolation), so variables can't be used to set anchors or aliases.
+before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
 
 It is also possible to partially override values set by anchor reference using the
 [YAML merge type](http://yaml.org/type/merge.html). In following example, `metrics` volume specification uses alias
@@ -2502,7 +2509,6 @@ Value can can combine multiple values and using without separator.
   1m30s
   1h5m30s20ms
 ```
-
 ## Interpolation
 
 Values in a Compose file can be set by variables, and interpolated at runtime. Compose files use a Bash-like
@@ -2532,15 +2538,15 @@ Interpolation can also be nested:
 Other extended shell-style features, such as `${VARIABLE/foo/bar}`, are not
 supported by the Compose specification.
 
-You can use a `$$` (double-dollar sign) when your configuration needs a literal
-dollar sign. This also prevents Compose from interpolating a value, so a `$$`
+You can use a `$` (double-dollar sign) when your configuration needs a literal
+dollar sign. This also prevents Compose from interpolating a value, so a `$`
 allows you to refer to environment variables that you don't want processed by
 Compose.
 
 ```yml
 web:
   build: .
-  command: "$$VAR_NOT_INTERPOLATED_BY_COMPOSE"
+  command: "$VAR_NOT_INTERPOLATED_BY_COMPOSE"
 ```
 
 If the Compose implementation can't resolve a substituted variable and no default value is defined, it MUST warn
