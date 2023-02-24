@@ -5,7 +5,7 @@ is limited to a simple IP connection with target services and external resources
 fine-tuning the actual implementation provided by the platform.
 
 Networks can be created by specifying the network name under a top-level `networks` section.
-Services can connect to networks by specifying the network name under the service [`networks`](services.md#networks) subsection
+Services can connect to networks by specifying the network name under the service [`networks`](05-services.md#networks) subsection
 
 In the following example, at runtime, networks `front-tier` and `back-tier` will be created and the `frontend` service
 connected to the `front-tier` network and the `back-tier` network.

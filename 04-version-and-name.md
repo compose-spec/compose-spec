@@ -7,7 +7,7 @@ prefer the most recent schema at the time it has been designed.
 
 Compose implementations SHOULD validate whether they can fully parse the Compose file. If some fields are unknown, typically
 because the Compose file was written with fields defined by a newer version of the specification, Compose implementations
-SHOULD warn the user. Compose implementations MAY offer options to ignore unknown fields (as defined by ["loose"](status.md#requirements-and-optional-attributes) mode).
+SHOULD warn the user. Compose implementations MAY offer options to ignore unknown fields (as defined by ["loose"](01-status.md#requirements-and-optional-attributes) mode).
 
 ## Name top-level element
 
@@ -16,7 +16,7 @@ Compose implementations MUST offer a way for user to override this name, and SHO
 default project name, to be used if the top-level `name` element is not set.
 
 Whenever project name is defined by top-level `name` or by some custom mechanism, it MUST be exposed for 
-[interpolation](interpolation.md) and environment variable resolution as `COMPOSE_PROJECT_NAME`
+[interpolation](12-interpolation.md) and environment variable resolution as `COMPOSE_PROJECT_NAME`
 
 ```yml
 services:

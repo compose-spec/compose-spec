@@ -110,7 +110,7 @@ on Linux kernel.
 ### cpu_rt_runtime
 
 `cpu_rt_runtime` configures CPU allocation parameters for platform with support for realtime scheduler. Can be either
-an integer value using microseconds as unit or a [duration](#specifying-durations).
+an integer value using microseconds as unit or a [duration](11-extension.md#specifying-durations).
 
 ```yml
  cpu_rt_runtime: '400ms'
@@ -120,7 +120,7 @@ an integer value using microseconds as unit or a [duration](#specifying-duration
 ### cpu_rt_period
 
 `cpu_rt_period` configures CPU allocation parameters for platform with support for realtime scheduler. Can be either
-an integer value using microseconds as unit or a [duration](#specifying-durations).
+an integer value using microseconds as unit or a [duration](11-extension.md#specifying-durations).
 
 ```yml
  cpu_rt_period: '1400us'
@@ -196,7 +196,7 @@ command: [ "bundle", "exec", "thin", "-p", "3000" ]
 configuration. Two different syntax variants are supported.
 
 Compose implementations MUST report an error if config doesn't exist on platform or isn't defined in the
-[`configs`](configs.md) section of this Compose file.
+[`configs`](08-configs.md) section of this Compose file.
 
 There are two syntaxes defined for configs. To remain compliant to this specification, an implementation
 MUST support both syntaxes. Implementations MUST allow use of both short and long syntaxes within the same document.
@@ -862,7 +862,7 @@ healthcheck:
   start_period: 40s
 ```
 
-`interval`, `timeout` and `start_period` are [specified as durations](#specifying-durations).
+`interval`, `timeout` and `start_period` are [specified as durations](11-extension.md#specifying-durations).
 
 `test` defines the command the Compose implementation will run to check container health. It can be
 either a string or a list. If it's a list, the first item must be either `NONE`, `CMD` or `CMD-SHELL`.
@@ -1015,7 +1015,7 @@ attached to a shared network SHOULD NOT be able to communicate. Compose implemen
 about this configuration mismatch.
 
 Links also express implicit dependency between services in the same way as
-[depends_on](#depends_on), so they determine the order of service startup.
+[depends_on](#dependson), so they determine the order of service startup.
 
 ### logging
 
@@ -1049,7 +1049,7 @@ specification define specific values which MUST be implemented as described if s
 ### networks
 
 `networks` defines the networks that service containers are attached to, referencing entries under the
-[top-level `networks` key](networks.md).
+[top-level `networks` key](06-networks.md).
 
 ```yml
 services:
@@ -1121,7 +1121,7 @@ networks:
 
 Specify a static IP address for containers for this service when joining the network.
 
-The corresponding network configuration in the [top-level networks section](#networks) MUST have an
+The corresponding network configuration in the [top-level networks section](06-networks.md) MUST have an
 `ipam` block with subnet configurations covering each static address.
 
 ```yml
@@ -1401,11 +1401,11 @@ _DEPRECATED: use [deploy/replicas](deploy.md#replicas)_
 
 ### secrets
 
-`secrets` grants access to sensitive data defined by [secrets](secrets.md) on a per-service basis. Two
+`secrets` grants access to sensitive data defined by [secrets](09-secrets.md) on a per-service basis. Two
 different syntax variants are supported: the short syntax and the long syntax.
 
 Compose implementations MUST report an error if the secret doesn't exist on the platform or isn't defined in the
-[`secrets`](secrets.md) section of this Compose file.
+[`secrets`](09-secrets.md) section of this Compose file.
 
 #### Short syntax
 
@@ -1466,7 +1466,7 @@ secrets:
 
 Services MAY be granted access to multiple secrets. Long and short syntax for secrets MAY be used in the
 same Compose file. Defining a secret in the top-level `secrets` MUST NOT imply granting any service access to it.
-Such grant must be explicit within service specification as [secrets](secrets.md) service element.
+Such grant must be explicit within service specification as [secrets](09-secrets.md) service element.
 
 ### security_opt
 
@@ -1481,7 +1481,7 @@ security_opt:
 ### shm_size
 
 `shm_size` configures the size of the shared memory (`/dev/shm` partition on Linux) allowed by the service container.
-Specified as a [byte value](#specifying-byte-values).
+Specified as a [byte value](11-extension.md#specifying-byte-values).
 
 ### stdin_open
 
@@ -1492,7 +1492,7 @@ Specified as a [byte value](#specifying-byte-values).
 `stop_grace_period` specifies how long the Compose implementation MUST wait when attempting to stop a container if it doesn't
 handle SIGTERM (or whichever stop signal has been specified with
 [`stop_signal`](#stopsignal)), before sending SIGKILL. Specified
-as a [duration](#specifying-durations).
+as a [duration](11-extension.md#specifying-durations).
 
 ```yml
     stop_grace_period: 1s
@@ -1593,7 +1593,7 @@ If the mount is a host path and only used by a single service, it MAY be declare
 definition instead of the top-level `volumes` key.
 
 To reuse a volume across multiple services, a named
-volume MUST be declared in the [top-level `volumes` key](volumes.md).
+volume MUST be declared in the [top-level `volumes` key](07-volumes.md).
 
 This example shows a named volume (`db-data`) being used by the `backend` service,
 and a bind mount defined for a single service
@@ -1645,7 +1645,7 @@ expressed in the short form.
 - `type`: the mount type `volume`, `bind`, `tmpfs` or `npipe`
 - `source`: the source of the mount, a path on the host for a bind mount, or the
   name of a volume defined in the
-  [top-level `volumes` key](volumes.md). Not applicable for a tmpfs mount.
+  [top-level `volumes` key](07-volumes.md). Not applicable for a tmpfs mount.
 - `target`: the path in the container where the volume is mounted
 - `read_only`: flag to set the volume as read-only
 - `bind`: configure additional bind options

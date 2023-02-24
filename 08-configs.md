@@ -7,7 +7,7 @@ When granted access to a config, the config content is mounted as a file in the 
 By default, the config MUST be owned by the user running the container command but can be overridden by service configuration.
 By default, the config MUST have world-readable permissions (mode 0444), unless service is configured to override this.
 
-Services can only access configs when explicitly granted by a [`configs`](#configs) subsection.
+Services can only access configs when explicitly granted by a [`configs`](05-services.md#configs) subsection.
 
 The top-level `configs` declaration defines or references
 configuration data that can be granted to the services in this
@@ -42,7 +42,7 @@ configs:
 
 External configs lookup can also use a distinct key by specifying a `name`. The following
 example modifies the previous one to lookup for config using a parameter `HTTP_CONFIG_KEY`. Doing
-so the actual lookup key will be set at deployment time by [interpolation](interpolation.md) of
+so the actual lookup key will be set at deployment time by [interpolation](12-interpolation.md) of
 variables, but exposed to containers as hard-coded ID `http_config`.
 
 ```yml

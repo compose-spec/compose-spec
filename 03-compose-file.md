@@ -1,12 +1,12 @@
 ## Compose file
 
 The Compose file is a [YAML](http://yaml.org/) file defining
-[version](version-and-name.md) (DEPRECATED),
-[services](services.md) (REQUIRED),
-[networks](networks.md),
-[volumes](volumes.md),
-[configs](configs.md) and
-[secrets](secrets.md).
+[version](04-version-and-name.md) (DEPRECATED),
+[services](05-services.md) (REQUIRED),
+[networks](06-networks.md),
+[volumes](07-volumes.md),
+[configs](08-configs.md) and
+[secrets](09-secrets.md).
 The default path for a Compose file is `compose.yaml` (preferred) or `compose.yml` in working directory.
 Compose implementations SHOULD also support `docker-compose.yaml` and `docker-compose.yml` for backward compatibility.
 If both files exist, Compose implementations MUST prefer canonical `compose.yaml` one.

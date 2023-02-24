@@ -41,7 +41,7 @@ secrets:
 
 External secrets lookup can also use a distinct key by specifying a `name`. The following
 example modifies the previous one to look up for secret using a parameter `CERTIFICATE_KEY`. Doing
-so the actual lookup key will be set at deployment time by [interpolation](interpolation.md) of
+so the actual lookup key will be set at deployment time by [interpolation](12-interpolation.md) of
 variables, but exposed to containers as hard-coded ID `server-certificate`.
 
 ```yml
