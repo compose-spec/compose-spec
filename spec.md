@@ -51,6 +51,8 @@ set the label `com.docker.compose.project`.
 
 Project name can be set explicitly by top-level `name` attribute. Compose implementation MUST offer a way for user to set a custom project name and override this name, so that the same `compose.yaml` file can be deployed twice on the same infrastructure, without changes, by just passing a distinct name.
 
+Project name MUST contain only lowercase letters, decimal digits, dashes, and underscores, and MUST begin with a lowercase letter or decimal digit.
+
 ### Illustrative example
 
 The following example illustrates Compose specification concepts with a concrete example application. The example is non-normative.
