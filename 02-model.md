@@ -105,3 +105,4 @@ Secrets and configs are read-only. The volume configuration allows you to select
 to tweak volume management according to the actual infrastructure. Configs and Secrets rely on platform services,
 and are declared `external` as they are not managed as part of the application lifecycle: the Compose implementation
 will use a platform-specific lookup mechanism to retrieve runtime values.
+

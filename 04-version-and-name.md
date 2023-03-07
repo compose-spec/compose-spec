@@ -26,3 +26,4 @@ services:
       - COMPOSE_PROJECT_NAME
     command: echo "I'm running ${COMPOSE_PROJECT_NAME}"
 ```
+

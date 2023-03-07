@@ -56,3 +56,4 @@ If `external` is set to `true` and secret configuration has other but `name` att
 not managed by compose lifecycle, Compose Implementations SHOULD reject a Compose file as invalid.
 
 Compose file need to explicitly grant access to the configs to relevant services in the application.
+

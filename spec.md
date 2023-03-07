@@ -2553,15 +2553,15 @@ Interpolation can also be nested:
 Other extended shell-style features, such as `${VARIABLE/foo/bar}`, are not
 supported by the Compose specification.
 
-You can use a `$` (double-dollar sign) when your configuration needs a literal
-dollar sign. This also prevents Compose from interpolating a value, so a `$`
+You can use a `$$` (double-dollar sign) when your configuration needs a literal
+dollar sign. This also prevents Compose from interpolating a value, so a `$$`
 allows you to refer to environment variables that you don't want processed by
 Compose.
 
 ```yml
 web:
   build: .
-  command: "$VAR_NOT_INTERPOLATED_BY_COMPOSE"
+  command: "$$VAR_NOT_INTERPOLATED_BY_COMPOSE"
 ```
 
 If the Compose implementation can't resolve a substituted variable and no default value is defined, it MUST warn

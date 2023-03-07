@@ -8,15 +8,25 @@ RUN jsonschema2md -d /schema/ -e json
 FROM scratch as docs
 COPY --from=generator /out /
 
-FROM --platform=${BUILDPLATFORM} node:19.6.1-alpine as spec-build
-RUN apk add --no-cache rsync git
-RUN npm install -g markdown-include
+FROM --platform=${BUILDPLATFORM} alpine as spec-build
 WORKDIR /src
-RUN --mount=target=/context \
-    --mount=target=.,type=tmpfs <<EOT
+COPY *.md /src
+RUN <<EOT
   set -e
-  rsync -a /context/. .
-  markdown-include markdown-include.json
+  cat head.md > spec.md
+  cat 01-status.md >> spec.md
+  cat 02-model.md >> spec.m >> spec.md
+  cat 03-compose-file.md >> spec.md
+  cat 04-version-and-name.md >> spec.md
+  cat 05-services.md >> spec.md
+  cat 06-networks.md >> spec.md
+  cat 07-volumes.md >> spec.md
+  cat 08-configs.md >> spec.md
+  cat 09-secrets.md >> spec.md
+  cat 10-fragments.md >> spec.md
+  cat 11-extension.md >> spec.md
+  cat 12-interpolation.md >> spec.md
+
   mkdir /out
   cp spec.md /out
 EOT

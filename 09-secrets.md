@@ -56,3 +56,4 @@ not managed by compose lifecycle, Compose Implementations SHOULD reject a Compos
 
 Compose file need to explicitly grant access to the secrets to relevant services in the application.
 
+
