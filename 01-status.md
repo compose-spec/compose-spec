@@ -22,3 +22,4 @@ to support those running modes:
 * default: warn user about unsupported attributes, but ignore them
 * strict: warn user about unsupported attributes and reject the compose file
 * loose: ignore unsupported attributes AND unknown attributes (that were not defined by the spec by the time implementation was created)
+

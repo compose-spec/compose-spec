@@ -76,3 +76,4 @@ services:
 - If Compose implementation is executed with `zot` as explicit service to run and profile `test` enabled,
   profile `debug` is automatically enabled and service `bar` is pulled in as a dependency starting both
   services `zot` and `bar`.
+
