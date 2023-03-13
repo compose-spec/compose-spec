@@ -112,13 +112,30 @@ build:
 
 `dockerfile` allows to set an alternate Dockerfile. A relative path MUST be resolved from the build context.
 Compose implementations MUST warn user about absolute path used to define Dockerfile as those prevent Compose file
-from being portable.
+from being portable. When set, `dockerfile_inline` attribute is not allowed and a Compose Implementation SHOULD 
+reject any Compose file having both set.
 
 ```yml
 build:
   context: .
   dockerfile: webapp.Dockerfile
 ```
+
+### dockerfile_inline
+
+`dockerfile_inline` allows to define Dockerfile content as inlined string in a Compose file. When set, `dockerfile` 
+attribute is not allowed  and a Compose Implementation SHOULD reject any Compose file having both set.
+
+Use of YAML multi-line string syntax is recommended to define Dockerfile content:
+
+```yml
+build:
+  context: .
+  dockerfile_inline: |
+    FROM baseimage
+    RUN some command
+```
+
 
 ### args
 
