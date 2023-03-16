@@ -465,6 +465,9 @@ build:
 When the `platforms` attribute is omitted, Compose implementations MUST include the service's platform
 in the list of the default build target platforms.
 
+When the `platforms` attribute is defined, Compose implementations SHOULD require it includes the service's 
+platform, otherwise users won't be able to run images they built.
+
 Compose implementations SHOULD report an error in the following cases:
 * when the list contains multiple platforms but the implementation is incapable of storing multi-platform images
 * when the list contains an unsupported platform
