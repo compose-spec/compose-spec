@@ -184,11 +184,16 @@ cgroup_parent: m-executor-abcd
 command: bundle exec thin -p 3000
 ```
 
-The command can also be a list, in a manner similar to [Dockerfile](https://docs.docker.com/engine/reference/builder/#cmd):
+The value can also be a list, in a manner similar to [Dockerfile](https://docs.docker.com/engine/reference/builder/#cmd):
 
 ```
 command: [ "bundle", "exec", "thin", "-p", "3000" ]
 ```
+
+If the value is `null`, the default command from the image MUST be used.
+
+If the value is `[]` (empty list) or `''` (empty string), the default command declared by the image MUST be ignored,
+i.e. overridden to be empty.
 
 ### configs
 
@@ -484,16 +489,20 @@ dns_search:
 
 ### entrypoint
 
-`entrypoint` overrides the default entrypoint for the Docker image (i.e. `ENTRYPOINT` set by Dockerfile).
-Compose implementations MUST clear out any default command on the Docker image - both `ENTRYPOINT` and `CMD` instruction
-in the Dockerfile - when `entrypoint` is configured by a Compose file. If [`command`](#command) is also set,
-it is used as parameter to `entrypoint` as a replacement for Docker image's `CMD`
+`entrypoint` declares the default entrypoint for the service container.
+This will override the `ENTRYPOINT` instruction from the service's Dockerfile.
 
+If `entrypoint` is non-null, Compose implementations MUST also ignore out any default command from the image (i.e. `CMD`
+instruction in Dockerfile).
+
+See also: [`command`](#command) to set or override the default command to be executed by the entrypoint process.
+
+In its short-form, the value can be defined as a string:
 ```yml
 entrypoint: /code/entrypoint.sh
 ```
 
-The entrypoint can also be a list, in a manner similar to
+Alternatively, the value can also be a list, in a manner similar to
 [Dockerfile](https://docs.docker.com/engine/reference/builder/#cmd):
 
 ```yml
@@ -505,6 +514,11 @@ entrypoint:
   - memory_limit=-1
   - vendor/bin/phpunit
 ```
+
+If the value is `null`, the default entrypoint from the image MUST be used.
+
+If the value is `[]` (empty list) or `''` (empty string), the default entrypoint declared by the image MUST be ignored,
+i.e. overridden to be empty.
 
 ### env_file
 
@@ -1681,4 +1695,3 @@ volumes_from:
 ### working_dir
 
 `working_dir` overrides the container's working directory from that specified by image (i.e. Dockerfile `WORKDIR`).
-
