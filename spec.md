@@ -443,7 +443,8 @@ command: [ "bundle", "exec", "thin", "-p", "3000" ]
 
 If the value is `null`, the default command from the image MUST be used.
 
-If the value is `[]` (empty list) or `''` (empty string), the default command declared by the image MUST be ignored, i.e. overridden to be empty.
+If the value is `[]` (empty list) or `''` (empty string), the default command declared by the image MUST be ignored,
+i.e. overridden to be empty.
 
 ### configs
 
@@ -742,7 +743,8 @@ dns_search:
 `entrypoint` declares the default entrypoint for the service container.
 This will override the `ENTRYPOINT` instruction from the service's Dockerfile.
 
-If `entrypoint` is non-null, Compose implementations MUST also ignore out any default command from the image (i.e. `CMD` instruction in Dockerfile).
+If `entrypoint` is non-null, Compose implementations MUST also ignore out any default command from the image (i.e. `CMD`
+instruction in Dockerfile).
 
 See also: [`command`](#command) to set or override the default command to be executed by the entrypoint process.
 
@@ -766,7 +768,8 @@ entrypoint:
 
 If the value is `null`, the default entrypoint from the image MUST be used.
 
-If the value is `[]` (empty list) or `''` (empty string), the default entrypoint declared by the image MUST be ignored, i.e. overridden to be empty.
+If the value is `[]` (empty list) or `''` (empty string), the default entrypoint declared by the image MUST be ignored,
+i.e. overridden to be empty.
 
 ### env_file
 
@@ -1943,7 +1946,6 @@ volumes_from:
 ### working_dir
 
 `working_dir` overrides the container's working directory from that specified by image (i.e. Dockerfile `WORKDIR`).
-
 
 ## Networks top-level element
 
