@@ -443,7 +443,7 @@ command: [ "bundle", "exec", "thin", "-p", "3000" ]
 
 If the value is `null`, the default command from the image MUST be used.
 
-If the value is `[]` (emtpy list) or `''` (empty string), the default command declared by the image MUST be ignored, i.e. overridden to be empty.
+If the value is `[]` (empty list) or `''` (empty string), the default command declared by the image MUST be ignored, i.e. overridden to be empty.
 
 ### configs
 
@@ -766,7 +766,7 @@ entrypoint:
 
 If the value is `null`, the default entrypoint from the image MUST be used.
 
-If the value is `[]` (emtpy list) or `''` (empty string), the default entrypoint declared by the image MUST be ignored, i.e. overridden to be empty.
+If the value is `[]` (empty list) or `''` (empty string), the default entrypoint declared by the image MUST be ignored, i.e. overridden to be empty.
 
 ### env_file
 
