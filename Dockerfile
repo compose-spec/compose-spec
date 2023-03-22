@@ -34,7 +34,10 @@ EOT
 FROM scratch AS spec-update
 COPY --from=spec-build /out /out
 
-FROM spec-build AS spec-validate
+FROM --platform=${BUILDPLATFORM} alpine as spec-validate
+RUN apk add --no-cache rsync git
+WORKDIR /src
+COPY --from=spec-build /out /out
 RUN --mount=target=/context \
     --mount=target=.,type=tmpfs <<EOT
    set -e
