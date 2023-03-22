@@ -1029,7 +1029,7 @@ attached to a shared network SHOULD NOT be able to communicate. Compose implemen
 about this configuration mismatch.
 
 Links also express implicit dependency between services in the same way as
-[depends_on](#dependson), so they determine the order of service startup.
+[depends_on](#depends_on), so they determine the order of service startup.
 
 ### logging
 
@@ -1505,7 +1505,7 @@ Specified as a [byte value](11-extension.md#specifying-byte-values).
 
 `stop_grace_period` specifies how long the Compose implementation MUST wait when attempting to stop a container if it doesn't
 handle SIGTERM (or whichever stop signal has been specified with
-[`stop_signal`](#stopsignal)), before sending SIGKILL. Specified
+[`stop_signal`](#stop_signal)), before sending SIGKILL. Specified
 as a [duration](11-extension.md#specifying-durations).
 
 ```yml
@@ -1552,7 +1552,7 @@ sysctls:
 You can only use sysctls that are namespaced in the kernel. Docker does not
 support changing sysctls inside a container that also modify the host system.
 For an overview of supported sysctls, refer to [configure namespaced kernel
-parameters (sysctls) at runtime](https://docs.docker.com/engine/reference/commandline/run/#configure-namespaced-kernel-parameters-sysctls-at-runtime).
+parameters (sysctls) at runtime](https://docs.docker.com/engine/reference/commandline/run/#sysctl).
 
 ### tmpfs
 
