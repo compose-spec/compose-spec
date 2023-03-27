@@ -1060,6 +1060,9 @@ specification define specific values which MUST be implemented as described if s
     network_mode: "service:[service name]"
 ```
 
+When set, `networks` attribute is not allowed and a Compose implementation SHOULD reject any
+Compose file containing both attributes
+
 ### networks
 
 `networks` defines the networks that service containers are attached to, referencing entries under the
