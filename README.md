@@ -63,6 +63,7 @@ Compose Specification is also implemented by:
 * [Nerdctl](https://github.com/containerd/nerdctl)
 * [Okteto Stacks](https://okteto.com/docs/reference/stacks)
 * [Docker Cloud Integrations](https://github.com/docker/compose-cli)
+* [Podman Compose](https://github.com/containers/podman-compose)
 
 | Metadata |                  |
 | -------- | ---------------: |
