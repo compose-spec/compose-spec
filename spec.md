@@ -2590,4 +2590,3 @@ services:
     labels: 
       - "$VAR_INTERPOLATED_BY_COMPOSE=BAR"
 ```
-
