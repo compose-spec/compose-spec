@@ -452,7 +452,7 @@ tags:
 
 ### platforms
 
-`platforms` defines a list of target [platforms](05-services#platform).
+`platforms` defines a list of target [platforms](05-services.md#platform).
 
 ```yml
 build:
