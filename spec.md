@@ -2573,9 +2573,9 @@ the user and substitute the variable with an empty string.
 As any values in a Compose file can be interpolated with variable substitution, including compact string notation
 for complex elements, interpolation MUST be applied _before_ merge on a per-file-basis.
 
-Interpolation only applies to yaml VALUES, not KEYS. For the few places where keys are actually arbitrary strings defines
-by the user, like [labels](#labels) or [environment](#environment), alternate syntax with equal sign MUST be used to 
-get interpolation applied:
+Interpolation applies only to YAML _values_, not to _keys_. For the few places where keys are actually arbitrary 
+user-defined strings, such as [labels](#labels) or [environment](#environment), an alternate equal sign syntax 
+MUST be used for interpolation to apply:
 
 ```yml
 services:
@@ -2590,4 +2590,3 @@ services:
     labels: 
       - "$VAR_INTERPOLATED_BY_COMPOSE=BAR"
 ```
-
