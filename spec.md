@@ -915,7 +915,7 @@ specified by `extends`) MUST be merged in the following way:
 
 ##### Mappings
 
-The following keys should be treated as mappings: `build.args`, `build.labels`,
+The following keys should be treated as mappings: `annotations`, `build.args`, `build.labels`,
 `build.extra_hosts`, `deploy.labels`, `deploy.update_config`, `deploy.rollback_config`,
 `deploy.restart_policy`, `deploy.resources.limits`, `environment`, `healthcheck`,
 `labels`, `logging.options`, `sysctls`, `storage_opt`, `extra_hosts`, `ulimits`.
@@ -1048,6 +1048,20 @@ duplicates resulting from the merge are not removed.
 ##### Scalars
 
 Any other allowed keys in the service definition should be treated as scalars.
+
+### annotations
+
+`annotations` defines annotations for the container. `annotations` can use either an array or a map.
+
+```yml
+annotations:
+  com.example.foo: bar
+```
+
+```yml
+annotations:
+  - com.example.foo=bar
+```
 
 ### external_links
 
