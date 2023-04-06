@@ -84,14 +84,24 @@ On push, both `awesome/webapp` and `awesome/database` docker images are pushed t
 The `build` element define configuration options that are applied by Compose implementations to build Docker image from source.
 `build` can be specified either as a string containing a path to the build context or a detailed structure:
 
+Using this string syntax, only the build context can be configured as either:
+- a relative path to the Compose file's parent folder. This path MUST be a directory and contain a `Dockerfile`
+
 ```yml
 services:
   webapp:
     build: ./dir
 ```
 
-Using this string syntax, only the build context can be configured as a relative path to the Compose file's parent folder.
-This path MUST be a directory and contain a `Dockerfile`.
+- a git repository URL. Git URLs accept context configuration in their fragment section, separated by a colon (`:`). 
+The first part represents the reference that Git will check out, and can be either a branch, a tag, or a remote reference. 
+The second part represents a subdirectory inside the repository that will be used as a build context.
+
+```yml
+services:
+  webapp:
+    build: https://github.com/mycompany/example.git#branch_or_tag:subdirectory
+```
 
 Alternatively `build` can be an object with fields defined as follow
 
@@ -106,6 +116,12 @@ from being portable.
 ```yml
 build:
   context: ./dir
+```
+
+```yml
+services:
+  webapp:
+    build: https://github.com/mycompany/webapp.git
 ```
 
 ### dockerfile
