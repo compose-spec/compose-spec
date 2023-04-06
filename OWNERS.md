@@ -6,3 +6,4 @@ maintainers:
 - ulyssessouza
 - glours
 - milas
+- laurazard
