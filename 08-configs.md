@@ -20,10 +20,8 @@ application. The source of the config is either `file` or `external`.
   reference configs that contain special characters. The name is used as is
   and will **not** be scoped with the project name.
 
-In this example, `http_config` is created (as `<project_name>_http_config`) when the application is deployed,
-and `my_second_config` MUST already exist on Platform and value will be obtained by lookup.
 
-In this example, `server-http_config` is created as `<project_name>_http_config` when the application is deployed,
+In this example, `<project_name>_http_config` is created when the application is deployed,
 by registering content of the `httpd.conf` as configuration data.
 
 ```yml

@@ -84,14 +84,24 @@ On push, both `awesome/webapp` and `awesome/database` docker images are pushed t
 The `build` element define configuration options that are applied by Compose implementations to build Docker image from source.
 `build` can be specified either as a string containing a path to the build context or a detailed structure:
 
+Using this string syntax, only the build context can be configured as either:
+- a relative path to the Compose file's parent folder. This path MUST be a directory and contain a `Dockerfile`
+
 ```yml
 services:
   webapp:
     build: ./dir
 ```
 
-Using this string syntax, only the build context can be configured as a relative path to the Compose file's parent folder.
-This path MUST be a directory and contain a `Dockerfile`.
+- a git repository URL. Git URLs accept context configuration in their fragment section, separated by a colon (`:`). 
+The first part represents the reference that Git will check out, and can be either a branch, a tag, or a remote reference. 
+The second part represents a subdirectory inside the repository that will be used as a build context.
+
+```yml
+services:
+  webapp:
+    build: https://github.com/mycompany/example.git#branch_or_tag:subdirectory
+```
 
 Alternatively `build` can be an object with fields defined as follow
 
@@ -106,6 +116,12 @@ from being portable.
 ```yml
 build:
   context: ./dir
+```
+
+```yml
+services:
+  webapp:
+    build: https://github.com/mycompany/webapp.git
 ```
 
 ### dockerfile
@@ -276,7 +292,7 @@ Illustrative examples of how this is used in Buildx can be found [here](https://
 
 ### extra_hosts
 
-`extra_hosts` adds hostname mappings at build-time. Use the same syntax as [extra_hosts](spec.md#extra_hosts).
+`extra_hosts` adds hostname mappings at build-time. Use the same syntax as [extra_hosts](05-services.md#extra_hosts).
 
 ```yml
 extra_hosts:
@@ -294,7 +310,7 @@ configuration, which means for Linux `/etc/hosts` will get extra lines:
 
 ### isolation
 
-`isolation` specifies a build’s container isolation technology. Like [isolation](spec.md#isolation) supported values
+`isolation` specifies a build’s container isolation technology. Like [isolation](05-services.md#isolation) supported values
 are platform-specific.
 
 ### privileged
@@ -345,7 +361,7 @@ available in the local image store.
 ### shm_size
 
 `shm_size` set the size of the shared memory (`/dev/shm` partition on Linux) allocated for building Docker image. Specify
-as an integer value representing the number of bytes or as a string expressing a [byte value](spec.md#specifying-byte-values).
+as an integer value representing the number of bytes or as a string expressing a [byte value](11-extension.md#specifying-byte-values).
 
 ```yml
 build:
@@ -370,11 +386,11 @@ build:
 ```
 
 ### secrets
-`secrets` grants access to sensitive data defined by [secrets](spec.md#secrets) on a per-service build basis. Two
+`secrets` grants access to sensitive data defined by [secrets](05-services.md#secrets) on a per-service build basis. Two
 different syntax variants are supported: the short syntax and the long syntax.
 
 Compose implementations MUST report an error if the secret isn't defined in the
-[`secrets`](spec.md#secrets-top-level-element) section of this Compose file.
+[`secrets`](09-secrets.md) section of this Compose file.
 
 #### Short syntax
 
@@ -437,12 +453,12 @@ secrets:
 
 Service builds MAY be granted access to multiple secrets. Long and short syntax for secrets MAY be used in the
 same Compose file. Defining a secret in the top-level `secrets` MUST NOT imply granting any service build access to it.
-Such grant must be explicit within service specification as [secrets](spec.md#secrets) service element.
+Such grant must be explicit within service specification as [secrets](05-services.md#secrets) service element.
 
 ### tags
 
 `tags` defines a list of tag mappings that MUST be associated to the build image. This list comes in addition of 
-the `image` [property defined in the service section](spec.md#image)
+the `image` [property defined in the service section](05-services.md#image)
 
 ```yml
 tags:
@@ -452,7 +468,7 @@ tags:
 
 ### platforms
 
-`platforms` defines a list of target [platforms](spec.md#platform).
+`platforms` defines a list of target [platforms](05-services.md#platform).
 
 ```yml
 build:

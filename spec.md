@@ -2310,10 +2310,8 @@ application. The source of the config is either `file` or `external`.
   reference configs that contain special characters. The name is used as is
   and will **not** be scoped with the project name.
 
-In this example, `http_config` is created (as `<project_name>_http_config`) when the application is deployed,
-and `my_second_config` MUST already exist on Platform and value will be obtained by lookup.
 
-In this example, `server-http_config` is created as `<project_name>_http_config` when the application is deployed,
+In this example, `<project_name>_http_config` is created when the application is deployed,
 by registering content of the `httpd.conf` as configuration data.
 
 ```yml
@@ -2576,3 +2574,21 @@ the user and substitute the variable with an empty string.
 
 As any values in a Compose file can be interpolated with variable substitution, including compact string notation
 for complex elements, interpolation MUST be applied _before_ merge on a per-file-basis.
+
+Interpolation applies only to YAML _values_, not to _keys_. For the few places where keys are actually arbitrary 
+user-defined strings, such as [labels](#labels) or [environment](#environment), an alternate equal sign syntax 
+MUST be used for interpolation to apply:
+
+```yml
+services:
+  foo:
+    labels: 
+      "$VAR_NOT_INTERPOLATED_BY_COMPOSE": "BAR"
+```
+
+```yml
+services:
+  foo:
+    labels: 
+      - "$VAR_INTERPOLATED_BY_COMPOSE=BAR"
+```
