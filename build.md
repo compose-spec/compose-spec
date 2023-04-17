@@ -284,11 +284,16 @@ build:
     source: https://github.com/myuser/project.git
 ```
 
-When used as a list, the syntax should follow the `NAME=VALUE` format, where `VALUE` is a string. Validation beyond that is the responsibility of the image builder (and is builder specific).
+When used as a list, the syntax should follow the `NAME=VALUE` format, where `VALUE` is a string. Validation beyond that 
+is the responsibility of the image builder (and is builder specific). A Compose implementation MUST support at least
+absolute and relative paths to a directory AND Git repository URLs, like [context](#context) does. Other context flavours 
+MUST be prefixed to avoid ambiguity with a `type://` prefix.
 
-The Compose implementation SHOULD warn the user if the image builder does not support additional contexts and MAY list the unused contexts.
+The Compose implementation SHOULD warn the user if the image builder does not support additional contexts and MAY list 
+the unused contexts.
 
-Illustrative examples of how this is used in Buildx can be found [here](https://github.com/docker/buildx/blob/master/docs/reference/buildx_build.md#-additional-build-contexts---build-context).
+Illustrative examples of how this is used in Buildx can be found 
+[here](https://github.com/docker/buildx/blob/master/docs/reference/buildx_build.md#-additional-build-contexts---build-context).
 
 ### extra_hosts
 
