@@ -9,21 +9,21 @@
 ## Introduction
 
 Compose specification is a platform-neutral way to define multi-container applications. A Compose implementation supporting
-deployment of application model MAY require some additional metadata as the Compose application model is way too abstract
+deployment of an application model MAY require some additional metadata as the Compose application model is an abstract way
 to reflect actual infrastructure needs per service, or lifecycle constraints.
 
-Compose Specification Deployment allows users to declare additional metadata on services so Compose implementations get
-relevant data to allocate adequate resources on platform and configure them to match user's needs.
+Compose Specification Deployment allows users to declare additional metadata on services so the Compose implementations gets
+relevant data to allocate adequate resources on the platform and configure them to match user's needs.
 
 ## Definitions
 
-Compose Specification is extended to support an OPTIONAL `deploy` subsection on services. This section define runtime requirements
+The Compose specification is extended to support an OPTIONAL `deploy` subsection on services. This section defines runtime requirements
 for a service.
 
 ### endpoint_mode
 
 `endpoint_mode` specifies a service discovery method for external clients connecting to a service. Default and available values
-are platform specific, anyway the Compose specification define two canonical values:
+are platform specific, the Compose specification define two canonical values:
 
 * `endpoint_mode: vip`: Assigns the service a virtual IP (VIP) that acts as the front end for clients to reach the service
   on a network. Platform routes requests between the client and nodes running the service, without client knowledge of how
@@ -46,8 +46,8 @@ services:
 
 ### labels
 
-`labels` specifies metadata for the service. These labels MUST *only* be set on the service and *not* on any containers for the service.
-This assumes the platform has some native concept of "service" that can match Compose application model.
+`labels` specifies metadata for the service. These labels MUST only be set on the service and not on any containers for the service.
+This assumes the platform has some native concept of "service" that can match the Compose application model.
 
 ```yml
 services:
@@ -60,7 +60,7 @@ services:
 
 ### mode
 
-`mode` define the replication model used to run the service on platform. Either `global` (exactly one container per physical node) or `replicated` (a specified number of containers). The default is `replicated`.
+`mode` defines the replication model used to run the service on the  platform. Either `global` (exactly one container per physical node) or `replicated` (a specified number of containers). The default is `replicated`.
 
 ```yml
 services:
@@ -72,7 +72,7 @@ services:
 
 ### placement
 
-`placement` specifies constraints and preferences for platform to select a physical node to run service containers.
+`placement` specifies constraints and preferences for the platform to select a physical node to run service containers.
 
 #### constraints
 
