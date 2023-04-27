@@ -34,20 +34,19 @@ The backend stores data in a persistent volume.
 
 Both services communicate with each other on an isolated back-tier network, while frontend is also connected to a front-tier network and exposes port 443 for external usage.
 
-```
-(External user) --> 443 [frontend network]
-                            |
-                  +--------------------+
-                  |  frontend service  |...ro...<HTTP configuration>
-                  |      "webapp"      |...ro...<server certificate> #secured
-                  +--------------------+
-                            |
-                        [backend network]
-                            |
-                  +--------------------+
-                  |  backend service   |  r+w   ___________________
-                  |     "database"     |=======( persistent volume )
-                  +--------------------+        \_________________/
+```mermaid
+flowchart TB;
+      A(((External user))) === B{{fa:fa-network-wired public network}};
+      B === |443| C(fa:fa-server frontend service 'webapp');
+      C:::service --- |ro| D> fa:fa-gear HTTP configuration ];
+      C --- |ro| E> fa:fa-key server certificate];
+      C === F{{fa:fa-network-wired private network}};
+      F === G(fa:fa-server backend service 'database');
+      G:::service --- |r+w| H[(fa:fa-floppy-disk persistent volume)];
+      
+      style A fill:#ffd
+      style H fill:#f96,stroke:#000
+      classDef service fill:#def,stroke:#000      
 ```
 
 The example application is composed of the following parts:
