@@ -61,9 +61,9 @@ services:
 ```
 
 - Compose application model parsed with no profile enabled only contains the `foo` service.
-- If profile `test` is enabled, model contains the services `bar` and `baz` which are enabled by the
-  `test` profile and service `foo` which is always enabled.
-- If profile `debug` is enabled, model contains both `foo` and `zot` services, but not `bar` and `baz`
+- If profile `test` is enabled, model contains the services `bar` and `baz`, which are enabled by the
+  `test` profile, and service `foo`, which is always enabled.
+- If profile `debug` is enabled, model contains both `foo` and `zot` services, but not `bar` and `baz`,
   and as such the model is invalid regarding the `depends_on` constraint of `zot`.
 - If profiles `debug` and `test` are enabled, model contains all services: `foo`, `bar`, `baz` and `zot`.
 - If Compose implementation is executed with `bar` as explicit service to run, it and the `test` profile
@@ -71,7 +71,7 @@ services:
 - If Compose implementation is executed with `baz` as explicit service to run, the service `baz` and the
   profile `test` will be active and `bar` will be pulled in by the `depends_on` constraint.
 - If Compose implementation is executed with `zot` as explicit service to run, again the model will be
-  invalid regarding the `depends_on` constraint of `zot` since `zot` and `bar` have no common `profiles`
+  invalid regarding the `depends_on` constraint of `zot`, since `zot` and `bar` have no common `profiles`
   listed.
 - If Compose implementation is executed with `zot` as explicit service to run and profile `test` enabled,
   profile `debug` is automatically enabled and service `bar` is pulled in as a dependency starting both

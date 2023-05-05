@@ -49,12 +49,12 @@ volumes:
 
 ### external
 
-If set to `true`, `external` specifies that this volume already exist on the platform and its lifecycle is managed outside
+If set to `true`, `external` specifies that this volume already exists on the platform and its lifecycle is managed outside
 of that of the application. Compose implementations MUST NOT attempt to create these volumes, and MUST return an error if they
 do not exist.
 
 If `external` is set to `true` and volume configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose Implementations SHOULD reject a Compose file as invalid.
+not managed by compose lifecycle, Compose Implementations SHOULD reject the Compose file as invalid.
 
 
 In the example below, instead of attempting to create a volume called
@@ -107,7 +107,7 @@ volumes:
     name: "my-app-data"
 ```
 
-It can also be used in conjunction with the `external` property. Doing so the name of the volume used to lookup for
+It can also be used in conjunction with the `external` property. In that case the name of the volume used to lookup for
 actual volume on platform is set separately from the name used to refer to it within the Compose file:
 
 ```yml
@@ -117,7 +117,7 @@ volumes:
       name: actual-name-of-volume
 ```
 
-This make it possible to make this lookup name a parameter of a Compose file, so that the model ID for volume is
+This makes it possible to make this lookup name a parameter of the Compose file, so that the model ID for volume is
 hard-coded but the actual volume ID on platform is set at runtime during deployment:
 
 ```yml

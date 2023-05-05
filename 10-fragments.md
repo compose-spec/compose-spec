@@ -9,12 +9,12 @@ volumes:
   metrics: *default-volume
 ```
 
-In previous sample, an _anchor_ is created as `default-volume` based on `db-data` volume specification. It is later reused by _alias_ `*default-volume` to define `metrics` volume. Same logic can apply to any element in a Compose file. Anchor resolution MUST take place
+In the previous sample, an _anchor_ is created as `default-volume` based on `db-data` volume specification. It is later reused by _alias_ `*default-volume` to define `metrics` volume. The same logic can apply to any element in a Compose file. Anchor resolution MUST take place
 before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
 
 It is also possible to partially override values set by anchor reference using the
-[YAML merge type](http://yaml.org/type/merge.html). In following example, `metrics` volume specification uses alias
-to avoid repetition but override `name` attribute:
+[YAML merge type](http://yaml.org/type/merge.html). In the following example, `metrics` volume specification uses alias
+to avoid repetition but overrides `name` attribute:
 
 ```yml
 

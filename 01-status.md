@@ -12,7 +12,7 @@ exposing Linux kernel specific configuration options, but also some Windows cont
 We acknowledge that no Compose implementation is expected to support all attributes, and that support for some properties
 is platform dependent and can only be confirmed at runtime. The definition of a versioned schema to control the supported
 properties in a Compose file, established by the [docker-compose](https://github.com/docker/compose) tool where the Compose
-file format was designed, doesn't offer any guarantee to the end-user attributes will be actually implemented.
+file format was designed, doesn't offer any guarantee to the end-user that attributes will be actually implemented.
 
 The specification defines the expected configuration syntax and behavior. Unless noted, supporting any of these is OPTIONAL.
 

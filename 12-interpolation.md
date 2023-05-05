@@ -1,10 +1,9 @@
 ## Interpolation
 
-Values in a Compose file can be set by variables, and interpolated at runtime. Compose files use a Bash-like
+Values in a Compose file can be set by variables and interpolated at runtime. Compose files use a Bash-like
 syntax `${VARIABLE}`
 
-Both `$VARIABLE` and `${VARIABLE}` syntax are supported. Default values can be defined inline using typical shell syntax:
-latest
+Both `$VARIABLE` and `${VARIABLE}` syntax is supported. Default values can be defined inline using typical shell syntax:
 
 - `${VARIABLE:-default}` evaluates to `default` if `VARIABLE` is unset or
   empty in the environment.
@@ -42,22 +41,22 @@ If the Compose implementation can't resolve a substituted variable and no defaul
 the user and substitute the variable with an empty string.
 
 As any values in a Compose file can be interpolated with variable substitution, including compact string notation
-for complex elements, interpolation MUST be applied _before_ merge on a per-file-basis.
+for complex elements, interpolation MUST be applied _before_ merge on a per-file basis.
 
-Interpolation applies only to YAML _values_, not to _keys_. For the few places where keys are actually arbitrary 
-user-defined strings, such as [labels](#labels) or [environment](#environment), an alternate equal sign syntax 
+Interpolation applies only to YAML _values_, not to _keys_. For the few places where keys are actually arbitrary
+user-defined strings, such as [labels](#labels) or [environment](#environment), an alternate equal sign syntax
 MUST be used for interpolation to apply:
 
 ```yml
 services:
   foo:
-    labels: 
+    labels:
       "$VAR_NOT_INTERPOLATED_BY_COMPOSE": "BAR"
 ```
 
 ```yml
 services:
   foo:
-    labels: 
+    labels:
       - "$VAR_INTERPOLATED_BY_COMPOSE=BAR"
 ```
