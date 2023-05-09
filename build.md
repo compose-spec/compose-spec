@@ -1,59 +1,55 @@
 # The Compose Specification - Build support
 {:.no_toc}
 
-*Note:* Build is an OPTIONAL part of the Compose Specification
+*Note:* Build is an OPTIONAL part of the Compose specification.
 
 * ToC
 {:toc}
 
 ## Introduction
 
-Compose specification is a platform-neutral way to define multi-container applications. A Compose implementation
-focusing on development use-case to run application on local machine will obviously also support (re)building
-application from sources. The Compose Build specification allows to define the build process within a Compose file
+The Compose specification is a platform-neutral way to define multi-container applications. A Compose implementation which focuses on running an application on a local machine will obviously need to also support (re)building
+application from source. The Compose Build specification lets developers define the build process within a Compose file
 in a portable way.
 
 ## Definitions
 
-Compose Specification is extended to support an OPTIONAL `build` subsection on services. This section define the
-build requirements for service container image. Only a subset of Compose file services MAY define such a Build
-subsection, others being created based on `Image` attribute. When a Build subsection is present for a service, it
-is *valid* for a Compose file to miss an `Image` attribute for corresponding service, as Compose implementation
-can build image from source.
+Compose Specification can be extended to support an OPTIONAL `build` subsection on services. 
+
+This section defines the build requirements for a service container image. Only a subset of Compose file services can be defined in such a `build`
+subsection, others may make use of the `image` attribute. When a `build` subsection is present for a service, it
+is valid for Compose to miss out the `image` attribute for the corresponding service, as the Compose implementation
+can build an image from source.
 
 Build can be either specified as a single string defining a context path, or as a detailed build definition.
 
-In the former case, the whole path is used as a Docker context to execute a docker build, looking for a canonical
-`Dockerfile` at context root. Context path can be absolute or relative, and if so relative path MUST be resolved
-from Compose file parent folder. As an absolute path prevent the Compose file to be portable, Compose implementation
-SHOULD warn user accordingly.
+In the former case, the whole path is used as a Docker context to execute a Docker build, looking for a canonical
+`Dockerfile` at the root of the directory. The path can be absolute or relative. If it is relative, it MUST be resolved
+from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so the Compose implementation SHOULD warn the users accordingly.
 
-In the later case, build arguments can be specified, including an alternate `Dockerfile` location. This one can be
-absolute or relative path. If Dockerfile path is relative, it MUST be resolved from context path.  As an absolute
-path prevent the Compose file to be portable, Compose implementation SHOULD warn user if an absolute alternate
-Dockerfile path is used.
+In the later case, build arguments can be specified, including an alternate `Dockerfile` location. The path can be absolute or relative. If it is relative, it MUST be resolved
+from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so the Compose implementation SHOULD warn the users accordingly.
 
-## Consistency with Image
+## Consistency with `image`
 
-When service definition do include both `Image` attribute and a `Build` section, Compose implementation can't
-guarantee a pulled image is strictly equivalent to building the same image from sources. Without any explicit
-user directives, Compose implementation with Build support MUST first try to pull Image, then build from source
-if image was not found on registry. Compose implementation MAY offer options to customize this behaviour by user
+When a service definition includes both the `image` attribute and a `build` section, the Compose implementation can't
+guarantee a pulled image is strictly equivalent to building the same image from source. Without any explicit
+user directives, the Compose implementation with Build support MUST first try to pull the image, then build from source
+if the image was not found on registry. The Compose implementation MAY offer options to customize this behaviour by user
 request.
 
 ## Publishing built images
 
-Compose implementation with Build support SHOULD offer an option to push built images to a registry. Doing so, it
-MUST NOT try to push service images without an `Image` attribute. Compose implementation SHOULD warn user about
-missing `Image` attribute which prevent image being pushed.
+The Compose implementation with Build support SHOULD offer an option to push built images to a registry. When doing so, it
+MUST NOT try to push service images without an `image` attribute. The Compose implementation SHOULD warn users about the missing `Image` attribute which prevent images being pushed.
 
-Compose implementation MAY offer a mechanism to compute an `Image` attribute for service when not explicitly
-declared in yaml file. In such a case, the resulting Compose configuration is considered to have a valid `Image`
+The Compose implementation MAY offer a mechanism to compute an `image` attribute for services when not explicitly
+declared in a yaml file. In such cases, the resulting Compose configuration is considered to have a valid `image`
 attribute, whenever the actual raw yaml file doesn't explicitly declare one.
 
-## Illustrative sample
+## Illustrative example
 
-The following sample illustrates Compose specification concepts with a concrete sample application. The sample is non-normative.
+The following example illustrates Compose specification concepts with a concrete sample application. The sample is non-normative.
 
 ```yaml
 services:
@@ -71,46 +67,46 @@ services:
     build: ~/custom
 ```
 
-When used to build service images from source, such a Compose file will create three docker images:
+When used to build service images from source, the Compose file creates three Docker images:
 
-* `awesome/webapp` docker image is built using `webapp` sub-directory within Compose file parent folder as docker build context. Lack of a `Dockerfile` within this folder will throw an error.
-* `awesome/database` docker image is built using `backend` sub-directory within Compose file parent folder. `backend.Dockerfile` file is used to define build steps, this file is searched relative to context path, which means for this sample `..` will resolve to Compose file parent folder, so `backend.Dockerfile` is a sibling file.
-* a docker image is built using `custom` directory within user's HOME as docker context. Compose implementation warn user about non-portable path used to build image.
+* `awesome/webapp` Docker image is built using `webapp` sub-directory, within the Compose file's parent folder, as the Docker build context. Lack of a `Dockerfile` within this folder throws an error.
+* `awesome/database` Docker image is built using `backend` sub-directory within the Compose file parent folder. `backend.Dockerfile` file is used to define build steps, this file is searched relative to the context path, which means `..` resolves to the Compose file parent folder, so `backend.Dockerfile` is a sibling file.
+* A Docker image is built using the `custom` directory with the user's HOME as the Docker context. The Compose implementation warns the user about the non-portable path used to build image.
 
-On push, both `awesome/webapp` and `awesome/database` docker images are pushed to (default) registry. `custom` service image is skipped as no `Image` attribute is set and user is warned about this missing attribute.
+On push, both `awesome/webapp` and `awesome/database` Docker images are pushed to the default registry. The `custom` service image is skipped as no `image` attribute is set and the user is warned about this missing attribute.
 
 ## Build definition
 
-The `build` element define configuration options that are applied by Compose implementations to build Docker image from source.
+The `build` element defines configuration options that are applied by Compose implementations to build Docker images from source.
 `build` can be specified either as a string containing a path to the build context or a detailed structure:
 
 Using this string syntax, only the build context can be configured as either:
-- a relative path to the Compose file's parent folder. This path MUST be a directory and contain a `Dockerfile`
+- A relative path to the Compose file's parent folder. This path MUST be a directory and contain a `Dockerfile`
 
-```yml
-services:
-  webapp:
-    build: ./dir
-```
+  ```yml
+  services:
+    webapp:
+      build: ./dir
+  ```
 
-- a git repository URL. Git URLs accept context configuration in their fragment section, separated by a colon (`:`). 
-The first part represents the reference that Git will check out, and can be either a branch, a tag, or a remote reference. 
-The second part represents a subdirectory inside the repository that will be used as a build context.
+- A git repository URL. Git URLs accept context configuration in their fragment section, separated by a colon (`:`). i
+The first part represents the reference that Git checks out, and can be either a branch, a tag, or a remote reference. 
+The second part represents a subdirectory inside the repository that is used as a build context.
 
-```yml
-services:
-  webapp:
-    build: https://github.com/mycompany/example.git#branch_or_tag:subdirectory
-```
+  ```yml
+  services:
+    webapp:
+      build: https://github.com/mycompany/example.git#branch_or_tag:subdirectory
+  ```
 
-Alternatively `build` can be an object with fields defined as follow
+Alternatively `build` can be an object with fields defined as follows:
 
 ### context (REQUIRED)
 
-`context` defines either a path to a directory containing a Dockerfile, or a url to a git repository.
+`context` defines either a path to a directory containing a Dockerfile, or a URL to a git repository.
 
 When the value supplied is a relative path, it MUST be interpreted as relative to the location of the Compose file.
-Compose implementations MUST warn user about absolute path used to define build context as those prevent Compose file
+Compose implementations MUST warn users about the absolute path used to define the build context as those prevent the Compose file
 from being portable.
 
 ```yml
@@ -126,9 +122,11 @@ services:
 
 ### dockerfile
 
-`dockerfile` allows to set an alternate Dockerfile. A relative path MUST be resolved from the build context.
-Compose implementations MUST warn user about absolute path used to define Dockerfile as those prevent Compose file
-from being portable. When set, `dockerfile_inline` attribute is not allowed and a Compose Implementation SHOULD 
+`dockerfile` sets an alternate Dockerfile. A relative path MUST be resolved from the build context.
+Compose implementations MUST warn users about the absolute path used to define the Dockerfile as it prevents Compose files
+from being portable. 
+
+When set, `dockerfile_inline` attribute is not allowed and a Compose Implementation SHOULD 
 reject any Compose file having both set.
 
 ```yml
@@ -139,8 +137,8 @@ build:
 
 ### dockerfile_inline
 
-`dockerfile_inline` allows to define Dockerfile content as inlined string in a Compose file. When set, `dockerfile` 
-attribute is not allowed  and a Compose Implementation SHOULD reject any Compose file having both set.
+`dockerfile_inline` defines Dockerfile content as inlined string in a Compose file. When set, the `dockerfile` 
+attribute is not allowed and a Compose Implementation SHOULD reject any Compose file having both set.
 
 Use of YAML multi-line string syntax is recommended to define Dockerfile content:
 
@@ -157,14 +155,14 @@ build:
 
 `args` define build arguments, i.e. Dockerfile `ARG` values.
 
-Using following Dockerfile:
+Using the following Dockerfile as an example:
 
 ```Dockerfile
 ARG GIT_COMMIT
 RUN echo "Based on commit: $GIT_COMMIT"
 ```
 
-`args` can be set in Compose file under the `build` key to define `GIT_COMMIT`. `args` can be set a mapping or a list:
+`args` can be set in the Compose file under the `build` key to define `GIT_COMMIT`. `args` can be set a mapping or a list:
 
 ```yml
 build:
@@ -180,8 +178,8 @@ build:
     - GIT_COMMIT=cdc3b19
 ```
 
-Value can be omitted when specifying a build argument, in which case its value at build time MUST be obtained by user interaction,
-otherwise build arg won't be set when building the Docker image.
+Values can be omitted when specifying a build argument, in which case its value at build time MUST be obtained by user interaction,
+otherwise the build arg won't be set when building the Docker image.
 
 ```yml
 args:
@@ -190,11 +188,11 @@ args:
 
 ### ssh
 
-`ssh` defines SSH authentications that the image builder SHOULD use during image build (e.g., cloning private repository)
+`ssh` defines SSH authentications that the image builder SHOULD use during image build (e.g., cloning private repository).
 
 `ssh` property syntax can be either:
 * `default` - let the builder connect to the ssh-agent.
-* `ID=path` - a key/value definition of an ID and the associated path. Can be either a [PEM](https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail) file, or path to ssh-agent socket
+* `ID=path` - a key/value definition of an ID and the associated path. Can be either a [PEM](https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail) file, or path to ssh-agent socket.
 
 Simple `default` sample
 ```yaml
@@ -217,18 +215,18 @@ build:
   ssh: 
     - myproject=~/.ssh/myproject.pem
 ```
-Image builder can then rely on this to mount SSH key during build.
-For illustration, [BuildKit extended syntax](https://github.com/compose-spec/compose-spec/pull/234/%5Bmoby/buildkit@master/frontend/dockerfile/docs/syntax.md#run---mounttypessh%5D(https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md#run---mounttypessh)) can be used to mount ssh key set by ID and access a secured resource:
+Image builder can then rely on this to mount the SSH key during build.
+For illustration, [BuildKit extended syntax](https://github.com/compose-spec/compose-spec/pull/234/%5Bmoby/buildkit@master/frontend/dockerfile/docs/syntax.md#run---mounttypessh%5D(https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md#run---mounttypessh)) can be used to mount the SSH key set by ID and access a secured resource:
 
 `RUN --mount=type=ssh,id=myproject git clone ...`
 
 ### cache_from
 
-`cache_from` defines a list of sources the Image builder SHOULD use for cache resolution.
+`cache_from` defines a list of sources the image builder SHOULD use for cache resolution.
 
 Cache location syntax MUST follow the global format `[NAME|type=TYPE[,KEY=VALUE]]`. Simple `NAME` is actually a shortcut notation for `type=registry,ref=NAME`.
 
-Compose Builder implementations MAY support custom types, the Compose Specification defines canonical types which MUST be supported:
+Compose Builder implementations MAY support custom types, the Compose specification defines canonical types which MUST be supported:
 
 - `registry` to retrieve build cache from an OCI image set by key `ref`
 
@@ -242,7 +240,7 @@ build:
     - type=gha
 ```
 
-Unsupported caches MUST be ignored and not prevent user from building image.
+Unsupported caches MUST be ignored and not prevent users from building image.
 
 ### cache_to
 
@@ -258,7 +256,7 @@ build:
 
 Cache target is defined using the same `type=TYPE[,KEY=VALUE]` syntax defined by [`cache_from`](#cache_from). 
 
-Unsupported cache target MUST be ignored and not prevent user from building image.
+Unsupported cache target MUST be ignored and not prevent users from building image.
 
 ### additional_contexts
 
@@ -315,7 +313,7 @@ configuration, which means for Linux `/etc/hosts` will get extra lines:
 
 ### isolation
 
-`isolation` specifies a build’s container isolation technology. Like [isolation](05-services.md#isolation) supported values
+`isolation` specifies a build’s container isolation technology. Like [isolation](05-services.md#isolation), supported values
 are platform-specific.
 
 ### privileged
@@ -354,18 +352,18 @@ build:
 
 ### no_cache
 
-`no_cache` disables image builder cache and enforce a full rebuild from source for all image layers. This only
+`no_cache` disables image builder cache and enforces a full rebuild from source for all image layers. This only
 applies to layers declared in the Dockerfile, referenced images COULD be retrieved from local image store whenever tag
 has been updated on registry (see [pull](#pull)).
 
 ### pull
 
-`pull` require the image builder to pull referenced images (`FROM` Dockerfile directive), even if those are already 
+`pull` requires the image builder to pull referenced images (`FROM` Dockerfile directive), even if those are already 
 available in the local image store.
 
 ### shm_size
 
-`shm_size` set the size of the shared memory (`/dev/shm` partition on Linux) allocated for building Docker image. Specify
+`shm_size` sets the size of the shared memory (`/dev/shm` partition on Linux) allocated for building Docker images. Specify
 as an integer value representing the number of bytes or as a string expressing a [byte value](11-extension.md#specifying-byte-values).
 
 ```yml
