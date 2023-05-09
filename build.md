@@ -8,7 +8,7 @@
 
 ## Introduction
 
-The Compose specification is a platform-neutral way to define multi-container applications. A Compose implementation which focuses on running an application on a local machine will obviously need to alo support (re)building
+The Compose specification is a platform-neutral way to define multi-container applications. A Compose implementation which focuses on running an application on a local machine will obviously need to also support (re)building
 application from source. The Compose Build specification lets developers define the build process within a Compose file
 in a portable way.
 
@@ -16,7 +16,7 @@ in a portable way.
 
 Compose Specification can be extended to support an OPTIONAL `build` subsection on services. 
 
-This section defines the build requirements for a service container image. Only a subset of Compose file services MAY define such a `build`
+This section defines the build requirements for a service container image. Only a subset of Compose file services can be defined in such a `build`
 subsection, others may make use of the `image` attribute. When a `build` subsection is present for a service, it
 is valid for Compose to miss out the `image` attribute for the corresponding service, as the Compose implementation
 can build an image from source.
@@ -25,10 +25,10 @@ Build can be either specified as a single string defining a context path, or as 
 
 In the former case, the whole path is used as a Docker context to execute a Docker build, looking for a canonical
 `Dockerfile` at the root of the directory. The path can be absolute or relative. If it is relative, it MUST be resolved
-from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so the Compose implementation SHOULD warn user accordingly.
+from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so the Compose implementation SHOULD warn the users accordingly.
 
 In the later case, build arguments can be specified, including an alternate `Dockerfile` location. The path can be absolute or relative. If it is relative, it MUST be resolved
-from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so the Compose implementation SHOULD warn user accordingly.
+from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so the Compose implementation SHOULD warn the users accordingly.
 
 ## Consistency with `image`
 
@@ -41,7 +41,7 @@ request.
 ## Publishing built images
 
 The Compose implementation with Build support SHOULD offer an option to push built images to a registry. When doing so, it
-MUST NOT try to push service images without an `image` attribute. The Compose implementation SHOULD warn user about the missing `Image` attribute which prevent images being pushed.
+MUST NOT try to push service images without an `image` attribute. The Compose implementation SHOULD warn users about the missing `Image` attribute which prevent images being pushed.
 
 The Compose implementation MAY offer a mechanism to compute an `image` attribute for services when not explicitly
 declared in a yaml file. In such cases, the resulting Compose configuration is considered to have a valid `image`
@@ -122,7 +122,7 @@ services:
 
 ### dockerfile
 
-`dockerfile` lets you set an alternate Dockerfile. A relative path MUST be resolved from the build context.
+`dockerfile` sets an alternate Dockerfile. A relative path MUST be resolved from the build context.
 Compose implementations MUST warn users about the absolute path used to define the Dockerfile as it prevents Compose files
 from being portable. 
 
@@ -137,7 +137,7 @@ build:
 
 ### dockerfile_inline
 
-`dockerfile_inline` lets you define Dockerfile content as inlined string in a Compose file. When set, the `dockerfile` 
+`dockerfile_inline` defines Dockerfile content as inlined string in a Compose file. When set, the `dockerfile` 
 attribute is not allowed and a Compose Implementation SHOULD reject any Compose file having both set.
 
 Use of YAML multi-line string syntax is recommended to define Dockerfile content:
