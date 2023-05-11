@@ -490,6 +490,7 @@ platform, otherwise users won't be able to run images they built.
 Compose implementations SHOULD report an error in the following cases:
 * when the list contains multiple platforms but the implementation is incapable of storing multi-platform images
 * when the list contains an unsupported platform
+
 ```yml
 build:
   context: "."
@@ -498,6 +499,7 @@ build:
     - "unsupported/unsupported"
 ```
 * when the list is non-empty and does not contain the service's platform
+
 ```yml
 services:
   frontend:
