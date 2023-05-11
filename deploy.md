@@ -23,7 +23,7 @@ for a service.
 ### endpoint_mode
 
 `endpoint_mode` specifies a service discovery method for external clients connecting to a service. Default and available values
-are platform specific, the Compose specification define two canonical values:
+are platform specific but the Compose specification defines two canonical values:
 
 * `endpoint_mode: vip`: Assigns the service a virtual IP (VIP) that acts as the front end for clients to reach the service
   on a network. Platform routes requests between the client and nodes running the service, without client knowledge of how
@@ -129,7 +129,7 @@ services:
 ### resources
 
 `resources` configures physical resource constraints for container to run on platform. Those constraints can be configured
-as a:
+as:
 
 - `limits`: The platform MUST prevent container to allocate more
 - `reservations`: The platform MUST guarantee container can allocate at least the configured amount
@@ -216,7 +216,7 @@ deploy:
 
 ##### device_ids
 
-If `device_ids` is set, Compose implementations MUST reserve devices with the specified IDs providing they satisfy the requested capabilities. The value is specified as a list of strings.
+If `device_ids` is set, Compose implementations MUST reserve devices with the specified IDs provided they satisfy the requested capabilities. The value is specified as a list of strings.
 
 ```yml
 deploy:

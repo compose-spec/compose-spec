@@ -11,7 +11,7 @@ and whose values are service definitions. A service  definition contains the con
 container started for that service.
 
 Each service MAY also include a Build section, which defines how to create the Docker image for the service.
-Compose implementations MAY support building docker images using this service definition. If not implemented
+Compose implementations MAY support building docker images using this service definition. If not implemented,
 the Build section SHOULD be ignored and the Compose file MUST still be considered valid.
 
 Build support is an OPTIONAL aspect of the Compose specification, and is
@@ -616,7 +616,7 @@ extends:
   service: webapp
 ```
 
-If supported Compose implementations MUST process `extends` in the following way:
+If supported, Compose implementations MUST process `extends` in the following way:
 
 - `service` defines the name of the service being referenced as a base, for example `web` or `database`.
 - `file` is the location of a Compose configuration file defining that service.
@@ -629,7 +629,7 @@ The following restrictions apply to the service being referenced:
   that introduces a dependency on another service is incompatible with `extends`. The
   non-exhaustive list of such keys is: `links`, `volumes_from`, `container` mode (in `ipc`, `pid`,
   `network_mode` and `net`), `service` mode (in `ipc`, `pid` and `network_mode`), `depends_on`.
-- Services cannot have circular references with `extends`
+- Services cannot have circular references with `extends`.
 
 Compose implementations MUST return an error in all of these cases.
 
@@ -912,7 +912,7 @@ test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
 test: curl -f https://localhost || exit 1
 ```
 
-`NONE` disable the healthcheck, and is mostly useful to disable Healthcheck set by image. Alternatively
+`NONE` disables the healthcheck, and is mostly useful to disable Healthcheck set by image. Alternatively,
 the healthcheck set by the image can be disabled by setting `disable: true`:
 
 ```yml
@@ -966,10 +966,10 @@ The init binary that is used is platform specific.
 values are platform specific, but Compose specification defines specific values
 which MUST be implemented as described if supported:
 
-- `shareable` which gives the container own private IPC namespace, with a
+- `shareable` which gives the container its own private IPC namespace, with a
   possibility to share it with other containers.
-- `service:{name}` which makes the container join another (`shareable`)
-   container's IPC namespace.
+- `service:{name}` which makes the container join another container's
+  (`shareable`) IPC namespace.
 
 ```yml
     ipc: "shareable"
@@ -1061,10 +1061,10 @@ are platform specific. Driver specific options can be set with `options` as key-
 
 ### network_mode
 
-`network_mode` set service containers network mode. Available values are platform specific, but Compose
-specification define specific values which MUST be implemented as described if supported:
+`network_mode` sets service containers network mode. Available values are platform specific, but Compose
+specification defines specific values which MUST be implemented as described if supported:
 
-- `none` which disable all container networking
+- `none` which disables all container networking
 - `host` which gives the container raw access to host's network interface
 - `service:{name}` which gives the containers access to the specified service only
 
@@ -1258,7 +1258,7 @@ There is a performance penalty for applications that swap memory to disk often.
 
 ### oom_kill_disable
 
-If `oom_kill_disable` is set Compose implementation MUST configure the platform so it won't kill the container in case
+If `oom_kill_disable` is set, Compose implementation MUST configure the platform so it won't kill the container in case
 of memory starvation.
 
 ### oom_score_adj
@@ -1346,7 +1346,7 @@ expressed in the short form.
 
 - `target`: the container port
 - `published`: the publicly exposed port. Can be set as a range using syntax `start-end`, so it is defined as a string, then actual port SHOULD be assigned within this range based on available ports.
-- `host_ip`: the Host IP mapping, unspecified means all network interfaces (`0.0.0.0`) 
+- `host_ip`: the Host IP mapping, unspecified means all network interfaces (`0.0.0.0`)
 - `protocol`: the port protocol (`tcp` or `udp`), unspecified means any protocol
 - `mode`: `host` for publishing a host port on each node, or `ingress` for a port to be load balanced.
 
@@ -1387,7 +1387,7 @@ If present, `profiles` SHOULD follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_
   `if_not_present` SHOULD be considered an alias for this value for backward compatibility
 * `build`: Compose implementations SHOULD build the image. Compose implementations SHOULD rebuild the image if already present.
 
-If `pull_policy` and `build` both presents, Compose implementations SHOULD build the image by default. Compose implementations MAY override this behavior in the toolchain.
+If `pull_policy` and `build` are both present, Compose implementations SHOULD build the image by default. Compose implementations MAY override this behavior in the toolchain.
 
 ### read_only
 
@@ -1397,10 +1397,10 @@ If `pull_policy` and `build` both presents, Compose implementations SHOULD build
 
 `restart` defines the policy that the platform will apply on container termination.
 
-- `no`: The default restart policy. Does not restart a container under any circumstances.
+- `no`: The default restart policy. Does not restart the container under any circumstances.
 - `always`: The policy always restarts the container until its removal.
-- `on-failure`: The policy restarts a container if the exit code indicates an error.
-- `unless-stopped`: The policy restarts a container irrespective of the exit code but will stop
+- `on-failure`: The policy restarts the container if the exit code indicates an error.
+- `unless-stopped`: The policy restarts the container irrespective of the exit code but will stop
   restarting when the service is stopped or removed.
 
 ```yml
@@ -1436,7 +1436,7 @@ _DEPRECATED: use [deploy/replicas](deploy.md#replicas)_
 different syntax variants are supported: the short syntax and the long syntax.
 
 Compose implementations MUST report an error if the secret doesn't exist on the platform or isn't defined in the
-[`secrets`](09-secrets.md) section of this Compose file.
+[`secrets`](09-secrets.md) section of the Compose file.
 
 #### Short syntax
 
@@ -1587,12 +1587,12 @@ tmpfs:
 
 ### tty
 
-`tty` configure service container to run with a TTY.
+`tty` configures service container to run with a TTY.
 
 ### ulimits
 
-`ulimits` overrides the default ulimits for a container. Either specifies as a single limit as an integer or
-soft/hard limits as a mapping.
+`ulimits` overrides the default ulimits for a container. Specified either as an integer for a single limit
+or as mapping for soft/hard limits.
 
 ```yml
 ulimits:
@@ -1620,7 +1620,7 @@ userns_mode: "host"
 
 `volumes` defines mount host paths or named volumes that MUST be accessible by service containers.
 
-If the mount is a host path and only used by a single service, it MAY be declared as part of the service
+If the mount is a host path and is only used by a single service, it MAY be declared as part of the service
 definition instead of the top-level `volumes` key.
 
 To reuse a volume across multiple services, a named
@@ -1654,11 +1654,11 @@ The short syntax uses a single string with colon-separated values to specify a v
 
 - `VOLUME`: MAY be either a host path on the platform hosting containers (bind mount) or a volume name
 - `CONTAINER_PATH`: the path in the container where the volume is mounted
-- `ACCESS_MODE`: is a comma-separated `,` list of options and MAY be set to:
+- `ACCESS_MODE`: a comma-separated `,` list of options. MAY be set to:
   - `rw`: read and write access (default)
   - `ro`: read-only access
-  - `z`: SELinux option indicates that the bind mount host content is shared among multiple containers
-  - `Z`: SELinux option indicates that the bind mount host content is private and unshared for other containers
+  - `z`: SELinux option indicating that the bind mount host content is shared among multiple containers
+  - `Z`: SELinux option indicating that the bind mount host content is private and unshared for other containers
 
 > **Note**: The SELinux re-labeling bind mount option is ignored on platforms without SELinux.
 
@@ -1681,7 +1681,7 @@ expressed in the short form.
 - `read_only`: flag to set the volume as read-only
 - `bind`: configure additional bind options
   - `propagation`: the propagation mode used for the bind
-  - `create_host_path`: create a directory at the source path on host if there is nothing present. 
+  - `create_host_path`: create a directory at the source path on host if there is nothing present.
     Do nothing if there is something present at the path. This is automatically implied by short syntax
     for backward compatibility with docker-compose legacy.
   - `selinux`: the SELinux re-labeling option `z` (shared) or `Z` (private)
@@ -1711,5 +1711,5 @@ volumes_from:
 
 ### working_dir
 
-`working_dir` overrides the container's working directory from that specified by image (i.e. Dockerfile `WORKDIR`).
+`working_dir` overrides the container's working directory from that specified by the image (i.e. Dockerfile `WORKDIR`).
 

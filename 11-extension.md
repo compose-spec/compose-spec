@@ -1,7 +1,7 @@
 ## Extension
 
 Special extension fields can be of any format as long as their name starts with the `x-` character sequence. They can be used
-within any structure in a Compose file. This is the sole exception for Compose implementations to silently ignore unrecognized field.
+within any structure in a Compose file. This is the sole exception for Compose implementations to silently ignore unrecognized fields.
 
 ```yml
 x-custom:
@@ -59,9 +59,9 @@ services:
     logging: *default-logging
 ```
 
-### specifying byte values
+### Specifying byte values
 
-Value express a byte value as a string in `{amount}{byte unit}` format:
+Values express a byte value as a string in `{amount}{byte unit}` format:
 The supported units are `b` (bytes), `k` or `kb` (kilo bytes), `m` or `mb` (mega bytes) and `g` or `gb` (giga bytes).
 
 ```
@@ -72,11 +72,11 @@ The supported units are `b` (bytes), `k` or `kb` (kilo bytes), `m` or `mb` (mega
     1gb
 ```
 
-### specifying durations
+### Specifying durations
 
-Value express a duration as a string in the in the form of `{value}{unit}`.
+Values express a duration as a string in the form of `{value}{unit}`.
 The supported units are `us` (microseconds), `ms` (milliseconds), `s` (seconds), `m` (minutes) and `h` (hours).
-Value can can combine multiple values and using without separator.
+Values can combine multiple values without separator.
 
 ```
   10ms

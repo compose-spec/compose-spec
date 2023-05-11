@@ -1,6 +1,6 @@
 ## Secrets top-level element
 
-Secrets are a flavour of Configs focussing on sensitive data, with specific constraint for this usage. As the platform implementation may significantly differ from Configs, dedicated Secrets section allows to configure the related resources.
+Secrets are a flavour of Configs focusing on sensitive data, with specific constraint for this usage. As the platform implementation may significantly differ from Configs, dedicated Secrets section allows to configure the related resources.
 
 The top-level `secrets` declaration defines or references sensitive data that can be granted to the services in this
 application. The source of the secret is either `file` or `external`.
@@ -31,7 +31,7 @@ secrets:
     environment: "OAUTH_TOKEN"
 ```
 
-Alternatively, `server-certificate` can be declared as external, doing so Compose implementation will lookup `server-certificate` to expose secret to relevant services.
+Alternatively, `server-certificate` can be declared as external. The Compose implementation will lookup `server-certificate` secret to expose to relevant services.
 
 ```yml
 secrets:
@@ -40,8 +40,8 @@ secrets:
 ```
 
 External secrets lookup can also use a distinct key by specifying a `name`. The following
-example modifies the previous one to look up for secret using a parameter `CERTIFICATE_KEY`. Doing
-so the actual lookup key will be set at deployment time by [interpolation](12-interpolation.md) of
+example modifies the previous one to look up for secret using a parameter `CERTIFICATE_KEY`. The
+the actual lookup key will be set at deployment time by [interpolation](12-interpolation.md) of
 variables, but exposed to containers as hard-coded ID `server-certificate`.
 
 ```yml
@@ -52,8 +52,8 @@ secrets:
 ```
 
 If `external` is set to `true` and secret configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose Implementations SHOULD reject a Compose file as invalid.
+not managed by compose lifecycle, Compose implementations SHOULD reject the Compose file as invalid.
 
-Compose file need to explicitly grant access to the secrets to relevant services in the application.
+Compose file needs to explicitly grant access to the secrets to relevant services in the application.
 
 
