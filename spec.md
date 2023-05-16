@@ -2438,7 +2438,11 @@ Compose file needs to explicitly grant access to the secrets to relevant service
 
 ## Fragments
 
-It is possible to re-use configuration fragments using [YAML anchors](http://www.yaml.org/spec/1.2/spec.html#id2765878).
+With Docker Compose you can use built-in [YAML](http://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create re-usable blocks. This is useful if you start to find common configurations that span multiple services. Having re-usable blocks minimizes potential mistakes.
+
+Anchors are created using the `&` sign. The sign is followed by an alias name. You can use this alias with the `*` sign later to reference the value following the anchor. Make sure there is no space between the `&` and the `*` characters and the following alias name.
+
+### Single-line anchor example
 
 ```yml
 volumes:
@@ -2447,11 +2451,36 @@ volumes:
   metrics: *default-volume
 ```
 
-In the previous sample, an _anchor_ is created as `default-volume` based on `db-data` volume specification. It is later reused by _alias_ `*default-volume` to define `metrics` volume. The same logic can apply to any element in a Compose file. Anchor resolution MUST take place
-before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
+In the example above, a `default-volume` anchor is created based on the `db-data` volume. It is later reused by the alias `*default-volume` to define the `metrics` volume. 
 
-It is also possible to partially override values set by anchor reference using the
-[YAML merge type](http://yaml.org/type/merge.html). In the following example, `metrics` volume specification uses alias
+Anchor resolution MUST take place before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
+
+### Multi-line anchor example
+
+```yml
+services:
+  first:
+    image: my-image:latest
+    environment: &env
+      - CONFIG_KEY
+      - EXAMPLE_KEY
+      - DEMO_VAR
+  second:
+    image: another-image:latest
+    environment: *env
+```
+
+If you have an anchor that you want to use in more than one service, use it in conjunction with an [extension](11-extension.md) to make your Compose file easier to maintain.
+
+
+### Extend anchor values examples
+
+You may want to extend the anchor to add additional values or partially override values. You can do this by using the
+[YAML merge type](http://yaml.org/type/merge.html). 
+
+#### Example 1
+
+In the following example, `metrics` volume specification uses alias
 to avoid repetition but overrides `name` attribute:
 
 ```yml
@@ -2471,10 +2500,35 @@ volumes:
     name: "metrics"
 ```
 
+#### Example 2
+
+```yml
+services:
+  first:
+    image: my-image:latest
+    environment: &env
+      - CONFIG_KEY
+      - EXAMPLE_KEY
+      - DEMO_VAR
+  second:
+    image: another-image:latest
+    environment:
+      <<: *env
+      - AN_EXTRA_KEY
+      - SECOND_SPECIFIC_KEY
+```
+
+The `second` service now pulls in the base environment configuration from the `env` anchor and adds two additional configuration items.
 ## Extension
 
-Special extension fields can be of any format as long as their name starts with the `x-` character sequence. They can be used
-within any structure in a Compose file. This is the sole exception for Compose implementations to silently ignore unrecognized fields.
+As with [Fragments](10-fragments.md), Extensions can be used to make your Compose file more efficient and easier to maintain. Extensions can also be used with [anchors and aliases](10-fragments.md).
+
+Use the prefix `x-` on any top-level element to modularize configurations that you want to reuse. They can be used
+within any structure in a Compose file as Docker Compose ignores these special top-level sections. This is the sole exception for Compose implementations to silently ignore unrecognized fields.
+
+The contents of any `x-` section is unspecified by Compose specification, so it can be used to enable custom features. If the compose implementation encounters an unknown extension field it MUST NOT fail, but COULD warn the user about the unknown field.
+
+### Example 1
 
 ```yml
 x-custom:
@@ -2487,8 +2541,6 @@ services:
     image: awesome/webapp
     x-foo: bar
 ```
-
-The contents of such fields are unspecified by Compose specification, and can be used to enable custom features. Compose implementation to encounter an unknown extension field MUST NOT fail, but COULD warn about unknown field.
 
 For platform extensions, it is highly recommended to prefix extension by platform/vendor name, the same way browsers add
 support for [custom CSS features](https://www.w3.org/TR/2011/REC-CSS2-20110607/syndata.html#vendor-keywords)
@@ -2503,6 +2555,60 @@ service:
         x-azure-region: "france-central"
 ```
 
+### Example 2
+
+```yml
+x-env: &env
+  environment:
+    - CONFIG_KEY
+    - EXAMPLE_KEY
+ 
+services:
+  first:
+    <<: *env
+    image: my-image:latest
+  second:
+    <<: *env
+    image: another-image:latest
+```
+
+In this example, the environment variables no longer belong to either of the services. They’ve been lifted out completely, into the `x-env` extension field.
+This defines a new node which contains the environment field. A YAML anchor is used (&env) so both services can reference the extension field’s value.
+
+### Example 3
+
+```yml
+x-function: &function
+ labels:
+   function: "true"
+ depends_on:
+   - gateway
+ networks:
+   - functions
+ deploy:
+   placement:
+     constraints:
+       - 'node.platform.os == linux'
+services:
+ # Node.js gives OS info about the node (Host)
+ nodeinfo:
+   <<: *function
+   image: functions/nodeinfo:latest
+   environment:
+     no_proxy: "gateway"
+     https_proxy: $https_proxy
+ # Uses `cat` to echo back response, fastest function to execute.
+ echoit:
+   <<: *function
+   image: functions/alpine:health
+   environment:
+     fprocess: "cat"
+     no_proxy: "gateway"
+     https_proxy: $https_proxy
+```
+
+The `nodeinfo` and `echoit` services both use merge it in, then set their specific image and environment. 
+
 ### Informative Historical Notes
 
 This section is informative. At the time of writing, the following prefixes are known to exist:
@@ -2511,26 +2617,6 @@ This section is informative. At the time of writing, the following prefixes are 
 | ---------- | ------------------- |
 | docker     | Docker              |
 | kubernetes | Kubernetes          |
-
-### Using extensions as fragments
-
-With the support for extension fields, Compose file can be written as follows to improve readability of reused fragments:
-
-```yml
-x-logging: &default-logging
-  options:
-    max-size: "12m"
-    max-file: "5"
-  driver: json-file
-
-services:
-  frontend:
-    image: awesome/webapp
-    logging: *default-logging
-  backend:
-    image: awesome/database
-    logging: *default-logging
-```
 
 ### Specifying byte values
 
