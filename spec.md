@@ -2574,7 +2574,6 @@ services:
 In this example, the environment variables no longer belong to either of the services. They’ve been lifted out completely, into the `x-env` extension field.
 This defines a new node which contains the environment field. A YAML anchor is used (&env) so both services can reference the extension field’s value.
 
-
 ### Example 3
 
 ```yml
