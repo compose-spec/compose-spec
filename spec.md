@@ -2442,7 +2442,9 @@ With Docker Compose you can use built-in [YAML](http://www.yaml.org/spec/1.2/spe
 
 Anchors are created using the `&` sign. The sign is followed by an alias name. You can use this alias with the `*` sign later to reference the value following the anchor. Make sure there is no space between the `&` and the `*` characters and the following alias name.
 
-### Single-line anchor example
+### Examples
+
+### Example 1
 
 ```yml
 volumes:
@@ -2455,7 +2457,7 @@ In the example above, a `default-volume` anchor is created based on the `db-data
 
 Anchor resolution MUST take place before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
 
-### Multi-line anchor example
+### Example 2
 
 ```yml
 services:
@@ -2471,7 +2473,6 @@ services:
 ```
 
 If you have an anchor that you want to use in more than one service, use it in conjunction with an [extension](11-extension.md) to make your Compose file easier to maintain.
-
 
 ### Extend anchor values examples
 
@@ -2524,7 +2525,7 @@ The `second` service now pulls in the base environment configuration from the `e
 As with [Fragments](10-fragments.md), Extensions can be used to make your Compose file more efficient and easier to maintain. Extensions can also be used with [anchors and aliases](10-fragments.md).
 
 Use the prefix `x-` on any top-level element to modularize configurations that you want to reuse. They can be used
-within any structure in a Compose file as Docker Compose ignores these special top-level sections. This is the sole exception for Compose implementations to silently ignore unrecognized fields.
+within any structure in a Compose file as Docker Compose ignores any fields that start with `x-`.  This is the sole exception for Compose implementations to silently ignore unrecognized fields.
 
 The contents of any `x-` section is unspecified by Compose specification, so it can be used to enable custom features. If the compose implementation encounters an unknown extension field it MUST NOT fail, but COULD warn the user about the unknown field.
 
@@ -2572,8 +2573,8 @@ services:
     image: another-image:latest
 ```
 
-In this example, the environment variables no longer belong to either of the services. They’ve been lifted out completely, into the `x-env` extension field.
-This defines a new node which contains the environment field. A YAML anchor is used (&env) so both services can reference the extension field’s value.
+In this example, the environment variables do not belong to either of the services. They’ve been lifted out completely, into the `x-env` extension field.
+This defines a new node which contains the environment field. A YAML anchor is used (`&env`) so both services can reference the extension field’s value as `*env`.
 
 ### Example 3
 

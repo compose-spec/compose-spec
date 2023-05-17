@@ -4,7 +4,9 @@ With Docker Compose you can use built-in [YAML](http://www.yaml.org/spec/1.2/spe
 
 Anchors are created using the `&` sign. The sign is followed by an alias name. You can use this alias with the `*` sign later to reference the value following the anchor. Make sure there is no space between the `&` and the `*` characters and the following alias name.
 
-### Single-line anchor example
+### Examples
+
+### Example 1
 
 ```yml
 volumes:
@@ -17,7 +19,7 @@ In the example above, a `default-volume` anchor is created based on the `db-data
 
 Anchor resolution MUST take place before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
 
-### Multi-line anchor example
+### Example 2
 
 ```yml
 services:
@@ -33,7 +35,6 @@ services:
 ```
 
 If you have an anchor that you want to use in more than one service, use it in conjunction with an [extension](11-extension.md) to make your Compose file easier to maintain.
-
 
 ### Extend anchor values examples
 
