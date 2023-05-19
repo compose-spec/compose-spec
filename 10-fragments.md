@@ -2,7 +2,9 @@
 
 With Docker Compose you can use built-in [YAML](http://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create re-usable blocks. This is useful if you start to find common configurations that span multiple services. Having re-usable blocks minimizes potential mistakes.
 
-Anchors are created using the `&` sign. The sign is followed by an alias name. You can use this alias with the `*` sign later to reference the value following the anchor. Make sure there is no space between the `&` and the `*` characters and the following alias name.
+Anchors are created using the `&` sign. The sign is followed by an alias name. You can use this alias with the `*` sign later to reference the value following the anchor. Make sure there is no space between the `&` and the `*` characters and the following alias name. 
+
+You can use more than one anchor and alias in a single Compose file.
 
 ### Examples
 
@@ -36,12 +38,9 @@ services:
 
 If you have an anchor that you want to use in more than one service, use it in conjunction with an [extension](11-extension.md) to make your Compose file easier to maintain.
 
-### Extend anchor values examples
+### Example 3
 
-You may want to extend the anchor to add additional values or partially override values. You can do this by using the
-[YAML merge type](http://yaml.org/type/merge.html). 
-
-#### Example 1
+You may want to partially override values. Compose follows the rule outlined by [YAML merge type](http://yaml.org/type/merge.html). 
 
 In the following example, `metrics` volume specification uses alias
 to avoid repetition but overrides `name` attribute:
@@ -63,22 +62,23 @@ volumes:
     name: "metrics"
 ```
 
-#### Example 2
+### Example 4
+
+You can also extend the anchor to add additional values.
 
 ```yml
 services:
   first:
     image: my-image:latest
     environment: &env
-      - CONFIG_KEY
-      - EXAMPLE_KEY
-      - DEMO_VAR
+      FOO: BAR
+      ZOT: QUIX
   second:
     image: another-image:latest
     environment:
       <<: *env
-      - AN_EXTRA_KEY
-      - SECOND_SPECIFIC_KEY
+      YET_ANOTHER: VARIABLE
 ```
 
-The `second` service now pulls in the base environment configuration from the `env` anchor and adds two additional configuration items.
+Note that [YAML merge]((http://yaml.org/type/merge.html)) only applies to mappings, and can't be used with sequences. In previous example, the
+environment variables MUST be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved. 

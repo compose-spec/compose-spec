@@ -88,6 +88,28 @@ services:
 
 The `nodeinfo` and `echoit` services both use merge it in, then set their specific image and environment. 
 
+### Example 4 
+
+Using [YAML merge](yaml.org/type/merge.html) it is also possible to use multiple extensions and shared
+and override additional  for specific needs:
+
+```yml
+x-environment: &default-environment
+  FOO: BAR
+  ZOT: QUIX
+x-keys: &keys
+  KEY: VALUE
+services:
+  frontend:
+    image: awesome/webapp
+    environment: 
+      << : [*default-environment, *keys]
+      YET_ANOTHER: VARIABLE
+```
+
+Note that [YAML merge]((http://yaml.org/type/merge.html)) only applies to mappings, and can't be used with sequences. In previous example, the
+environment variables MUST be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
+
 ### Informative Historical Notes
 
 This section is informative. At the time of writing, the following prefixes are known to exist:
