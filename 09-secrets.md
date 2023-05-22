@@ -1,6 +1,6 @@
 ## Secrets top-level element
 
-Docker Compose provides a way for you to use secrets without having to use environment variables to store information. If you’re injecting passwords and API keys as environment variables, you risk unintentional information exposure. Environment variables are often available to all processes, and it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks.
+Compose provides a way for you to use secrets without having to use environment variables to store information. If you’re injecting passwords and API keys as environment variables, you risk unintentional information exposure. Environment variables are often available to all processes, and it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks.
 
 Secrets are also useful for locally replicating a remote development setup with Kubernetes. Using secrets makes your application scalable.
 
@@ -57,10 +57,9 @@ secrets:
     name: "${CERTIFICATE_KEY}"
 ```
 
-If `external` is set to `true` and secret configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose implementations SHOULD reject the Compose file as invalid.
+If `external` is set to `true`, all other attributes apart from `name` are irrelevant. If Compose detects any other attribute, it SHOULD reject the Compose file as invalid.
 
-Compose file needs to explicitly grant access to the secrets to relevant services in the application.
+The Compose file needs to explicitly grant access to the secrets to relevant services in the application.
 
 ## Additional resources:
 
