@@ -34,20 +34,39 @@ The backend stores data in a persistent volume.
 
 Both services communicate with each other on an isolated back-tier network, while frontend is also connected to a front-tier network and exposes port 443 for external usage.
 
-```
-(External user) --> 443 [frontend network]
-                            |
-                  +--------------------+
-                  |  frontend service  |...ro...<HTTP configuration>
-                  |      "webapp"      |...ro...<server certificate> #secured
-                  +--------------------+
-                            |
-                        [backend network]
-                            |
-                  +--------------------+
-                  |  backend service   |  r+w   ___________________
-                  |     "database"     |=======( persistent volume )
-                  +--------------------+        \_________________/
+```mermaid
+    %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+    flowchart LR
+    subgraph A[INFRASTRUCTURE]
+    direction TB
+    subgraph TOP[" "]
+        subgraph B1[Frontend Service]
+            fs["`**webapp**`"]
+        end
+        style B1 fill:#ccd6e8, stroke-width:0px
+        subgraph B2[Backend Service]
+            bs["`**database**`"]
+        end
+        style B2 fill:#ccd6e8, stroke-width:0px
+        
+    end
+    style TOP fill:transparent, stroke-width:2px, stroke:#62affb, stroke-dasharray: 5 5
+        key[ro= read only\nr+w = read write]
+        style key fill:transparent, stroke-width:0px,text-align: left, size: 94px
+        
+        direction TB
+        id2(Server\nCertificate)
+        id1(HTTP\nConfiguration)
+        id1 & id2 -.-|ro| B1
+        style id1 stroke:#000,stroke-width:1px,stroke-dasharray: 10
+        style id2 stroke:#000,stroke-width:1px,stroke-dasharray: 10
+        B2 ==r+w==> id3[(Persistent\nVolume)]
+    end
+    style A fill:#eeeeee, stroke-width:0px
+    direction LR
+    id4[External\nUser] ---id5(((443)))--->|Frontend\nNetwork| B1
+    style id4 stroke:#000,stroke-width:2px
+    B1 --Backend\nNetwork--> B2
 ```
 
 The example application is composed of the following parts:

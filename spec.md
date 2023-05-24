@@ -17,21 +17,21 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 ### Requirements and optional attributes
 
 The Compose specification includes properties designed to target a local [OCI](https://opencontainers.org/) container runtime,
-exposing Linux kernel specific configuration options, but also some Windows container specific properties, as well as cloud platform features related to resource placement on a cluster, replicated application distribution and scalability.
+exposing Linux kernel specific configuration options, but also some Windows container specific properties. It is also designed for cloud platform features related to resource placement on a cluster, replicated application distribution, and scalability.
 
-We acknowledge that no Compose implementation is expected to support **all** attributes, and that support for some properties
-is Platform dependent and can only be confirmed at runtime. The definition of a versioned schema to control the supported
+We acknowledge that no Compose implementation is expected to support all attributes, and that support for some properties
+is platform dependent and can only be confirmed at runtime. The definition of a versioned schema to control the supported
 properties in a Compose file, established by the [docker-compose](https://github.com/docker/compose) tool where the Compose
-file format was designed, doesn't offer any guarantee to the end-user attributes will be actually implemented.
+file format was designed, doesn't offer any guarantee to the end-user that attributes will be actually implemented.
 
-The specification defines the expected configuration syntax and behavior, but - until noted - supporting any of those is OPTIONAL.
+The specification defines the expected configuration syntax and behavior. Unless noted, supporting any of these is OPTIONAL.
 
-A Compose implementation to parse a Compose file using unsupported attributes SHOULD warn user. We recommend implementors
+A Compose implementation to parse a Compose file using unsupported attributes SHOULD warn users. We recommend the following implementors
 to support those running modes:
 
-* default: warn user about unsupported attributes, but ignore them
-* strict: warn user about unsupported attributes and reject the compose file
-* loose: ignore unsupported attributes AND unknown attributes (that were not defined by the spec by the time implementation was created)
+* Default: warn the user about unsupported attributes, but ignore them
+* Strict: warn the user about unsupported attributes and reject the Compose file
+* Loose: ignore unsupported attributes AND unknown attributes (that were not defined by the spec by the time implementation was created)
 
 ## The Compose application model
 
@@ -69,20 +69,39 @@ The backend stores data in a persistent volume.
 
 Both services communicate with each other on an isolated back-tier network, while frontend is also connected to a front-tier network and exposes port 443 for external usage.
 
-```
-(External user) --> 443 [frontend network]
-                            |
-                  +--------------------+
-                  |  frontend service  |...ro...<HTTP configuration>
-                  |      "webapp"      |...ro...<server certificate> #secured
-                  +--------------------+
-                            |
-                        [backend network]
-                            |
-                  +--------------------+
-                  |  backend service   |  r+w   ___________________
-                  |     "database"     |=======( persistent volume )
-                  +--------------------+        \_________________/
+```mermaid
+    %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+    flowchart LR
+    subgraph A[INFRASTRUCTURE]
+    direction TB
+    subgraph TOP[" "]
+        subgraph B1[Frontend Service]
+            fs["`**webapp**`"]
+        end
+        style B1 fill:#ccd6e8, stroke-width:0px
+        subgraph B2[Backend Service]
+            bs["`**database**`"]
+        end
+        style B2 fill:#ccd6e8, stroke-width:0px
+        
+    end
+    style TOP fill:transparent, stroke-width:2px, stroke:#62affb, stroke-dasharray: 5 5
+        key[ro= read only\nr+w = read write]
+        style key fill:transparent, stroke-width:0px,text-align: left, size: 94px
+        
+        direction TB
+        id2(Server\nCertificate)
+        id1(HTTP\nConfiguration)
+        id1 & id2 -.-|ro| B1
+        style id1 stroke:#000,stroke-width:1px,stroke-dasharray: 10
+        style id2 stroke:#000,stroke-width:1px,stroke-dasharray: 10
+        B2 ==r+w==> id3[(Persistent\nVolume)]
+    end
+    style A fill:#eeeeee, stroke-width:0px
+    direction LR
+    id4[External\nUser] ---id5(((443)))--->|Frontend\nNetwork| B1
+    style id4 stroke:#000,stroke-width:2px
+    B1 --Backend\nNetwork--> B2
 ```
 
 The example application is composed of the following parts:
@@ -204,9 +223,9 @@ services:
 ```
 
 - Compose application model parsed with no profile enabled only contains the `foo` service.
-- If profile `test` is enabled, model contains the services `bar` and `baz` which are enabled by the
-  `test` profile and service `foo` which is always enabled.
-- If profile `debug` is enabled, model contains both `foo` and `zot` services, but not `bar` and `baz`
+- If profile `test` is enabled, model contains the services `bar` and `baz`, which are enabled by the
+  `test` profile, and service `foo`, which is always enabled.
+- If profile `debug` is enabled, model contains both `foo` and `zot` services, but not `bar` and `baz`,
   and as such the model is invalid regarding the `depends_on` constraint of `zot`.
 - If profiles `debug` and `test` are enabled, model contains all services: `foo`, `bar`, `baz` and `zot`.
 - If Compose implementation is executed with `bar` as explicit service to run, it and the `test` profile
@@ -214,7 +233,7 @@ services:
 - If Compose implementation is executed with `baz` as explicit service to run, the service `baz` and the
   profile `test` will be active and `bar` will be pulled in by the `depends_on` constraint.
 - If Compose implementation is executed with `zot` as explicit service to run, again the model will be
-  invalid regarding the `depends_on` constraint of `zot` since `zot` and `bar` have no common `profiles`
+  invalid regarding the `depends_on` constraint of `zot`, since `zot` and `bar` have no common `profiles`
   listed.
 - If Compose implementation is executed with `zot` as explicit service to run and profile `test` enabled,
   profile `debug` is automatically enabled and service `bar` is pulled in as a dependency starting both
@@ -233,11 +252,11 @@ SHOULD warn the user. Compose implementations MAY offer options to ignore unknow
 
 ## Name top-level element
 
-Top-level `name` property is defined by the specification as project name to be used if user doesn't set one explicitly. 
+Top-level `name` property is defined by the specification as project name to be used if user doesn't set one explicitly.
 Compose implementations MUST offer a way for user to override this name, and SHOULD define a mechanism to compute a
-default project name, to be used if the top-level `name` element is not set.
+default project name to be used if the top-level `name` element is not set.
 
-Whenever project name is defined by top-level `name` or by some custom mechanism, it MUST be exposed for 
+Whenever project name is defined by top-level `name` or by some custom mechanism, it MUST be exposed for
 [interpolation](12-interpolation.md) and environment variable resolution as `COMPOSE_PROJECT_NAME`
 
 ```yml
@@ -248,7 +267,6 @@ services:
       - COMPOSE_PROJECT_NAME
     command: echo "I'm running ${COMPOSE_PROJECT_NAME}"
 ```
-
 ## Services top-level element
 
 A Service is an abstract definition of a computing resource within an application which can be scaled/replaced
@@ -262,7 +280,7 @@ and whose values are service definitions. A service  definition contains the con
 container started for that service.
 
 Each service MAY also include a Build section, which defines how to create the Docker image for the service.
-Compose implementations MAY support building docker images using this service definition. If not implemented
+Compose implementations MAY support building docker images using this service definition. If not implemented,
 the Build section SHOULD be ignored and the Compose file MUST still be considered valid.
 
 Build support is an OPTIONAL aspect of the Compose specification, and is
@@ -380,7 +398,7 @@ an integer value using microseconds as unit or a [duration](11-extension.md#spec
 
 ### cpus
 
-_DEPRECATED: use [deploy.reservations.cpus](deploy.md#cpus)_
+_DEPRECATED: use [deploy.limits.cpus](deploy.md#cpus)_
 
 `cpus` define the number of (potentially virtual) CPUs to allocate to service containers. This is a fractional number.
 `0.000` means no limit.
@@ -867,7 +885,7 @@ extends:
   service: webapp
 ```
 
-If supported Compose implementations MUST process `extends` in the following way:
+If supported, Compose implementations MUST process `extends` in the following way:
 
 - `service` defines the name of the service being referenced as a base, for example `web` or `database`.
 - `file` is the location of a Compose configuration file defining that service.
@@ -880,7 +898,7 @@ The following restrictions apply to the service being referenced:
   that introduces a dependency on another service is incompatible with `extends`. The
   non-exhaustive list of such keys is: `links`, `volumes_from`, `container` mode (in `ipc`, `pid`,
   `network_mode` and `net`), `service` mode (in `ipc`, `pid` and `network_mode`), `depends_on`.
-- Services cannot have circular references with `extends`
+- Services cannot have circular references with `extends`.
 
 Compose implementations MUST return an error in all of these cases.
 
@@ -915,7 +933,7 @@ specified by `extends`) MUST be merged in the following way:
 
 ##### Mappings
 
-The following keys should be treated as mappings: `build.args`, `build.labels`,
+The following keys should be treated as mappings: `annotations`, `build.args`, `build.labels`,
 `build.extra_hosts`, `deploy.labels`, `deploy.update_config`, `deploy.rollback_config`,
 `deploy.restart_policy`, `deploy.resources.limits`, `environment`, `healthcheck`,
 `labels`, `logging.options`, `sysctls`, `storage_opt`, `extra_hosts`, `ulimits`.
@@ -1049,6 +1067,20 @@ duplicates resulting from the merge are not removed.
 
 Any other allowed keys in the service definition should be treated as scalars.
 
+### annotations
+
+`annotations` defines annotations for the container. `annotations` can use either an array or a map.
+
+```yml
+annotations:
+  com.example.foo: bar
+```
+
+```yml
+annotations:
+  - com.example.foo=bar
+```
+
 ### external_links
 
 `external_links` link service containers to services managed outside this Compose application.
@@ -1149,7 +1181,7 @@ test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
 test: curl -f https://localhost || exit 1
 ```
 
-`NONE` disable the healthcheck, and is mostly useful to disable Healthcheck set by image. Alternatively
+`NONE` disables the healthcheck, and is mostly useful to disable Healthcheck set by image. Alternatively,
 the healthcheck set by the image can be disabled by setting `disable: true`:
 
 ```yml
@@ -1203,10 +1235,10 @@ The init binary that is used is platform specific.
 values are platform specific, but Compose specification defines specific values
 which MUST be implemented as described if supported:
 
-- `shareable` which gives the container own private IPC namespace, with a
+- `shareable` which gives the container its own private IPC namespace, with a
   possibility to share it with other containers.
-- `service:{name}` which makes the container join another (`shareable`)
-   container's IPC namespace.
+- `service:{name}` which makes the container join another container's
+  (`shareable`) IPC namespace.
 
 ```yml
     ipc: "shareable"
@@ -1298,10 +1330,10 @@ are platform specific. Driver specific options can be set with `options` as key-
 
 ### network_mode
 
-`network_mode` set service containers network mode. Available values are platform specific, but Compose
-specification define specific values which MUST be implemented as described if supported:
+`network_mode` sets service containers network mode. Available values are platform specific, but Compose
+specification defines specific values which MUST be implemented as described if supported:
 
-- `none` which disable all container networking
+- `none` which disables all container networking
 - `host` which gives the container raw access to host's network interface
 - `service:{name}` which gives the containers access to the specified service only
 
@@ -1495,7 +1527,7 @@ There is a performance penalty for applications that swap memory to disk often.
 
 ### oom_kill_disable
 
-If `oom_kill_disable` is set Compose implementation MUST configure the platform so it won't kill the container in case
+If `oom_kill_disable` is set, Compose implementation MUST configure the platform so it won't kill the container in case
 of memory starvation.
 
 ### oom_score_adj
@@ -1583,7 +1615,7 @@ expressed in the short form.
 
 - `target`: the container port
 - `published`: the publicly exposed port. Can be set as a range using syntax `start-end`, so it is defined as a string, then actual port SHOULD be assigned within this range based on available ports.
-- `host_ip`: the Host IP mapping, unspecified means all network interfaces (`0.0.0.0`) 
+- `host_ip`: the Host IP mapping, unspecified means all network interfaces (`0.0.0.0`)
 - `protocol`: the port protocol (`tcp` or `udp`), unspecified means any protocol
 - `mode`: `host` for publishing a host port on each node, or `ingress` for a port to be load balanced.
 
@@ -1624,7 +1656,7 @@ If present, `profiles` SHOULD follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_
   `if_not_present` SHOULD be considered an alias for this value for backward compatibility
 * `build`: Compose implementations SHOULD build the image. Compose implementations SHOULD rebuild the image if already present.
 
-If `pull_policy` and `build` both presents, Compose implementations SHOULD build the image by default. Compose implementations MAY override this behavior in the toolchain.
+If `pull_policy` and `build` are both present, Compose implementations SHOULD build the image by default. Compose implementations MAY override this behavior in the toolchain.
 
 ### read_only
 
@@ -1634,10 +1666,10 @@ If `pull_policy` and `build` both presents, Compose implementations SHOULD build
 
 `restart` defines the policy that the platform will apply on container termination.
 
-- `no`: The default restart policy. Does not restart a container under any circumstances.
+- `no`: The default restart policy. Does not restart the container under any circumstances.
 - `always`: The policy always restarts the container until its removal.
-- `on-failure`: The policy restarts a container if the exit code indicates an error.
-- `unless-stopped`: The policy restarts a container irrespective of the exit code but will stop
+- `on-failure`: The policy restarts the container if the exit code indicates an error.
+- `unless-stopped`: The policy restarts the container irrespective of the exit code but will stop
   restarting when the service is stopped or removed.
 
 ```yml
@@ -1673,7 +1705,7 @@ _DEPRECATED: use [deploy/replicas](deploy.md#replicas)_
 different syntax variants are supported: the short syntax and the long syntax.
 
 Compose implementations MUST report an error if the secret doesn't exist on the platform or isn't defined in the
-[`secrets`](09-secrets.md) section of this Compose file.
+[`secrets`](09-secrets.md) section of the Compose file.
 
 #### Short syntax
 
@@ -1824,12 +1856,12 @@ tmpfs:
 
 ### tty
 
-`tty` configure service container to run with a TTY.
+`tty` configures service container to run with a TTY.
 
 ### ulimits
 
-`ulimits` overrides the default ulimits for a container. Either specifies as a single limit as an integer or
-soft/hard limits as a mapping.
+`ulimits` overrides the default ulimits for a container. Specified either as an integer for a single limit
+or as mapping for soft/hard limits.
 
 ```yml
 ulimits:
@@ -1857,7 +1889,7 @@ userns_mode: "host"
 
 `volumes` defines mount host paths or named volumes that MUST be accessible by service containers.
 
-If the mount is a host path and only used by a single service, it MAY be declared as part of the service
+If the mount is a host path and is only used by a single service, it MAY be declared as part of the service
 definition instead of the top-level `volumes` key.
 
 To reuse a volume across multiple services, a named
@@ -1891,11 +1923,11 @@ The short syntax uses a single string with colon-separated values to specify a v
 
 - `VOLUME`: MAY be either a host path on the platform hosting containers (bind mount) or a volume name
 - `CONTAINER_PATH`: the path in the container where the volume is mounted
-- `ACCESS_MODE`: is a comma-separated `,` list of options and MAY be set to:
+- `ACCESS_MODE`: a comma-separated `,` list of options. MAY be set to:
   - `rw`: read and write access (default)
   - `ro`: read-only access
-  - `z`: SELinux option indicates that the bind mount host content is shared among multiple containers
-  - `Z`: SELinux option indicates that the bind mount host content is private and unshared for other containers
+  - `z`: SELinux option indicating that the bind mount host content is shared among multiple containers
+  - `Z`: SELinux option indicating that the bind mount host content is private and unshared for other containers
 
 > **Note**: The SELinux re-labeling bind mount option is ignored on platforms without SELinux.
 
@@ -1918,7 +1950,7 @@ expressed in the short form.
 - `read_only`: flag to set the volume as read-only
 - `bind`: configure additional bind options
   - `propagation`: the propagation mode used for the bind
-  - `create_host_path`: create a directory at the source path on host if there is nothing present. 
+  - `create_host_path`: create a directory at the source path on host if there is nothing present.
     Do nothing if there is something present at the path. This is automatically implied by short syntax
     for backward compatibility with docker-compose legacy.
   - `selinux`: the SELinux re-labeling option `z` (shared) or `Z` (private)
@@ -1948,7 +1980,7 @@ volumes_from:
 
 ### working_dir
 
-`working_dir` overrides the container's working directory from that specified by image (i.e. Dockerfile `WORKDIR`).
+`working_dir` overrides the container's working directory from that specified by the image (i.e. Dockerfile `WORKDIR`).
 
 ## Networks top-level element
 
@@ -1960,7 +1992,7 @@ Networks can be created by specifying the network name under a top-level `networ
 Services can connect to networks by specifying the network name under the service [`networks`](05-services.md#networks) subsection
 
 In the following example, at runtime, networks `front-tier` and `back-tier` will be created and the `frontend` service
-connected to the `front-tier` network and the `back-tier` network.
+will be connected to `front-tier` and `back-tier` networks.
 
 ```yml
 services:
@@ -1992,9 +2024,9 @@ Default and available values are platform specific. Compose specification MUST s
 
 #### host or none
 
-The syntax for using built-in networks such as `host` and `none` is different, as such networks implicitly exists outside
-the scope of the Compose implementation. To use them one MUST define an external network with the name `host` or `none` and
-an alias that the Compose implementation can use (`hostnet` or `nonet` in the following examples), then grant the service
+The syntax for using built-in networks such as `host` and `none` is different, as such networks implicitly exist outside
+the scope of the Compose implementation. To use them, one MUST define an external network with the name `host` or `none` and
+an alias that the Compose implementation can use (`hostnet` and `nonet` in the following examples), then grant the service
 access to that network using its alias.
 
 ```yml
@@ -2035,7 +2067,7 @@ driver_opts:
 
 ### attachable
 
-If `attachable` is set to `true`, then standalone containers SHOULD be able attach to this network, in addition to services.
+If `attachable` is set to `true`, then standalone containers SHOULD be able to attach to this network, in addition to services.
 If a standalone container attaches to the network, it can communicate with services and other standalone containers
 that are also attached to the network.
 
@@ -2082,8 +2114,8 @@ ipam:
 
 ### internal
 
-By default, Compose implementations MUST provides external connectivity to networks. `internal` when set to `true` allow to
-create an externally isolated network.
+By default, Compose implementations MUST provides external connectivity to networks. `internal`, when set to `true`, allows
+creating an externally isolated network.
 
 ### labels
 
@@ -2110,10 +2142,10 @@ Compose implementations MUST set `com.docker.compose.project` and `com.docker.co
 ### external
 
 If set to `true`, `external` specifies that this network’s lifecycle is maintained outside of that of the application.
-Compose Implementations SHOULD NOT attempt to create these networks, and raises an error if one doesn't exist.
+Compose Implementations SHOULD NOT attempt to create these networks, and SHOULD raise an error if one doesn't exist.
 
 If `external` is set to `true` and network configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose Implementations SHOULD reject a Compose file as invalid.
+not managed by compose lifecycle, Compose Implementations SHOULD reject the Compose file as invalid.
 
 In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network, Compose
 implementations SHOULD interrogate the platform for an existing network simply called `outside` and connect the
@@ -2209,12 +2241,12 @@ volumes:
 
 ### external
 
-If set to `true`, `external` specifies that this volume already exist on the platform and its lifecycle is managed outside
+If set to `true`, `external` specifies that this volume already exists on the platform and its lifecycle is managed outside
 of that of the application. Compose implementations MUST NOT attempt to create these volumes, and MUST return an error if they
 do not exist.
 
 If `external` is set to `true` and volume configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose Implementations SHOULD reject a Compose file as invalid.
+not managed by compose lifecycle, Compose Implementations SHOULD reject the Compose file as invalid.
 
 
 In the example below, instead of attempting to create a volume called
@@ -2267,7 +2299,7 @@ volumes:
     name: "my-app-data"
 ```
 
-It can also be used in conjunction with the `external` property. Doing so the name of the volume used to lookup for
+It can also be used in conjunction with the `external` property. In that case the name of the volume used to lookup for
 actual volume on platform is set separately from the name used to refer to it within the Compose file:
 
 ```yml
@@ -2277,7 +2309,7 @@ volumes:
       name: actual-name-of-volume
 ```
 
-This make it possible to make this lookup name a parameter of a Compose file, so that the model ID for volume is
+This makes it possible to make this lookup name a parameter of the Compose file, so that the model ID for volume is
 hard-coded but the actual volume ID on platform is set at runtime during deployment:
 
 ```yml
@@ -2290,7 +2322,7 @@ volumes:
 
 ## Configs top-level element
 
-Configs allow services to adapt their behaviour without the need to rebuild a Docker image. Configs are comparable to Volumes from a service point of view as they are mounted into service's containers filesystem. The actual implementation detail to get configuration provided by the platform can be set from the Configuration definition.
+Configs allow services to adapt their behaviour without the need to rebuild a Docker image. Configs are comparable to Volumes from a service point of view as they are mounted into service's container's filesystem. The actual implementation detail to get the configuration provided by the platform can be set from the Configuration definition.
 
 When granted access to a config, the config content is mounted as a file in the container. The location of the mount point within the container defaults to `/<config-name>` in Linux containers and `C:\<config-name>` in Windows containers.
 
@@ -2306,13 +2338,13 @@ application. The source of the config is either `file` or `external`.
 - `file`: The config is created with the contents of the file at the specified path.
 - `external`: If set to true, specifies that this config has already been created. Compose implementation does not
   attempt to create it, and if it does not exist, an error occurs.
-- `name`: The name of config object on Platform to lookup. This field can be used to
+- `name`: The name of the config object on Platform to lookup. This field can be used to
   reference configs that contain special characters. The name is used as is
   and will **not** be scoped with the project name.
 
 
 In this example, `<project_name>_http_config` is created when the application is deployed,
-by registering content of the `httpd.conf` as configuration data.
+by registering the content of the `httpd.conf` as configuration data.
 
 ```yml
 configs:
@@ -2320,7 +2352,7 @@ configs:
     file: ./httpd.conf
 ```
 
-Alternatively, `http_config` can be declared as external, doing so Compose implementation will lookup `http_config` to expose configuration data to relevant services.
+Alternatively, `http_config` can be declared as external. The Compose implementation will lookup `http_config` to expose configuration data to relevant services.
 
 ```yml
 configs:
@@ -2329,8 +2361,8 @@ configs:
 ```
 
 External configs lookup can also use a distinct key by specifying a `name`. The following
-example modifies the previous one to lookup for config using a parameter `HTTP_CONFIG_KEY`. Doing
-so the actual lookup key will be set at deployment time by [interpolation](12-interpolation.md) of
+example modifies the previous one to lookup for config using a parameter `HTTP_CONFIG_KEY`. The
+the actual lookup key will be set at deployment time by [interpolation](12-interpolation.md) of
 variables, but exposed to containers as hard-coded ID `http_config`.
 
 ```yml
@@ -2340,14 +2372,14 @@ configs:
     name: "${HTTP_CONFIG_KEY}"
 ```
 
-If `external` is set to `true` and secret configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose Implementations SHOULD reject a Compose file as invalid.
+If `external` is set to `true` and the configuration has other but `name` attributes set, considering resource is
+not managed by compose lifecycle, Compose Implementations SHOULD reject the Compose file as invalid.
 
 Compose file need to explicitly grant access to the configs to relevant services in the application.
 
 ## Secrets top-level element
 
-Secrets are a flavour of Configs focussing on sensitive data, with specific constraint for this usage. As the platform implementation may significantly differ from Configs, dedicated Secrets section allows to configure the related resources.
+Secrets are a flavour of Configs focusing on sensitive data, with specific constraint for this usage. As the platform implementation may significantly differ from Configs, dedicated Secrets section allows to configure the related resources.
 
 The top-level `secrets` declaration defines or references sensitive data that can be granted to the services in this
 application. The source of the secret is either `file` or `external`.
@@ -2378,7 +2410,7 @@ secrets:
     environment: "OAUTH_TOKEN"
 ```
 
-Alternatively, `server-certificate` can be declared as external, doing so Compose implementation will lookup `server-certificate` to expose secret to relevant services.
+Alternatively, `server-certificate` can be declared as external. The Compose implementation will lookup `server-certificate` secret to expose to relevant services.
 
 ```yml
 secrets:
@@ -2387,8 +2419,8 @@ secrets:
 ```
 
 External secrets lookup can also use a distinct key by specifying a `name`. The following
-example modifies the previous one to look up for secret using a parameter `CERTIFICATE_KEY`. Doing
-so the actual lookup key will be set at deployment time by [interpolation](12-interpolation.md) of
+example modifies the previous one to look up for secret using a parameter `CERTIFICATE_KEY`. The
+the actual lookup key will be set at deployment time by [interpolation](12-interpolation.md) of
 variables, but exposed to containers as hard-coded ID `server-certificate`.
 
 ```yml
@@ -2399,14 +2431,22 @@ secrets:
 ```
 
 If `external` is set to `true` and secret configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose Implementations SHOULD reject a Compose file as invalid.
+not managed by compose lifecycle, Compose implementations SHOULD reject the Compose file as invalid.
 
-Compose file need to explicitly grant access to the secrets to relevant services in the application.
+Compose file needs to explicitly grant access to the secrets to relevant services in the application.
 
 
 ## Fragments
 
-It is possible to re-use configuration fragments using [YAML anchors](http://www.yaml.org/spec/1.2/spec.html#id2765878).
+With Docker Compose you can use built-in [YAML](http://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create re-usable blocks. This is useful if you start to find common configurations that span multiple services. Having re-usable blocks minimizes potential mistakes.
+
+Anchors are created using the `&` sign. The sign is followed by an alias name. You can use this alias with the `*` sign later to reference the value following the anchor. Make sure there is no space between the `&` and the `*` characters and the following alias name. 
+
+You can use more than one anchor and alias in a single Compose file.
+
+### Examples
+
+### Example 1
 
 ```yml
 volumes:
@@ -2415,12 +2455,33 @@ volumes:
   metrics: *default-volume
 ```
 
-In previous sample, an _anchor_ is created as `default-volume` based on `db-data` volume specification. It is later reused by _alias_ `*default-volume` to define `metrics` volume. Same logic can apply to any element in a Compose file. Anchor resolution MUST take place
-before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
+In the example above, a `default-volume` anchor is created based on the `db-data` volume. It is later reused by the alias `*default-volume` to define the `metrics` volume. 
 
-It is also possible to partially override values set by anchor reference using the
-[YAML merge type](http://yaml.org/type/merge.html). In following example, `metrics` volume specification uses alias
-to avoid repetition but override `name` attribute:
+Anchor resolution MUST take place before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
+
+### Example 2
+
+```yml
+services:
+  first:
+    image: my-image:latest
+    environment: &env
+      - CONFIG_KEY
+      - EXAMPLE_KEY
+      - DEMO_VAR
+  second:
+    image: another-image:latest
+    environment: *env
+```
+
+If you have an anchor that you want to use in more than one service, use it in conjunction with an [extension](11-extension.md) to make your Compose file easier to maintain.
+
+### Example 3
+
+You may want to partially override values. Compose follows the rule outlined by [YAML merge type](http://yaml.org/type/merge.html). 
+
+In the following example, `metrics` volume specification uses alias
+to avoid repetition but overrides `name` attribute:
 
 ```yml
 
@@ -2439,10 +2500,36 @@ volumes:
     name: "metrics"
 ```
 
+### Example 4
+
+You can also extend the anchor to add additional values.
+
+```yml
+services:
+  first:
+    image: my-image:latest
+    environment: &env
+      FOO: BAR
+      ZOT: QUIX
+  second:
+    image: another-image:latest
+    environment:
+      <<: *env
+      YET_ANOTHER: VARIABLE
+```
+
+Note that [YAML merge]((http://yaml.org/type/merge.html)) only applies to mappings, and can't be used with sequences. In previous example, the
+environment variables MUST be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved. 
 ## Extension
 
-Special extension fields can be of any format as long as their name starts with the `x-` character sequence. They can be used
-within any structure in a Compose file. This is the sole exception for Compose implementations to silently ignore unrecognized field.
+As with [Fragments](10-fragments.md), Extensions can be used to make your Compose file more efficient and easier to maintain. Extensions can also be used with [anchors and aliases](10-fragments.md).
+
+Use the prefix `x-` on any top-level element to modularize configurations that you want to reuse. They can be used
+within any structure in a Compose file as Docker Compose ignores any fields that start with `x-`.  This is the sole exception for Compose implementations to silently ignore unrecognized fields.
+
+The contents of any `x-` section is unspecified by Compose specification, so it can be used to enable custom features. If the compose implementation encounters an unknown extension field it MUST NOT fail, but COULD warn the user about the unknown field.
+
+### Example 1
 
 ```yml
 x-custom:
@@ -2455,8 +2542,6 @@ services:
     image: awesome/webapp
     x-foo: bar
 ```
-
-The contents of such fields are unspecified by Compose specification, and can be used to enable custom features. Compose implementation to encounter an unknown extension field MUST NOT fail, but COULD warn about unknown field.
 
 For platform extensions, it is highly recommended to prefix extension by platform/vendor name, the same way browsers add
 support for [custom CSS features](https://www.w3.org/TR/2011/REC-CSS2-20110607/syndata.html#vendor-keywords)
@@ -2471,6 +2556,82 @@ service:
         x-azure-region: "france-central"
 ```
 
+### Example 2
+
+```yml
+x-env: &env
+  environment:
+    - CONFIG_KEY
+    - EXAMPLE_KEY
+ 
+services:
+  first:
+    <<: *env
+    image: my-image:latest
+  second:
+    <<: *env
+    image: another-image:latest
+```
+
+In this example, the environment variables do not belong to either of the services. They’ve been lifted out completely, into the `x-env` extension field.
+This defines a new node which contains the environment field. A YAML anchor is used (`&env`) so both services can reference the extension field’s value as `*env`.
+
+### Example 3
+
+```yml
+x-function: &function
+ labels:
+   function: "true"
+ depends_on:
+   - gateway
+ networks:
+   - functions
+ deploy:
+   placement:
+     constraints:
+       - 'node.platform.os == linux'
+services:
+ # Node.js gives OS info about the node (Host)
+ nodeinfo:
+   <<: *function
+   image: functions/nodeinfo:latest
+   environment:
+     no_proxy: "gateway"
+     https_proxy: $https_proxy
+ # Uses `cat` to echo back response, fastest function to execute.
+ echoit:
+   <<: *function
+   image: functions/alpine:health
+   environment:
+     fprocess: "cat"
+     no_proxy: "gateway"
+     https_proxy: $https_proxy
+```
+
+The `nodeinfo` and `echoit` services both use merge it in, then set their specific image and environment. 
+
+### Example 4 
+
+Using [YAML merge](yaml.org/type/merge.html) it is also possible to use multiple extensions and shared
+and override additional  for specific needs:
+
+```yml
+x-environment: &default-environment
+  FOO: BAR
+  ZOT: QUIX
+x-keys: &keys
+  KEY: VALUE
+services:
+  frontend:
+    image: awesome/webapp
+    environment: 
+      << : [*default-environment, *keys]
+      YET_ANOTHER: VARIABLE
+```
+
+Note that [YAML merge]((http://yaml.org/type/merge.html)) only applies to mappings, and can't be used with sequences. In previous example, the
+environment variables MUST be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
+
 ### Informative Historical Notes
 
 This section is informative. At the time of writing, the following prefixes are known to exist:
@@ -2480,29 +2641,9 @@ This section is informative. At the time of writing, the following prefixes are 
 | docker     | Docker              |
 | kubernetes | Kubernetes          |
 
-### Using extensions as fragments
+### Specifying byte values
 
-With the support for extension fields, Compose file can be written as follows to improve readability of reused fragments:
-
-```yml
-x-logging: &default-logging
-  options:
-    max-size: "12m"
-    max-file: "5"
-  driver: json-file
-
-services:
-  frontend:
-    image: awesome/webapp
-    logging: *default-logging
-  backend:
-    image: awesome/database
-    logging: *default-logging
-```
-
-### specifying byte values
-
-Value express a byte value as a string in `{amount}{byte unit}` format:
+Values express a byte value as a string in `{amount}{byte unit}` format:
 The supported units are `b` (bytes), `k` or `kb` (kilo bytes), `m` or `mb` (mega bytes) and `g` or `gb` (giga bytes).
 
 ```
@@ -2513,11 +2654,11 @@ The supported units are `b` (bytes), `k` or `kb` (kilo bytes), `m` or `mb` (mega
     1gb
 ```
 
-### specifying durations
+### Specifying durations
 
-Value express a duration as a string in the in the form of `{value}{unit}`.
+Values express a duration as a string in the form of `{value}{unit}`.
 The supported units are `us` (microseconds), `ms` (milliseconds), `s` (seconds), `m` (minutes) and `h` (hours).
-Value can can combine multiple values and using without separator.
+Values can combine multiple values without separator.
 
 ```
   10ms
@@ -2527,11 +2668,10 @@ Value can can combine multiple values and using without separator.
 ```
 ## Interpolation
 
-Values in a Compose file can be set by variables, and interpolated at runtime. Compose files use a Bash-like
+Values in a Compose file can be set by variables and interpolated at runtime. Compose files use a Bash-like
 syntax `${VARIABLE}`
 
-Both `$VARIABLE` and `${VARIABLE}` syntax are supported. Default values can be defined inline using typical shell syntax:
-latest
+Both `$VARIABLE` and `${VARIABLE}` syntax is supported. Default values can be defined inline using typical shell syntax:
 
 - `${VARIABLE:-default}` evaluates to `default` if `VARIABLE` is unset or
   empty in the environment.
@@ -2573,22 +2713,182 @@ If the Compose implementation can't resolve a substituted variable and no defaul
 the user and substitute the variable with an empty string.
 
 As any values in a Compose file can be interpolated with variable substitution, including compact string notation
-for complex elements, interpolation MUST be applied _before_ merge on a per-file-basis.
+for complex elements, interpolation MUST be applied _before_ merge on a per-file basis.
 
-Interpolation applies only to YAML _values_, not to _keys_. For the few places where keys are actually arbitrary 
-user-defined strings, such as [labels](#labels) or [environment](#environment), an alternate equal sign syntax 
+Interpolation applies only to YAML _values_, not to _keys_. For the few places where keys are actually arbitrary
+user-defined strings, such as [labels](#labels) or [environment](#environment), an alternate equal sign syntax
 MUST be used for interpolation to apply:
 
 ```yml
 services:
   foo:
-    labels: 
+    labels:
       "$VAR_NOT_INTERPOLATED_BY_COMPOSE": "BAR"
 ```
 
 ```yml
 services:
   foo:
-    labels: 
+    labels:
       - "$VAR_INTERPOLATED_BY_COMPOSE=BAR"
+```
+## Merge and override
+
+Compose implementations SHOULD allow users to define a Compose application model through multiple Compose files. 
+When doing so, a Compose implementation MUST follow the rules declared in this section to merge Compose files.
+
+### Mapping
+
+A YAML `mapping` gets merged by adding missing entries and merging the conflicting ones.
+
+Merging the following example YAML trees:
+```yaml
+services:
+  foo:
+    key1: value1
+    key2: value2
+```    
+
+```yaml
+services:
+  foo:
+    key2: VALUE
+    key3: value3
+```
+
+MUST result in a Compose application model equivalent to the YAML tree:
+
+```yaml
+services:
+  foo:
+    key1: value1
+    key2: VALUE
+    key3: value3
+```
+
+### Sequence
+
+A YAML `sequence` is merged by appending values from the overriding Compose file to the previous one.
+
+Merging the following example YAML trees:
+```yaml
+services:
+  foo:
+    DNS:
+      - 1.1.1.1
+```    
+
+```yaml
+services:
+  foo:
+    DNS: 
+      - 8.8.8.8
+```
+
+MUST result in a Compose application model equivalent to the YAML tree:
+
+```yaml
+services:
+  foo:
+    DNS:
+      - 1.1.1.1
+      - 8.8.8.8
+```
+
+## Exceptions
+
+There are exceptions to those rules:
+
+### Shell commands
+
+Service's [command](#command), [entrypoint](#entrypoint) and [healthcheck](#healthcheck) `test`: 
+For usability, the value MUST be overridden by the latest Compose file, and not appended.
+
+Merging the following example YAML trees:
+```yaml
+services:
+  foo:
+    command: ["echo", "foo"]
+```    
+
+```yaml
+services:
+  foo:
+    command: ["echo", "bar"]
+```
+
+MUST result in a Compose application model equivalent to the YAML tree:
+
+```yaml
+services:
+  foo:
+    DNS:
+      command: ["echo", "bar"]
+```
+
+
+### Unique resources
+
+Applies to service [ports](#ports), [volumes](#volumes), [secrets](#secrets) and [configs](#configs).
+While these types are modeled in a Compose file as a sequence, they have special uniqueness requirements:
+
+| attribute   | unique key               |
+|-------------|--------------------------|
+| volumes     |  target                  |
+| secrets     |  source                  |
+| configs     |  source                  |
+| ports       |  {ip, target, published, protocol}   |
+
+While merging Compose files, a Compose implementation MUST append new entries that do not violate a uniqueness constraint and merge entries that share a unique key.
+
+Merging the following example YAML trees:
+```yaml
+services:
+  foo:
+    volumes:
+      - foo:/work
+```    
+
+```yaml
+services:
+  foo:
+    volumes:
+      - bar:/work
+```
+
+MUST result in a Compose application model equivalent to the YAML tree:
+
+```yaml
+services:
+  foo:
+    volumes:
+      - bar:/work
+```
+
+### Reset value
+
+In addition to the previously described mechanism, an override Compose file can also be used to remove elements from application model.
+For this purpose, custom YAML tag `!reset` can be set to override value set by the overriden Compose file, and replace with default
+value or `null` on target attribute.
+
+Merging the following example YAML trees:
+```yaml
+services:
+  foo:
+    build:
+      context: /path
+```    
+
+```yaml
+services:
+  foo:
+    build: !reset
+```
+
+MUST result in a Compose application model equivalent to the YAML tree:
+
+```yaml
+services:
+  foo:
+    build: null
 ```

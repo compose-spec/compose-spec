@@ -8,7 +8,7 @@ Networks can be created by specifying the network name under a top-level `networ
 Services can connect to networks by specifying the network name under the service [`networks`](05-services.md#networks) subsection
 
 In the following example, at runtime, networks `front-tier` and `back-tier` will be created and the `frontend` service
-connected to the `front-tier` network and the `back-tier` network.
+will be connected to `front-tier` and `back-tier` networks.
 
 ```yml
 services:
@@ -40,9 +40,9 @@ Default and available values are platform specific. Compose specification MUST s
 
 #### host or none
 
-The syntax for using built-in networks such as `host` and `none` is different, as such networks implicitly exists outside
-the scope of the Compose implementation. To use them one MUST define an external network with the name `host` or `none` and
-an alias that the Compose implementation can use (`hostnet` or `nonet` in the following examples), then grant the service
+The syntax for using built-in networks such as `host` and `none` is different, as such networks implicitly exist outside
+the scope of the Compose implementation. To use them, one MUST define an external network with the name `host` or `none` and
+an alias that the Compose implementation can use (`hostnet` and `nonet` in the following examples), then grant the service
 access to that network using its alias.
 
 ```yml
@@ -83,7 +83,7 @@ driver_opts:
 
 ### attachable
 
-If `attachable` is set to `true`, then standalone containers SHOULD be able attach to this network, in addition to services.
+If `attachable` is set to `true`, then standalone containers SHOULD be able to attach to this network, in addition to services.
 If a standalone container attaches to the network, it can communicate with services and other standalone containers
 that are also attached to the network.
 
@@ -130,8 +130,8 @@ ipam:
 
 ### internal
 
-By default, Compose implementations MUST provides external connectivity to networks. `internal` when set to `true` allow to
-create an externally isolated network.
+By default, Compose implementations MUST provides external connectivity to networks. `internal`, when set to `true`, allows
+creating an externally isolated network.
 
 ### labels
 
@@ -158,10 +158,10 @@ Compose implementations MUST set `com.docker.compose.project` and `com.docker.co
 ### external
 
 If set to `true`, `external` specifies that this network’s lifecycle is maintained outside of that of the application.
-Compose Implementations SHOULD NOT attempt to create these networks, and raises an error if one doesn't exist.
+Compose Implementations SHOULD NOT attempt to create these networks, and SHOULD raise an error if one doesn't exist.
 
 If `external` is set to `true` and network configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose Implementations SHOULD reject a Compose file as invalid.
+not managed by compose lifecycle, Compose Implementations SHOULD reject the Compose file as invalid.
 
 In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network, Compose
 implementations SHOULD interrogate the platform for an existing network simply called `outside` and connect the

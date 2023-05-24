@@ -26,6 +26,7 @@ RUN <<EOT
   cat 10-fragments.md >> spec.md
   cat 11-extension.md >> spec.md
   cat 12-interpolation.md >> spec.md
+  cat 13-merge.md >> spec.md
 
   mkdir /out
   cp spec.md /out

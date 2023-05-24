@@ -1,7 +1,13 @@
 ## Extension
 
-Special extension fields can be of any format as long as their name starts with the `x-` character sequence. They can be used
-within any structure in a Compose file. This is the sole exception for Compose implementations to silently ignore unrecognized field.
+As with [Fragments](10-fragments.md), Extensions can be used to make your Compose file more efficient and easier to maintain. Extensions can also be used with [anchors and aliases](10-fragments.md).
+
+Use the prefix `x-` on any top-level element to modularize configurations that you want to reuse. They can be used
+within any structure in a Compose file as Docker Compose ignores any fields that start with `x-`.  This is the sole exception for Compose implementations to silently ignore unrecognized fields.
+
+The contents of any `x-` section is unspecified by Compose specification, so it can be used to enable custom features. If the compose implementation encounters an unknown extension field it MUST NOT fail, but COULD warn the user about the unknown field.
+
+### Example 1
 
 ```yml
 x-custom:
@@ -14,8 +20,6 @@ services:
     image: awesome/webapp
     x-foo: bar
 ```
-
-The contents of such fields are unspecified by Compose specification, and can be used to enable custom features. Compose implementation to encounter an unknown extension field MUST NOT fail, but COULD warn about unknown field.
 
 For platform extensions, it is highly recommended to prefix extension by platform/vendor name, the same way browsers add
 support for [custom CSS features](https://www.w3.org/TR/2011/REC-CSS2-20110607/syndata.html#vendor-keywords)
@@ -30,6 +34,82 @@ service:
         x-azure-region: "france-central"
 ```
 
+### Example 2
+
+```yml
+x-env: &env
+  environment:
+    - CONFIG_KEY
+    - EXAMPLE_KEY
+ 
+services:
+  first:
+    <<: *env
+    image: my-image:latest
+  second:
+    <<: *env
+    image: another-image:latest
+```
+
+In this example, the environment variables do not belong to either of the services. They’ve been lifted out completely, into the `x-env` extension field.
+This defines a new node which contains the environment field. A YAML anchor is used (`&env`) so both services can reference the extension field’s value as `*env`.
+
+### Example 3
+
+```yml
+x-function: &function
+ labels:
+   function: "true"
+ depends_on:
+   - gateway
+ networks:
+   - functions
+ deploy:
+   placement:
+     constraints:
+       - 'node.platform.os == linux'
+services:
+ # Node.js gives OS info about the node (Host)
+ nodeinfo:
+   <<: *function
+   image: functions/nodeinfo:latest
+   environment:
+     no_proxy: "gateway"
+     https_proxy: $https_proxy
+ # Uses `cat` to echo back response, fastest function to execute.
+ echoit:
+   <<: *function
+   image: functions/alpine:health
+   environment:
+     fprocess: "cat"
+     no_proxy: "gateway"
+     https_proxy: $https_proxy
+```
+
+The `nodeinfo` and `echoit` services both use merge it in, then set their specific image and environment. 
+
+### Example 4 
+
+Using [YAML merge](yaml.org/type/merge.html) it is also possible to use multiple extensions and shared
+and override additional  for specific needs:
+
+```yml
+x-environment: &default-environment
+  FOO: BAR
+  ZOT: QUIX
+x-keys: &keys
+  KEY: VALUE
+services:
+  frontend:
+    image: awesome/webapp
+    environment: 
+      << : [*default-environment, *keys]
+      YET_ANOTHER: VARIABLE
+```
+
+Note that [YAML merge]((http://yaml.org/type/merge.html)) only applies to mappings, and can't be used with sequences. In previous example, the
+environment variables MUST be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
+
 ### Informative Historical Notes
 
 This section is informative. At the time of writing, the following prefixes are known to exist:
@@ -39,29 +119,9 @@ This section is informative. At the time of writing, the following prefixes are 
 | docker     | Docker              |
 | kubernetes | Kubernetes          |
 
-### Using extensions as fragments
+### Specifying byte values
 
-With the support for extension fields, Compose file can be written as follows to improve readability of reused fragments:
-
-```yml
-x-logging: &default-logging
-  options:
-    max-size: "12m"
-    max-file: "5"
-  driver: json-file
-
-services:
-  frontend:
-    image: awesome/webapp
-    logging: *default-logging
-  backend:
-    image: awesome/database
-    logging: *default-logging
-```
-
-### specifying byte values
-
-Value express a byte value as a string in `{amount}{byte unit}` format:
+Values express a byte value as a string in `{amount}{byte unit}` format:
 The supported units are `b` (bytes), `k` or `kb` (kilo bytes), `m` or `mb` (mega bytes) and `g` or `gb` (giga bytes).
 
 ```
@@ -72,11 +132,11 @@ The supported units are `b` (bytes), `k` or `kb` (kilo bytes), `m` or `mb` (mega
     1gb
 ```
 
-### specifying durations
+### Specifying durations
 
-Value express a duration as a string in the in the form of `{value}{unit}`.
+Values express a duration as a string in the form of `{value}{unit}`.
 The supported units are `us` (microseconds), `ms` (milliseconds), `s` (seconds), `m` (minutes) and `h` (hours).
-Value can can combine multiple values and using without separator.
+Values can combine multiple values without separator.
 
 ```
   10ms
