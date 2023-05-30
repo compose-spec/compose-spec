@@ -1,6 +1,6 @@
 ## Fragments
 
-With Compose, you can use built-in [YAML](http://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create re-usable blocks. This is useful if you start to find common configurations that span multiple services. Having re-usable blocks minimizes potential mistakes.
+With Compose, you can use built-in [YAML](https://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create re-usable blocks. This is useful if you start to find common configurations that span multiple services. Having re-usable blocks minimizes potential mistakes.
 
 Anchors are created using the `&` sign. The sign is followed by an alias name. You can use this alias with the `*` sign later to reference the value following the anchor. Make sure there is no space between the `&` and the `*` characters and the following alias name. 
 
@@ -38,7 +38,7 @@ If you have an anchor that you want to use in more than one service, use it in c
 
 ### Example 3
 
-You may want to partially override values. Compose follows the rule outlined by [YAML merge type](http://yaml.org/type/merge.html). 
+You may want to partially override values. Compose follows the rule outlined by [YAML merge type](https://yaml.org/type/merge.html). 
 
 In the following example, `metrics` volume specification uses alias
 to avoid repetition but overrides `name` attribute:
@@ -78,8 +78,8 @@ services:
       YET_ANOTHER: VARIABLE
 ```
 
->**Note**
+> **Note**
 >
-> [YAML merge](http://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
+> [YAML merge](https://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
 
 In example above, the environment variables must be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved. 

@@ -1,6 +1,6 @@
 ## Compose file
 
-The Compose file is a [YAML](http://yaml.org/) file defining
+The Compose file is a [YAML](https://yaml.org/) file defining
 [version](04-version-and-name.md) (Deprecated),
 [services](05-services.md) (Required),
 [networks](06-networks.md),

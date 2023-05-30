@@ -90,7 +90,7 @@ The `nodeinfo` and `echoit` services both include the `x-function` extension via
 
 ### Example 4 
 
-Using [YAML merge](http://yaml.org/type/merge.html) it is also possible to use multiple extensions and share
+Using [YAML merge](https://yaml.org/type/merge.html) it is also possible to use multiple extensions and share
 and override additional attributes for specific needs:
 
 ```yml
@@ -108,9 +108,10 @@ services:
 ```
 
 > **Note**
-> [YAML merge](http://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
 >
->In the example above, the environment variables are declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
+> [YAML merge](https://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
+>
+> In the example above, the environment variables are declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
 
 ### Informative Historical Notes
 
