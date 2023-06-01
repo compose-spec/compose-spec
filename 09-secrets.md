@@ -1,10 +1,8 @@
 ## Secrets top-level element
 
-Compose provides a way for you to use secrets without having to use environment variables to store information. If you’re injecting passwords and API keys as environment variables, you risk unintentional information exposure. Environment variables are often available to all processes, and it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks.
+Secrets provides a more secure way of getting sensitive information in to your application's services, so you don't have to rely on using environment variables. If you’re injecting passwords and API keys as environment variables, you risk unintentional information exposure. Environment variables are often available to all processes, and it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks.
 
-Secrets are also useful for locally replicating a remote development setup with Kubernetes. Using secrets makes your application scalable.
-
-The top-level `secrets` element defines or references sensitive data that can be granted to your services. The source of the secret is set with either `file` or `external`.
+The top-level `secrets` element defines or references sensitive data that can be granted to your services. The source of the secret is set with either `file` or `environment`.
 
 - `file`: The secret is created with the contents of the file at the specified path.
 - `environment`: The secret is created with the value of an environment variable.
@@ -47,7 +45,7 @@ secrets:
 ```
 
 External secrets lookup can also use a distinct key by specifying a `name`. The following
-example extends the previous example and has Compose looking for a secret using the parameter `CERTIFICATE_KEY`. The the actual lookup key is set at deployment time by [interpolation](12-interpolation.md) of
+example extends the previous example and has Compose looking for a secret using the parameter `CERTIFICATE_KEY`. The actual lookup key is set at deployment time by [interpolation](12-interpolation.md) of
 variables, but exposed to containers as hard-coded ID `server-certificate`.
 
 ```yml
@@ -57,7 +55,7 @@ secrets:
     name: "${CERTIFICATE_KEY}"
 ```
 
-If `external` is set to `true`, all other attributes apart from `name` are irrelevant. If Compose detects any other attribute, it SHOULD reject the Compose file as invalid.
+If `external` is set to `true`, all other attributes apart from `name` are irrelevant. If Compose detects any other attribute, it SHOULD reject the compose file as invalid.
 
 The Compose file needs to explicitly grant access to the secrets to relevant services in the application.
 
