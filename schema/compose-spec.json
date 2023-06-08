@@ -17,6 +17,15 @@
       "description": "define the Compose project name, until user defines one explicitly."
     },
 
+    "include": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "$ref": "#/definitions/include"
+      },
+      "description": "compose sub-projects to be included."
+    },
+
     "services": {
       "id": "#/properties/services",
       "type": "object",
@@ -586,6 +595,22 @@
         "additionalProperties": false,
         "patternProperties": {"^x-": {}}
       }
+    },
+
+    "include": {
+      "id": "#/definitions/include",
+      "oneOf": [
+        {"type": "string"},
+        {
+          "type": "object",
+          "properties": {
+            "path": {"$ref": "#/definitions/string_or_list"},
+            "env_file": {"$ref": "#/definitions/string_or_list"},
+            "project_directory": {"type": "string"}
+          },
+          "additionalProperties": false
+        }
+      ]
     },
 
     "network": {
