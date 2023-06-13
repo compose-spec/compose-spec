@@ -235,6 +235,13 @@ Deploy support is an optional aspect of the Compose specification, and is
 described in detail in the [Deployment support](deploy.md) documentation.
 If not implemented the Deploy section should be ignored and the Compose file must still be considered valid.
 
+### attach
+
+When `attach` is defined and set to `false` Compose will not collect service logs,
+until user explicitly requests to.
+
+Default service configuration is `attach: true`.
+
 ### build
 
 `build` specifies the build configuration for creating container image from source, as defined in the [Build support](build.md) documentation.
