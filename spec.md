@@ -2007,7 +2007,9 @@ networks:
 driver is not available on the platform.
 
 ```yml
-driver: overlay
+volumes:
+  db-data:
+    driver: overlay
 ```
 
 Default and available values are platform specific. Compose specification must support the following specific drivers:
@@ -2054,9 +2056,11 @@ networks:
 driver-dependent - consult the driver's documentation for more information. Optional.
 
 ```yml
-driver_opts:
-  foo: "bar"
-  baz: 1
+volumes:
+  db-data:
+    driver_opts:
+      foo: "bar"
+      baz: 1
 ```
 
 ### attachable
@@ -2118,17 +2122,21 @@ Add metadata to containers using Labels. Can use either an array or a dictionary
 Users should use reverse-DNS notation to prevent labels from conflicting with those used by other software.
 
 ```yml
-labels:
-  com.example.description: "Financial transaction network"
-  com.example.department: "Finance"
-  com.example.label-with-empty-value: ""
+volumes:
+  db-data:
+    labels:
+      com.example.description: "Financial transaction network"
+      com.example.department: "Finance"
+      com.example.label-with-empty-value: ""
 ```
 
 ```yml
-labels:
-  - "com.example.description=Financial transaction network"
-  - "com.example.department=Finance"
-  - "com.example.label-with-empty-value"
+volumes:
+  db-data:
+    labels:
+      - "com.example.description=Financial transaction network"
+      - "com.example.department=Finance"
+      - "com.example.label-with-empty-value"
 ```
 
 Compose sets `com.docker.compose.project` and `com.docker.compose.network` labels.
@@ -2217,7 +2225,9 @@ creating a volume. Optionally, you can configure it with the following keys:
 Specify which volume driver should be used for this volume. Default and available values are platform specific. If the driver is not available, Compose must return an error and stop application deployment.
 
 ```yml
-driver: foobar
+volumes:
+  db-data:
+    driver: foobar
 ```
 
 ### driver_opts
@@ -2267,17 +2277,21 @@ It's recommended that you use reverse-DNS notation to prevent your labels from
 conflicting with those used by other software.
 
 ```yml
-labels:
-  com.example.description: "Database volume"
-  com.example.department: "IT/Ops"
-  com.example.label-with-empty-value: ""
+volumes:
+  db-data:
+    labels:
+      com.example.description: "Database volume"
+      com.example.department: "IT/Ops"
+      com.example.label-with-empty-value: ""
 ```
 
 ```yml
-labels:
-  - "com.example.description=Database volume"
-  - "com.example.department=IT/Ops"
-  - "com.example.label-with-empty-value"
+volumes:
+  db-data:
+    labels:
+      - "com.example.description=Database volume"
+      - "com.example.department=IT/Ops"
+      - "com.example.label-with-empty-value"
 ```
 
 Compose sets `com.docker.compose.project` and `com.docker.compose.volume` labels.

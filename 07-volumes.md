@@ -31,7 +31,9 @@ creating a volume. Optionally, you can configure it with the following keys:
 Specify which volume driver should be used for this volume. Default and available values are platform specific. If the driver is not available, Compose must return an error and stop application deployment.
 
 ```yml
-driver: foobar
+volumes:
+  db-data:
+    driver: foobar
 ```
 
 ### driver_opts
@@ -81,17 +83,21 @@ It's recommended that you use reverse-DNS notation to prevent your labels from
 conflicting with those used by other software.
 
 ```yml
-labels:
-  com.example.description: "Database volume"
-  com.example.department: "IT/Ops"
-  com.example.label-with-empty-value: ""
+volumes:
+  db-data:
+    labels:
+      com.example.description: "Database volume"
+      com.example.department: "IT/Ops"
+      com.example.label-with-empty-value: ""
 ```
 
 ```yml
-labels:
-  - "com.example.description=Database volume"
-  - "com.example.department=IT/Ops"
-  - "com.example.label-with-empty-value"
+volumes:
+  db-data:
+    labels:
+      - "com.example.description=Database volume"
+      - "com.example.department=IT/Ops"
+      - "com.example.label-with-empty-value"
 ```
 
 Compose sets `com.docker.compose.project` and `com.docker.compose.volume` labels.
