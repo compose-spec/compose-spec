@@ -7,7 +7,7 @@ application. The source of the secret is either `file` or `external`.
 
 - `file`: The secret is created with the contents of the file at the specified path.
 - `environment`: The secret is created with the value of an environment variable.
-- `external`: If set to true, specifies that this secret has already been created. Compose implementation does
+- `external`: If set to true, specifies that this secret has already been created. Compose does
   not attempt to create it, and if it does not exist, an error occurs.
 - `name`: The name of the secret object in Docker. This field can be used to
   reference secrets that contain special characters. The name is used as is
@@ -31,7 +31,7 @@ secrets:
     environment: "OAUTH_TOKEN"
 ```
 
-Alternatively, `server-certificate` can be declared as external. The Compose implementation will lookup `server-certificate` secret to expose to relevant services.
+Alternatively, `server-certificate` can be declared as external. Compose will lookup `server-certificate` secret to expose to relevant services.
 
 ```yml
 secrets:
@@ -52,7 +52,7 @@ secrets:
 ```
 
 If `external` is set to `true` and secret configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose implementations SHOULD reject the Compose file as invalid.
+not managed by compose lifecycle, Compose rejects the Compose file as invalid.
 
 Compose file needs to explicitly grant access to the secrets to relevant services in the application.
 

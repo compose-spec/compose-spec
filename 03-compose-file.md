@@ -8,8 +8,8 @@ The Compose file is a [YAML](http://yaml.org/) file defining
 [configs](08-configs.md) and
 [secrets](09-secrets.md).
 The default path for a Compose file is `compose.yaml` (preferred) or `compose.yml` in working directory.
-Compose implementations SHOULD also support `docker-compose.yaml` and `docker-compose.yml` for backward compatibility.
-If both files exist, Compose implementations MUST prefer canonical `compose.yaml` one.
+Compose also supports `docker-compose.yaml` and `docker-compose.yml` for backward compatibility.
+If both files exist, Compose prefers the canonical `compose.yaml` one.
 
 Multiple Compose files can be combined together to define the application model. The combination of YAML files
 MUST be implemented by appending/overriding YAML elements based on Compose file order set by the user. Simple
@@ -34,7 +34,7 @@ All other top-level elements are not affected by `profiles` and are always activ
 
 References to other services (by `links`, `extends` or shared resource syntax `service:xxx`) MUST not
 automatically enable a component that would otherwise have been ignored by active profiles. Instead the
-Compose implementation MUST return an error.
+Compose returns an error.
 
 #### Illustrative example
 
@@ -66,14 +66,14 @@ services:
 - If profile `debug` is enabled, model contains both `foo` and `zot` services, but not `bar` and `baz`,
   and as such the model is invalid regarding the `depends_on` constraint of `zot`.
 - If profiles `debug` and `test` are enabled, model contains all services: `foo`, `bar`, `baz` and `zot`.
-- If Compose implementation is executed with `bar` as explicit service to run, it and the `test` profile
+- If Compose is executed with `bar` as explicit service to run, it and the `test` profile
   will be active even if `test` profile is not enabled _by the user_.
-- If Compose implementation is executed with `baz` as explicit service to run, the service `baz` and the
+- If Compose is executed with `baz` as explicit service to run, the service `baz` and the
   profile `test` will be active and `bar` will be pulled in by the `depends_on` constraint.
-- If Compose implementation is executed with `zot` as explicit service to run, again the model will be
+- If Compose is executed with `zot` as explicit service to run, again the model will be
   invalid regarding the `depends_on` constraint of `zot`, since `zot` and `bar` have no common `profiles`
   listed.
-- If Compose implementation is executed with `zot` as explicit service to run and profile `test` enabled,
+- If Compose is executed with `zot` as explicit service to run and profile `test` enabled,
   profile `debug` is automatically enabled and service `bar` is pulled in as a dependency starting both
   services `zot` and `bar`.
 

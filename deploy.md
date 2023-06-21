@@ -12,7 +12,7 @@ Compose specification is a platform-neutral way to define multi-container applic
 deployment of an application model MAY require some additional metadata as the Compose application model is an abstract way
 to reflect actual infrastructure needs per service, or lifecycle constraints.
 
-Compose Specification Deployment allows users to declare additional metadata on services so the Compose implementations gets
+Compose Specification Deployment allows users to declare additional metadata on services so Composes gets
 relevant data to allocate adequate resources on the platform and configure them to match user's needs.
 
 ## Definitions
@@ -201,7 +201,7 @@ deploy:
 
 ##### count
 
-If `count` is set to `all` or not specified, Compose implementations MUST reserve all devices that satisfy the requested capabilities. Otherwise, Compose implementations MUST reserve at least the number of devices specified. The value is specified as an integer.
+If `count` is set to `all` or not specified, Compose reserves all devices that satisfy the requested capabilities. Otherwise, Compose reserves at least the number of devices specified. The value is specified as an integer.
 
 ```yml
 deploy:
@@ -212,11 +212,11 @@ deploy:
           count: 2
 ```
 
-`count` and `device_ids` fields are exclusive. Compose implementations MUST return an error if both are specified.
+`count` and `device_ids` fields are exclusive. Compose returns an error if both are specified.
 
 ##### device_ids
 
-If `device_ids` is set, Compose implementations MUST reserve devices with the specified IDs provided they satisfy the requested capabilities. The value is specified as a list of strings.
+If `device_ids` is set, Compose reserves devices with the specified IDs provided they satisfy the requested capabilities. The value is specified as a list of strings.
 
 ```yml
 deploy:
@@ -227,7 +227,7 @@ deploy:
           device_ids: ["GPU-f123d1c9-26bb-df9b-1c23-4a731f61d8c7"]
 ```
 
-`count` and `device_ids` fields are exclusive. Compose implementations MUST return an error if both are specified.
+`count` and `device_ids` fields are exclusive. Compose returns an error if both are specified.
 
 ##### options
 
@@ -246,7 +246,7 @@ deploy:
 
 ### restart_policy
 
-`restart_policy` configures if and how to restart containers when they exit. If `restart_policy` is not set, Compose implementations MUST consider `restart` field set by service configuration.
+`restart_policy` configures if and how to restart containers when they exit. If `restart_policy` is not set, Compose considers the `restart` field set by service configuration.
 
 - `condition`: One of `none`, `on-failure` or `any` (default: `any`).
 - `delay`: How long to wait between restart attempts, specified as a [duration](11-extension.md#specifying-durations) (default: 0).

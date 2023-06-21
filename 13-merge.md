@@ -1,7 +1,7 @@
 ## Merge and override
 
-Compose implementations SHOULD allow users to define a Compose application model through multiple Compose files. 
-When doing so, a Compose implementation MUST follow the rules declared in this section to merge Compose files.
+Compose allows users to define a Compose application model through multiple Compose files. 
+When doing so, Compose follows the rules declared in this section to merge Compose files.
 
 ### Mapping
 
@@ -105,7 +105,7 @@ While these types are modeled in a Compose file as a sequence, they have special
 | configs     |  source                  |
 | ports       |  {ip, target, published, protocol}   |
 
-While merging Compose files, a Compose implementation MUST append new entries that do not violate a uniqueness constraint and merge entries that share a unique key.
+While merging Compose files, Compose appends new entries that do not violate a uniqueness constraint and merge entries that share a unique key.
 
 Merging the following example YAML trees:
 ```yaml

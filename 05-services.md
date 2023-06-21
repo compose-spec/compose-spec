@@ -11,7 +11,7 @@ and whose values are service definitions. A service  definition contains the con
 container started for that service.
 
 Each service MAY also include a Build section, which defines how to create the Docker image for the service.
-Compose implementations MAY support building docker images using this service definition. If not implemented,
+Compose supports building docker images using this service definition. If not implemented,
 the Build section SHOULD be ignored and the Compose file MUST still be considered valid.
 
 Build support is an OPTIONAL aspect of the Compose specification, and is
@@ -99,12 +99,12 @@ Fine-tune bandwidth allocation by device. Each item in the list must have two ke
 
 ### cpu_period
 
-`cpu_period` allow Compose implementations to configure CPU CFS (Completely Fair Scheduler) period when platform is based
+`cpu_period` allows you to configure CPU CFS (Completely Fair Scheduler) period when platform is based
 on Linux kernel.
 
 ### cpu_quota
 
-`cpu_quota` allow Compose implementations to configure CPU CFS (Completely Fair Scheduler) quota when platform is based
+`cpu_quota` allows you to configure CPU CFS (Completely Fair Scheduler) quota when platform is based
 on Linux kernel.
 
 ### cpu_rt_runtime
@@ -200,7 +200,7 @@ i.e. overridden to be empty.
 `configs` grant access to configs on a per-service basis using the per-service `configs`
 configuration. Two different syntax variants are supported.
 
-Compose implementations MUST report an error if config doesn't exist on platform or isn't defined in the
+Compose reports an error if config doesn't exist on platform or isn't defined in the
 [`configs`](08-configs.md) section of this Compose file.
 
 There are two syntaxes defined for configs. To remain compliant to this specification, an implementation
@@ -279,7 +279,7 @@ You can grant a service access to multiple configs, and you can mix long and sho
 container_name: my-web-container
 ```
 
-Compose implementation MUST NOT scale a service beyond one container if the Compose file specifies a
+Compose does not scale a service beyond one container if the Compose file specifies a
 `container_name`. Attempting to do so MUST result in an error.
 
 If present, `container_name` SHOULD follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`
@@ -288,8 +288,8 @@ If present, `container_name` SHOULD follow the regex format of `[a-zA-Z0-9][a-zA
 
 `credential_spec` configures the credential spec for a managed service account.
 
-Compose implementations that support services using Windows containers MUST support `file:` and
-`registry:` protocols for credential_spec. Compose implementations MAY also support additional
+If you have services that use Windows containers, you can use `file:` and
+`registry:` protocols for credential_spec. Compose can also support additional
 protocols for custom use-cases.
 
 The `credential_spec` must be in the format `file://<filename>` or `registry://<value-name>`.
@@ -338,10 +338,10 @@ configs:
 The short syntax variant only specifies service names of the dependencies.
 Service dependencies cause the following behaviors:
 
-- Compose implementations MUST create services in dependency order. In the following
+- Compose creates services in dependency order. In the following
   example, `db` and `redis` are created before `web`.
 
-- Compose implementations MUST remove services in dependency order. In the following
+- Compose removes services in dependency order. In the following
   example, `web` is removed before `db` and `redis`.
 
 Simple example:
@@ -359,9 +359,9 @@ services:
     image: postgres
 ```
 
-Compose implementations MUST guarantee dependency services have been started before
+Compose guarantees dependency services have been started before
 starting a dependent service.
-Compose implementations MAY wait for dependency services to be "ready" before
+Compose waits for dependency services to be "ready" before
 starting a dependent service.
 
 #### Long syntax
@@ -369,7 +369,7 @@ starting a dependent service.
 The long form syntax enables the configuration of additional fields that can't be
 expressed in the short form.
 
-- `restart`: when `true` a Compose implementation MUST restart this service after it updated the dependency service.
+- `restart`: when `true` Compose restarts this service after it updated the dependency service.
   This applies to an explicit restart controlled by a Compose operation, and excludes automated restart by the container runtime
   after container died.
 
@@ -383,14 +383,14 @@ expressed in the short form.
 
 Service dependencies cause the following behaviors:
 
-- Compose implementations MUST create services in dependency order. In the following
+- Compose creates services in dependency order. In the following
   example, `db` and `redis` are created before `web`.
 
-- Compose implementations MUST wait for healthchecks to pass on dependencies
+- Compose waits for healthchecks to pass on dependencies
   marked with `service_healthy`. In the following example, `db` is expected to
   be "healthy" before `web` is created.
 
-- Compose implementations MUST remove services in dependency order. In the following
+- Compose removes services in dependency order. In the following
   example, `web` is removed before `db` and `redis`.
 
 Simple example:
@@ -411,9 +411,9 @@ services:
     image: postgres
 ```
 
-Compose implementations MUST guarantee dependency services have been started before
+Compose guarantees dependency services have been started before
 starting a dependent service.
-Compose implementations MUST guarantee dependency services marked with
+Compose guarantees dependency services marked with
 `service_healthy` are "healthy" before starting a dependent service.
 
 
@@ -492,7 +492,7 @@ dns_search:
 `entrypoint` declares the default entrypoint for the service container.
 This will override the `ENTRYPOINT` instruction from the service's Dockerfile.
 
-If `entrypoint` is non-null, Compose implementations MUST also ignore out any default command from the image (i.e. `CMD`
+If `entrypoint` is non-null, Compose also ignores any default command from the image (i.e. `CMD`
 instruction in Dockerfile).
 
 See also: [`command`](#command) to set or override the default command to be executed by the entrypoint process.
@@ -538,7 +538,7 @@ env_file:
 ```
 
 Relative path MUST be resolved from the Compose file's parent folder. As absolute paths prevent the Compose
-file from being portable, Compose implementations SHOULD warn users when such a path is used to set `env_file`.
+file from being portable, Compose warns users when such a path is used to set `env_file`.
 
 Environment variables declared in the [environment](#environment) section
 MUST override these values – this holds true even if those values are
@@ -551,7 +551,7 @@ Blank lines MUST also be ignored.
 
 The value of `VAL` is used as a raw string and not modified at all. If the value is surrounded by quotes
 (as is often the case for shell variables), the quotes MUST be **included** in the value passed to containers
-created by the Compose implementation.
+created by Compose.
 
 `VAL` MAY be omitted, in such cases the variable value is empty string.
 `=VAL` MAY be omitted, in such cases the variable is **unset**.
@@ -594,7 +594,7 @@ When both `env_file` and `environment` are set for a service, values set by `env
 
 ### expose
 
-`expose` defines the ports that Compose implementations MUST expose from container. These ports MUST be
+`expose` defines the ports that Compose exposes from container. These ports MUST be
 accessible to linked services and SHOULD NOT be published to the host machine. Only the internal container
 ports can be specified.
 
@@ -616,7 +616,7 @@ extends:
   service: webapp
 ```
 
-If supported, Compose implementations MUST process `extends` in the following way:
+If supported, Compose processes `extends` in the following way:
 
 - `service` defines the name of the service being referenced as a base, for example `web` or `database`.
 - `file` is the location of a Compose configuration file defining that service.
@@ -631,7 +631,7 @@ The following restrictions apply to the service being referenced:
   `network_mode` and `net`), `service` mode (in `ipc`, `pid` and `network_mode`), `depends_on`.
 - Services cannot have circular references with `extends`.
 
-Compose implementations MUST return an error in all of these cases.
+Compose returns an error in all of these cases.
 
 #### Finding referenced service
 
@@ -645,7 +645,7 @@ Compose implementations MUST return an error in all of these cases.
   - Absolute path.
 
 Service denoted by `service` MUST be present in the identified referenced Compose file.
-Compose implementations MUST return an error if:
+Compose returns an error if:
 
 - Service denoted by `service` was not found
 - Compose file denoted by `file` was not found
@@ -847,7 +847,7 @@ extra_hosts:
   otherhost: "50.31.209.229"
 ```
 
-Compose implementations MUST create matching entry with the IP address and hostname in the container's network
+Compose creates matching entry with the IP address and hostname in the container's network
 configuration, which means for Linux `/etc/hosts` will get extra lines:
 
 ```
@@ -892,7 +892,7 @@ healthcheck:
 
 `interval`, `timeout` and `start_period` are [specified as durations](11-extension.md#specifying-durations).
 
-`test` defines the command the Compose implementation will run to check container health. It can be
+`test` defines the command Compose will run to check container health. It can be
 either a string or a list. If it's a list, the first item must be either `NONE`, `CMD` or `CMD-SHELL`.
 If it's a string, it's equivalent to specifying `CMD-SHELL` followed by that string.
 
@@ -939,12 +939,11 @@ as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
     image: my_private.registry:5000/redis
 ```
 
-If the image does not exist on the platform, Compose implementations MUST attempt to pull it based on the `pull_policy`.
-Compose implementations with build support MAY offer alternative options for the end user to control precedence of
+If the image does not exist on the platform, Compose attempts to pull it based on the `pull_policy`.
+If you are also using the Compose Build specification, there are alternative options for controling the precedence of
 pull over building the image from source, however pulling the image MUST be the default behavior.
 
-`image` MAY be omitted from a Compose file as long as a `build` section is declared. Compose implementations
-without build support MUST fail when `image` is missing from the Compose file.
+`image` MAY be omitted from a Compose file as long as a `build` section is declared. If you are not useing the Compose Build specification, Compose won't work if `image` is missing from the Compose file.
 
 ### init
 
@@ -1012,9 +1011,9 @@ labels:
   - "com.example.label-with-empty-value"
 ```
 
-Compose implementations MUST create containers with canonical labels:
+Compose creates containers with canonical labels:
 
-- `com.docker.compose.project` set on all resources created by Compose implementation to the user project name
+- `com.docker.compose.project` set on all resources created by Compose to the user project name
 - `com.docker.compose.service` set on service containers with service name as defined in the Compose file
 
 The `com.docker.compose` label prefix is reserved. Specifying labels with this prefix in the Compose file MUST
@@ -1039,7 +1038,7 @@ if no alias was specified.
 Links are not required to enable services to communicate - when no specific network configuration is set,
 any service MUST be able to reach any other service at that service’s name on the `default` network. If services
 do declare networks they are attached to, `links` SHOULD NOT override the network configuration and services not
-attached to a shared network SHOULD NOT be able to communicate. Compose implementations MAY NOT warn the user
+attached to a shared network SHOULD NOT be able to communicate. Compose doesn't warn the user
 about this configuration mismatch.
 
 Links also express implicit dependency between services in the same way as
@@ -1074,7 +1073,7 @@ specification defines specific values which MUST be implemented as described if 
     network_mode: "service:[service name]"
 ```
 
-When set, `networks` attribute is not allowed and a Compose implementation SHOULD reject any
+When set, `networks` attribute is not allowed and Compose rejects any
 Compose file containing both attributes
 
 ### networks
@@ -1198,7 +1197,7 @@ networks:
 
 #### priority
 
-`priority` indicates in which order Compose implementation SHOULD connect the service’s containers to its
+`priority` indicates in which order Compose connects the service’s containers to its
 networks. If unspecified, the default value is 0.
 
 In the following example, the app service connects to app_net_1 first as it has the highest priority. It then connects to app_net_3, then app_net_2, which uses the default priority value of 0.
@@ -1258,7 +1257,7 @@ There is a performance penalty for applications that swap memory to disk often.
 
 ### oom_kill_disable
 
-If `oom_kill_disable` is set, Compose implementation MUST configure the platform so it won't kill the container in case
+If `oom_kill_disable` is set, Compose configures the platform so it won't kill the container in case
 of memory starvation.
 
 ### oom_score_adj
@@ -1268,7 +1267,7 @@ be within [-1000,1000] range.
 
 ### pid
 
-`pid` sets the PID mode for container created by the Compose implementation.
+`pid` sets the PID mode for container created by Compose.
 Supported values are platform specific.
 
 ### pids_limit
@@ -1286,7 +1285,7 @@ pids_limit: 10
 `platform` defines the target platform containers for this service will run on, using the `os[/arch[/variant]]` syntax.
 The values of `os`, `arch`, and `variant` MUST conform to the convention used by the [OCI Image Spec](https://github.com/opencontainers/image-spec/blob/v1.0.2/image-index.md).
 
-Compose implementation MUST use this attribute when declared to determine which version of the image will be pulled
+Compose uses this attribute when declared to determine which version of the image will be pulled
 and/or on which platform the service’s build will be performed.
 
 ```yml
@@ -1310,13 +1309,13 @@ in the form:
 - `HOST` is `[IP:](port | range)`
 - `CONTAINER` is `port | range`
 - `PROTOCOL` to restrict port to specified protocol. `tcp` and `udp` values are defined by the specification,
-  Compose implementations MAY offer support for platform-specific protocol names.
+  Compose offers support for platform-specific protocol names.
 
 Host IP, if not set, MUST bind to all network interfaces. Port can be either a single
 value or a range. Host and container MUST use equivalent ranges.
 
 Either specify both ports (`HOST:CONTAINER`), or just the container port. In the latter case, the
-Compose implementation SHOULD automatically allocate any unassigned host port.
+Compose automatically allocates any unassigned host port.
 
 `HOST:CONTAINER` SHOULD always be specified as a (quoted) string, to avoid conflicts
 with [yaml base-60 float](https://yaml.org/type/float.html).
@@ -1336,7 +1335,7 @@ ports:
   - "6060:6060/udp"
 ```
 
-> **Note**: Host IP mapping MAY not be supported on the platform, in such case Compose implementations SHOULD reject
+> **Note**: Host IP mapping MAY not be supported on the platform, in such case Compose rejects
 > the Compose file and MUST inform the user they will ignore the specified host IP.
 
 #### Long syntax
@@ -1377,17 +1376,17 @@ If present, `profiles` SHOULD follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_
 
 ### pull_policy
 
-`pull_policy` defines the decisions Compose implementations will make when it starts to pull images. Possible values are:
+`pull_policy` defines the decisions Compose makes when it starts to pull images. Possible values are:
 
-* `always`: Compose implementations SHOULD always pull the image from the registry.
-* `never`: Compose implementations SHOULD NOT pull the image from a registry and SHOULD rely on the platform cached image.
+* `always`: Compose always pull the image from the registry.
+* `never`: Compose doesn't pull the image from a registry and SHOULD rely on the platform cached image.
    If there is no cached image, a failure MUST be reported.
-* `missing`: Compose implementations SHOULD pull the image only if it's not available in the platform cache.
-   This SHOULD be the default option for Compose implementations without build support.
+* `missing`: Compose pulls the image only if it's not available in the platform cache.
+   This SHOULD be the default option if you are not also using the Compose Build specification.
   `if_not_present` SHOULD be considered an alias for this value for backward compatibility
-* `build`: Compose implementations SHOULD build the image. Compose implementations SHOULD rebuild the image if already present.
+* `build`: Compose builds the image. Compose rebuilds the image if already present.
 
-If `pull_policy` and `build` are both present, Compose implementations SHOULD build the image by default. Compose implementations MAY override this behavior in the toolchain.
+If `pull_policy` and `build` are both present, Compose builds the image by default. Compose may override this behavior in the toolchain.
 
 ### read_only
 
@@ -1435,7 +1434,7 @@ _DEPRECATED: use [deploy/replicas](deploy.md#replicas)_
 `secrets` grants access to sensitive data defined by [secrets](09-secrets.md) on a per-service basis. Two
 different syntax variants are supported: the short syntax and the long syntax.
 
-Compose implementations MUST report an error if the secret doesn't exist on the platform or isn't defined in the
+Compose reports an error if the secret doesn't exist on the platform or isn't defined in the
 [`secrets`](09-secrets.md) section of the Compose file.
 
 #### Short syntax
@@ -1478,7 +1477,7 @@ the service's containers.
 The following example sets the name of the `server-certificate` secret file to `server.crt`
 within the container, sets the mode to `0440` (group-readable) and sets the user and group
 to `103`. The value of `server-certificate` secret is provided by the platform through a lookup and
-the secret lifecycle is not directly managed by the Compose implementation.
+the secret lifecycle is not directly managed by Compose.
 
 ```yml
 services:
@@ -1520,7 +1519,7 @@ Specified as a [byte value](11-extension.md#specifying-byte-values).
 
 ### stop_grace_period
 
-`stop_grace_period` specifies how long the Compose implementation MUST wait when attempting to stop a container if it doesn't
+`stop_grace_period` specifies how long Compose MUST wait when attempting to stop a container if it doesn't
 handle SIGTERM (or whichever stop signal has been specified with
 [`stop_signal`](#stop_signal)), before sending SIGKILL. Specified
 as a [duration](11-extension.md#specifying-durations).
@@ -1534,8 +1533,8 @@ Default value is 10 seconds for the container to exit before sending SIGKILL.
 
 ### stop_signal
 
-`stop_signal` defines the signal that the Compose implementation MUST use to stop the service containers.
-If unset containers are stopped by the Compose Implementation by sending `SIGTERM`.
+`stop_signal` defines the signal that Compose MUST use to stop the service containers.
+If unset containers are stopped by Compose by sending `SIGTERM`.
 
 ```yml
 stop_signal: SIGUSR1
@@ -1662,10 +1661,10 @@ The short syntax uses a single string with colon-separated values to specify a v
 
 > **Note**: The SELinux re-labeling bind mount option is ignored on platforms without SELinux.
 
-> **Note**: Relative host paths MUST only be supported by Compose implementations that deploy to a
+> **Note**: Relative host paths MUST only be supported by Compose  that deploy to a
 > local container runtime. This is because the relative path is resolved from the Compose file’s parent
-> directory which is only applicable in the local case. Compose Implementations deploying to a non-local
-> platform MUST reject Compose files which use relative host paths with an error. To avoid ambiguities
+> directory which is only applicable in the local case. When Compose deploys to a non-local
+> platform it rejects Compose files which use relative host paths with an error. To avoid ambiguities
 > with named volumes, relative paths SHOULD always begin with `.` or `..`.
 
 #### Long syntax
@@ -1699,7 +1698,7 @@ read-only access (ro) or read-write (rw). If no access level is specified, then 
 
 String value defines another service in the Compose application model to mount volumes from. The
 `container:` prefix, if supported, allows to mount volumes from a container that is not managed by the
-Compose implementation.
+Compose.
 
 ```yaml
 volumes_from:

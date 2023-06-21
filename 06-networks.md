@@ -25,7 +25,7 @@ networks:
 
 ### driver
 
-`driver` specifies which driver should be used for this network. Compose implementations MUST return an error if the
+`driver` specifies which driver should be used for this network. Compose returns an error if the
 driver is not available on the platform.
 
 ```yml
@@ -41,8 +41,8 @@ Default and available values are platform specific. Compose specification MUST s
 #### host or none
 
 The syntax for using built-in networks such as `host` and `none` is different, as such networks implicitly exist outside
-the scope of the Compose implementation. To use them, one MUST define an external network with the name `host` or `none` and
-an alias that the Compose implementation can use (`hostnet` and `nonet` in the following examples), then grant the service
+the scope of Compose. To use them, one MUST define an external network with the name `host` or `none` and
+an alias that Compose can use (`hostnet` and `nonet` in the following examples), then grant the service
 access to that network using its alias.
 
 ```yml
@@ -130,7 +130,7 @@ ipam:
 
 ### internal
 
-By default, Compose implementations MUST provides external connectivity to networks. `internal`, when set to `true`, allows
+By default, Compose provides external connectivity to networks. `internal`, when set to `true`, allows
 creating an externally isolated network.
 
 ### labels
@@ -153,15 +153,15 @@ labels:
   - "com.example.label-with-empty-value"
 ```
 
-Compose implementations MUST set `com.docker.compose.project` and `com.docker.compose.network` labels.
+Compose sets `com.docker.compose.project` and `com.docker.compose.network` labels.
 
 ### external
 
 If set to `true`, `external` specifies that this network’s lifecycle is maintained outside of that of the application.
-Compose Implementations SHOULD NOT attempt to create these networks, and SHOULD raise an error if one doesn't exist.
+Compose doesn't attempt to create these networks, and SHOULD raise an error if one doesn't exist.
 
 If `external` is set to `true` and network configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose Implementations SHOULD reject the Compose file as invalid.
+not managed by compose lifecycle, Compose rejects the Compose file as invalid.
 
 In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network, Compose
 implementations SHOULD interrogate the platform for an existing network simply called `outside` and connect the
@@ -196,7 +196,7 @@ networks:
     name: my-app-net
 ```
 
-It can also be used in conjunction with the `external` property to define the platform network that the Compose implementation
+It can also be used in conjunction with the `external` property to define the platform network that Compose
 should retrieve, typically by using a parameter so the Compose file doesn't need to hard-code runtime specific values:
 
 ```yml

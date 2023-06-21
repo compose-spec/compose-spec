@@ -157,7 +157,7 @@ This example illustrates the distinction between volumes, configs and secrets. W
 to service containers as mounted files or directories, only a volume can be configured for read+write access.
 Secrets and configs are read-only. The volume configuration allows you to select a volume driver and pass driver options
 to tweak volume management according to the actual infrastructure. Configs and Secrets rely on platform services,
-and are declared `external` as they are not managed as part of the application lifecycle: the Compose implementation
+and are declared `external` as they are not managed as part of the application lifecycle: Compose
 will use a platform-specific lookup mechanism to retrieve runtime values.
 
 ## Compose file
@@ -820,7 +820,7 @@ Blank lines MUST also be ignored.
 
 The value of `VAL` is used as a raw string and not modified at all. If the value is surrounded by quotes
 (as is often the case for shell variables), the quotes MUST be **included** in the value passed to containers
-created by the Compose implementation.
+created by Compose.
 
 `VAL` MAY be omitted, in such cases the variable value is empty string.
 `=VAL` MAY be omitted, in such cases the variable is **unset**.
@@ -1161,7 +1161,7 @@ healthcheck:
 
 `interval`, `timeout` and `start_period` are [specified as durations](11-extension.md#specifying-durations).
 
-`test` defines the command the Compose implementation will run to check container health. It can be
+`test` defines the command Compose will run to check container health. It can be
 either a string or a list. If it's a list, the first item must be either `NONE`, `CMD` or `CMD-SHELL`.
 If it's a string, it's equivalent to specifying `CMD-SHELL` followed by that string.
 
@@ -1537,7 +1537,7 @@ be within [-1000,1000] range.
 
 ### pid
 
-`pid` sets the PID mode for container created by the Compose implementation.
+`pid` sets the PID mode for container created by Compose.
 Supported values are platform specific.
 
 ### pids_limit
@@ -1747,7 +1747,7 @@ the service's containers.
 The following example sets the name of the `server-certificate` secret file to `server.crt`
 within the container, sets the mode to `0440` (group-readable) and sets the user and group
 to `103`. The value of `server-certificate` secret is provided by the platform through a lookup and
-the secret lifecycle is not directly managed by the Compose implementation.
+the secret lifecycle is not directly managed by Compose.
 
 ```yml
 services:
@@ -1789,7 +1789,7 @@ Specified as a [byte value](11-extension.md#specifying-byte-values).
 
 ### stop_grace_period
 
-`stop_grace_period` specifies how long the Compose implementation MUST wait when attempting to stop a container if it doesn't
+`stop_grace_period` specifies how long Compose MUST wait when attempting to stop a container if it doesn't
 handle SIGTERM (or whichever stop signal has been specified with
 [`stop_signal`](#stop_signal)), before sending SIGKILL. Specified
 as a [duration](11-extension.md#specifying-durations).
@@ -1803,8 +1803,8 @@ Default value is 10 seconds for the container to exit before sending SIGKILL.
 
 ### stop_signal
 
-`stop_signal` defines the signal that the Compose implementation MUST use to stop the service containers.
-If unset containers are stopped by the Compose Implementation by sending `SIGTERM`.
+`stop_signal` defines the signal that Compose MUST use to stop the service containers.
+If unset containers are stopped by Compose by sending `SIGTERM`.
 
 ```yml
 stop_signal: SIGUSR1
@@ -2025,8 +2025,8 @@ Default and available values are platform specific. Compose specification MUST s
 #### host or none
 
 The syntax for using built-in networks such as `host` and `none` is different, as such networks implicitly exist outside
-the scope of the Compose implementation. To use them, one MUST define an external network with the name `host` or `none` and
-an alias that the Compose implementation can use (`hostnet` and `nonet` in the following examples), then grant the service
+the scope of Compose. To use them, one MUST define an external network with the name `host` or `none` and
+an alias that Compose can use (`hostnet` and `nonet` in the following examples), then grant the service
 access to that network using its alias.
 
 ```yml
@@ -2180,7 +2180,7 @@ networks:
     name: my-app-net
 ```
 
-It can also be used in conjunction with the `external` property to define the platform network that the Compose implementation
+It can also be used in conjunction with the `external` property to define the platform network that Compose
 should retrieve, typically by using a parameter so the Compose file doesn't need to hard-code runtime specific values:
 
 ```yml
@@ -2220,7 +2220,7 @@ creating a volume. Optionally, you can configure it with the following keys:
 
 ### driver
 
-Specify which volume driver should be used for this volume. Default and available values are platform specific. If the driver is not available, the Compose implementation MUST return an error and stop application deployment.
+Specify which volume driver should be used for this volume. Default and available values are platform specific. If the driver is not available, Compose MUST return an error and stop application deployment.
 
 ```yml
 driver: foobar
@@ -2352,7 +2352,7 @@ configs:
     file: ./httpd.conf
 ```
 
-Alternatively, `http_config` can be declared as external. The Compose implementation will lookup `http_config` to expose configuration data to relevant services.
+Alternatively, `http_config` can be declared as external. Compose will lookup `http_config` to expose configuration data to relevant services.
 
 ```yml
 configs:
@@ -2410,7 +2410,7 @@ secrets:
     environment: "OAUTH_TOKEN"
 ```
 
-Alternatively, `server-certificate` can be declared as external. The Compose implementation will lookup `server-certificate` secret to expose to relevant services.
+Alternatively, `server-certificate` can be declared as external. Compose will lookup `server-certificate` secret to expose to relevant services.
 
 ```yml
 secrets:
@@ -2527,7 +2527,7 @@ As with [Fragments](10-fragments.md), Extensions can be used to make your Compos
 Use the prefix `x-` on any top-level element to modularize configurations that you want to reuse. They can be used
 within any structure in a Compose file as Docker Compose ignores any fields that start with `x-`.  This is the sole exception for Compose implementations to silently ignore unrecognized fields.
 
-The contents of any `x-` section is unspecified by Compose specification, so it can be used to enable custom features. If the compose implementation encounters an unknown extension field it MUST NOT fail, but COULD warn the user about the unknown field.
+The contents of any `x-` section is unspecified by Compose specification, so it can be used to enable custom features. If Compose encounters an unknown extension field it MUST NOT fail, but COULD warn the user about the unknown field.
 
 ### Example 1
 
@@ -2705,7 +2705,7 @@ web:
   command: "$$VAR_NOT_INTERPOLATED_BY_COMPOSE"
 ```
 
-If the Compose implementation can't resolve a substituted variable and no default value is defined, it MUST warn
+If Compose can't resolve a substituted variable and no default value is defined, it MUST warn
 the user and substitute the variable with an empty string.
 
 As any values in a Compose file can be interpolated with variable substitution, including compact string notation

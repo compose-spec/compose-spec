@@ -37,7 +37,7 @@ web:
   command: "$$VAR_NOT_INTERPOLATED_BY_COMPOSE"
 ```
 
-If the Compose implementation can't resolve a substituted variable and no default value is defined, it MUST warn
+If Compose can't resolve a substituted variable and no default value is defined, it MUST warn
 the user and substitute the variable with an empty string.
 
 As any values in a Compose file can be interpolated with variable substitution, including compact string notation
