@@ -5,7 +5,7 @@ As with [Fragments](10-fragments.md), Extensions can be used to make your Compos
 Use the prefix `x-` on any top-level element to modularize configurations that you want to reuse. They can be used
 within any structure in a Compose file as Docker Compose ignores any fields that start with `x-`.  This is the sole exception where Compose silently ignores unrecognized fields.
 
-The contents of any `x-` section is unspecified by Compose specification, so it can be used to enable custom features. If Compose encounters an unknown extension field it must NOT fail, but COULD warn the user about the unknown field.
+The contents of any `x-` section is unspecified by Compose specification, so it can be used to enable custom features. If Compose encounters an unknown extension field it must not fail, but COULD warn the user about the unknown field.
 
 ### Example 1
 
