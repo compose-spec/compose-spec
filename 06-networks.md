@@ -83,7 +83,7 @@ driver_opts:
 
 ### attachable
 
-If `attachable` is set to `true`, then standalone containers SHOULD be able to attach to this network, in addition to services.
+If `attachable` is set to `true`, then standalone containers should be able to attach to this network, in addition to services.
 If a standalone container attaches to the network, it can communicate with services and other standalone containers
 that are also attached to the network.
 
@@ -137,7 +137,7 @@ creating an externally isolated network.
 
 Add metadata to containers using Labels. Can use either an array or a dictionary.
 
-Users SHOULD use reverse-DNS notation to prevent labels from conflicting with those used by other software.
+Users should use reverse-DNS notation to prevent labels from conflicting with those used by other software.
 
 ```yml
 labels:
@@ -158,13 +158,13 @@ Compose sets `com.docker.compose.project` and `com.docker.compose.network` label
 ### external
 
 If set to `true`, `external` specifies that this network’s lifecycle is maintained outside of that of the application.
-Compose doesn't attempt to create these networks, and SHOULD raise an error if one doesn't exist.
+Compose doesn't attempt to create these networks, and should raise an error if one doesn't exist.
 
 If `external` is set to `true` and network configuration has other but `name` attributes set, considering resource is
 not managed by compose lifecycle, Compose rejects the Compose file as invalid.
 
 In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network, Compose
-implementations SHOULD interrogate the platform for an existing network simply called `outside` and connect the
+implementations should interrogate the platform for an existing network simply called `outside` and connect the
 `proxy` service's containers to it.
 
 ```yml

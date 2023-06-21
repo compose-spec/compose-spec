@@ -12,7 +12,7 @@ container started for that service.
 
 Each service MAY also include a Build section, which defines how to create the Docker image for the service.
 Compose supports building docker images using this service definition. If not implemented,
-the Build section SHOULD be ignored and the Compose file must still be considered valid.
+the Build section should be ignored and the Compose file must still be considered valid.
 
 Build support is an OPTIONAL aspect of the Compose specification, and is
 described in detail in the [Build support](build.md) documentation.
@@ -23,7 +23,7 @@ available resources.
 
 Deploy support is an OPTIONAL aspect of the Compose specification, and is
 described in detail in the [Deployment support](deploy.md) documentation.
-If not implemented the Deploy section SHOULD be ignored and the Compose file must still be considered valid.
+If not implemented the Deploy section should be ignored and the Compose file must still be considered valid.
 
 ### build
 
@@ -282,7 +282,7 @@ container_name: my-web-container
 Compose does not scale a service beyond one container if the Compose file specifies a
 `container_name`. Attempting to do so must result in an error.
 
-If present, `container_name` SHOULD follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`
+If present, `container_name` should follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`
 
 ### credential_spec
 
@@ -565,11 +565,11 @@ VAR="quoted"
 ### environment
 
 `environment` defines environment variables set in the container. `environment` can use either an array or a
-map. Any boolean values; true, false, yes, no, SHOULD be enclosed in quotes to ensure
+map. Any boolean values; true, false, yes, no, should be enclosed in quotes to ensure
 they are not converted to True or False by the YAML parser.
 
 Environment variables MAY be declared by a single key (no value to equals sign). In such a case Compose
-implementations SHOULD rely on some user interaction to resolve the value. If they do not, the variable
+implementations should rely on some user interaction to resolve the value. If they do not, the variable
 is unset and will be removed from the service container environment.
 
 Map syntax:
@@ -595,7 +595,7 @@ When both `env_file` and `environment` are set for a service, values set by `env
 ### expose
 
 `expose` defines the ports that Compose exposes from container. These ports must be
-accessible to linked services and SHOULD NOT be published to the host machine. Only the internal container
+accessible to linked services and should not be published to the host machine. Only the internal container
 ports can be specified.
 
 ```yml
@@ -1037,8 +1037,8 @@ if no alias was specified.
 
 Links are not required to enable services to communicate - when no specific network configuration is set,
 any service must be able to reach any other service at that service’s name on the `default` network. If services
-do declare networks they are attached to, `links` SHOULD NOT override the network configuration and services not
-attached to a shared network SHOULD NOT be able to communicate. Compose doesn't warn the user
+do declare networks they are attached to, `links` should not override the network configuration and services not
+attached to a shared network should not be able to communicate. Compose doesn't warn the user
 about this configuration mismatch.
 
 Links also express implicit dependency between services in the same way as
@@ -1297,7 +1297,7 @@ platform: linux/arm64/v8
 ### ports
 
 Exposes container ports.
-Port mapping must NOT be used with `network_mode: host` and doing so must result in a runtime error.
+Port mapping must not be used with `network_mode: host` and doing so must result in a runtime error.
 
 #### Short syntax
 
@@ -1317,7 +1317,7 @@ value or a range. Host and container must use equivalent ranges.
 Either specify both ports (`HOST:CONTAINER`), or just the container port. In the latter case, the
 Compose automatically allocates any unassigned host port.
 
-`HOST:CONTAINER` SHOULD always be specified as a (quoted) string, to avoid conflicts
+`HOST:CONTAINER` should always be specified as a (quoted) string, to avoid conflicts
 with [yaml base-60 float](https://yaml.org/type/float.html).
 
 Samples:
@@ -1344,7 +1344,7 @@ The long form syntax allows the configuration of additional fields that can't be
 expressed in the short form.
 
 - `target`: the container port
-- `published`: the publicly exposed port. Can be set as a range using syntax `start-end`, so it is defined as a string, then actual port SHOULD be assigned within this range based on available ports.
+- `published`: the publicly exposed port. Can be set as a range using syntax `start-end`, so it is defined as a string, then actual port should be assigned within this range based on available ports.
 - `host_ip`: the Host IP mapping, unspecified means all network interfaces (`0.0.0.0`)
 - `protocol`: the port protocol (`tcp` or `udp`), unspecified means any protocol
 - `mode`: `host` for publishing a host port on each node, or `ingress` for a port to be load balanced.
@@ -1372,18 +1372,18 @@ ports:
 
 `profiles` defines a list of named profiles for the service to be enabled under. When not set, service is always enabled.
 
-If present, `profiles` SHOULD follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`.
+If present, `profiles` should follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`.
 
 ### pull_policy
 
 `pull_policy` defines the decisions Compose makes when it starts to pull images. Possible values are:
 
 * `always`: Compose always pull the image from the registry.
-* `never`: Compose doesn't pull the image from a registry and SHOULD rely on the platform cached image.
+* `never`: Compose doesn't pull the image from a registry and should rely on the platform cached image.
    If there is no cached image, a failure must be reported.
 * `missing`: Compose pulls the image only if it's not available in the platform cache.
-   This SHOULD be the default option if you are not also using the Compose Build specification.
-  `if_not_present` SHOULD be considered an alias for this value for backward compatibility
+   This should be the default option if you are not also using the Compose Build specification.
+  `if_not_present` should be considered an alias for this value for backward compatibility
 * `build`: Compose builds the image. Compose rebuilds the image if already present.
 
 If `pull_policy` and `build` are both present, Compose builds the image by default. Compose may override this behavior in the toolchain.
@@ -1495,7 +1495,7 @@ secrets:
 ```
 
 Services MAY be granted access to multiple secrets. Long and short syntax for secrets MAY be used in the
-same Compose file. Defining a secret in the top-level `secrets` must NOT imply granting any service access to it.
+same Compose file. Defining a secret in the top-level `secrets` must not imply granting any service access to it.
 Such grant must be explicit within service specification as [secrets](09-secrets.md) service element.
 
 ### security_opt
@@ -1665,7 +1665,7 @@ The short syntax uses a single string with colon-separated values to specify a v
 > local container runtime. This is because the relative path is resolved from the Compose file’s parent
 > directory which is only applicable in the local case. When Compose deploys to a non-local
 > platform it rejects Compose files which use relative host paths with an error. To avoid ambiguities
-> with named volumes, relative paths SHOULD always begin with `.` or `..`.
+> with named volumes, relative paths should always begin with `.` or `..`.
 
 #### Long syntax
 

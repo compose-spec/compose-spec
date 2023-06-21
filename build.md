@@ -25,10 +25,10 @@ can build an image from source.
 
 In the former case, the whole path is used as a Docker context to execute a Docker build, looking for a canonical
 `Dockerfile` at the root of the directory. The path can be absolute or relative. If it is relative, it must be resolved
-from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so Compose SHOULD warn the users accordingly.
+from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so Compose should warn the users accordingly.
 
 In the later case, build arguments can be specified, including an alternate `Dockerfile` location. The path can be absolute or relative. If it is relative, it must be resolved
-from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so Compose SHOULD warn the users accordingly.
+from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so Compose should warn the users accordingly.
 
 ## Consistency with `image`
 
@@ -40,7 +40,7 @@ request.
 
 ## Publishing built images
 
-Compose with Build support SHOULD offer an option to push built images to a registry. When doing so, it must not try to push service images without an `image` attribute. Compose SHOULD warn users about the missing `image` attribute which prevents images being pushed.
+Compose with Build support should offer an option to push built images to a registry. When doing so, it must not try to push service images without an `image` attribute. Compose should warn users about the missing `image` attribute which prevents images being pushed.
 
 Compose MAY offer a mechanism to compute an `image` attribute for services when not explicitly
 declared in a yaml file. In such cases, the resulting Compose configuration is considered to have a valid `image`
@@ -100,7 +100,7 @@ The second part represents a subdirectory inside the repository that is used as 
 
 Alternatively `build` can be an object with fields defined as follows:
 
-### context (REQUIRED)
+### context (Required)
 
 `context` defines either a path to a directory containing a Dockerfile, or a URL to a git repository.
 
@@ -137,7 +137,7 @@ build:
 ### dockerfile_inline
 
 `dockerfile_inline` defines Dockerfile content as inlined string in a Compose file. When set, the `dockerfile`
-attribute is not allowed and Compose SHOULD reject any Compose file having both set.
+attribute is not allowed and Compose should reject any Compose file having both set.
 
 Use of YAML multi-line string syntax is recommended to define Dockerfile content:
 
@@ -187,7 +187,7 @@ args:
 
 ### ssh
 
-`ssh` defines SSH authentications that the image builder SHOULD use during image build (e.g., cloning private repository).
+`ssh` defines SSH authentications that the image builder should use during image build (e.g., cloning private repository).
 
 `ssh` property syntax can be either:
 * `default` - let the builder connect to the ssh-agent.
@@ -221,7 +221,7 @@ For illustration, [BuildKit extended syntax](https://github.com/compose-spec/com
 
 ### cache_from
 
-`cache_from` defines a list of sources the image builder SHOULD use for cache resolution.
+`cache_from` defines a list of sources the image builder should use for cache resolution.
 
 Cache location syntax must follow the global format `[NAME|type=TYPE[,KEY=VALUE]]`. Simple `NAME` is actually a shortcut notation for `type=registry,ref=NAME`.
 
@@ -259,7 +259,7 @@ Unsupported cache target must be ignored and not prevent users from building ima
 
 ### additional_contexts
 
-`additional_contexts` defines a list of named contexts the image builder SHOULD use during image build.
+`additional_contexts` defines a list of named contexts the image builder should use during image build.
 
 `additional_contexts` can be a mapping or a list:
 
@@ -286,7 +286,7 @@ is the responsibility of the image builder (and is builder specific). Compose su
 absolute and relative paths to a directory AND Git repository URLs, like [context](#context) does. Other context flavours
 must be prefixed to avoid ambiguity with a `type://` prefix.
 
-Compose SHOULD warn the user if the image builder does not support additional contexts and MAY list
+Compose should warn the user if the image builder does not support additional contexts and MAY list
 the unused contexts.
 
 Illustrative examples of how this is used in Buildx can be found
@@ -329,7 +329,7 @@ build:
 
 `labels` add metadata to the resulting image. `labels` can be set either as an array or a map.
 
-reverse-DNS notation SHOULD be used to prevent labels from conflicting with those used by other software.
+reverse-DNS notation should be used to prevent labels from conflicting with those used by other software.
 
 ```yml
 build:
@@ -454,7 +454,7 @@ secrets:
 ```
 
 Service builds MAY be granted access to multiple secrets. Long and short syntax for secrets MAY be used in the
-same Compose file. Defining a secret in the top-level `secrets` must NOT imply granting any service build access to it.
+same Compose file. Defining a secret in the top-level `secrets` must not imply granting any service build access to it.
 Such grant must be explicit within service specification as [secrets](05-services.md#secrets) service element.
 
 ### tags

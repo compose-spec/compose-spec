@@ -1,8 +1,8 @@
 ## Compose file
 
 The Compose file is a [YAML](http://yaml.org/) file defining
-[version](04-version-and-name.md) (DEPRECATED),
-[services](05-services.md) (REQUIRED),
+[version](04-version-and-name.md) (Deprecated),
+[services](05-services.md) (Required),
 [networks](06-networks.md),
 [volumes](07-volumes.md),
 [configs](08-configs.md) and
@@ -23,7 +23,7 @@ the expanded form.
 ### Profiles
 
 Profiles allow to adjust the Compose application model for various usages and environments. A Compose
-implementation SHOULD allow the user to define a set of active profiles. The exact mechanism is implementation
+implementation should allow the user to define a set of active profiles. The exact mechanism is implementation
 specific and MAY include command line flags, environment variables, etc.
 
 The Services top-level element supports a `profiles` attribute to define a list of named profiles. Services without

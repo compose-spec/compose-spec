@@ -76,7 +76,7 @@ services:
 
 #### constraints
 
-`constraints` defines a REQUIRED property the platform's node must fulfill to run service container. Can be set either
+`constraints` defines a required property the platform's node must fulfill to run service container. Can be set either
 by a list or a map with string values.
 
 ```yml
@@ -95,7 +95,7 @@ deploy:
 
 #### preferences
 
-`preferences` defines a property the platform's node SHOULD fulfill to run service container. Can be set either
+`preferences` defines a property the platform's node should fulfill to run service container. Can be set either
 by a list or a map with string values.
 
 ```yml
@@ -114,7 +114,7 @@ deploy:
 
 ### replicas
 
-If the service is `replicated` (which is the default), `replicas` specifies the number of containers that SHOULD be
+If the service is `replicated` (which is the default), `replicas` specifies the number of containers that should be
 running at any given time.
 
 ```yml
