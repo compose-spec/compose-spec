@@ -10,18 +10,18 @@ A Compose file must declare a `services` root element as a map whose keys are st
 and whose values are service definitions. A service  definition contains the configuration that is applied to each
 container started for that service.
 
-Each service MAY also include a Build section, which defines how to create the Docker image for the service.
+Each service may also include a Build section, which defines how to create the Docker image for the service.
 Compose supports building docker images using this service definition. If not implemented,
 the Build section should be ignored and the Compose file must still be considered valid.
 
-Build support is an OPTIONAL aspect of the Compose specification, and is
+Build support is an optional aspect of the Compose specification, and is
 described in detail in the [Build support](build.md) documentation.
 
 Each Service defines runtime constraints and requirements to run its containers. The `deploy` section groups
 these constraints and allows the platform to adjust the deployment strategy to best match containers' needs with
 available resources.
 
-Deploy support is an OPTIONAL aspect of the Compose specification, and is
+Deploy support is an optional aspect of the Compose specification, and is
 described in detail in the [Deployment support](deploy.md) documentation.
 If not implemented the Deploy section should be ignored and the Compose file must still be considered valid.
 
@@ -170,7 +170,7 @@ select cgroup namespace to use, if supported.
 
 ### cgroup_parent
 
-`cgroup_parent` specifies an OPTIONAL parent [cgroup](http://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
+`cgroup_parent` specifies an optional parent [cgroup](http://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
 
 ```
 cgroup_parent: m-executor-abcd
@@ -553,8 +553,8 @@ The value of `VAL` is used as a raw string and not modified at all. If the value
 (as is often the case for shell variables), the quotes must be **included** in the value passed to containers
 created by Compose.
 
-`VAL` MAY be omitted, in such cases the variable value is empty string.
-`=VAL` MAY be omitted, in such cases the variable is **unset**.
+`VAL` may be omitted, in such cases the variable value is empty string.
+`=VAL` may be omitted, in such cases the variable is **unset**.
 
 ```bash
 # Set Rails/Rack environment
@@ -568,7 +568,7 @@ VAR="quoted"
 map. Any boolean values; true, false, yes, no, should be enclosed in quotes to ensure
 they are not converted to True or False by the YAML parser.
 
-Environment variables MAY be declared by a single key (no value to equals sign). In such a case Compose
+Environment variables may be declared by a single key (no value to equals sign). In such a case Compose
 implementations should rely on some user interaction to resolve the value. If they do not, the variable
 is unset and will be removed from the service container environment.
 
@@ -943,7 +943,7 @@ If the image does not exist on the platform, Compose attempts to pull it based o
 If you are also using the Compose Build specification, there are alternative options for controling the precedence of
 pull over building the image from source, however pulling the image must be the default behavior.
 
-`image` MAY be omitted from a Compose file as long as a `build` section is declared. If you are not useing the Compose Build specification, Compose won't work if `image` is missing from the Compose file.
+`image` may be omitted from a Compose file as long as a `build` section is declared. If you are not useing the Compose Build specification, Compose won't work if `image` is missing from the Compose file.
 
 ### init
 
@@ -1335,7 +1335,7 @@ ports:
   - "6060:6060/udp"
 ```
 
-> **Note**: Host IP mapping MAY not be supported on the platform, in such case Compose rejects
+> **Note**: Host IP mapping may not be supported on the platform, in such case Compose rejects
 > the Compose file and must inform the user they will ignore the specified host IP.
 
 #### Long syntax
@@ -1472,7 +1472,7 @@ the service's containers.
 - `mode`: The [permissions](http://permissions-calculator.org/) for the file to be mounted in `/run/secrets/`
   in the service's task containers, in octal notation.
   Default value is world-readable permissions (mode `0444`).
-  The writable bit must be ignored if set. The executable bit MAY be set.
+  The writable bit must be ignored if set. The executable bit may be set.
 
 The following example sets the name of the `server-certificate` secret file to `server.crt`
 within the container, sets the mode to `0440` (group-readable) and sets the user and group
@@ -1494,7 +1494,7 @@ secrets:
     external: true
 ```
 
-Services MAY be granted access to multiple secrets. Long and short syntax for secrets MAY be used in the
+Services may be granted access to multiple secrets. Long and short syntax for secrets may be used in the
 same Compose file. Defining a secret in the top-level `secrets` must not imply granting any service access to it.
 Such grant must be explicit within service specification as [secrets](09-secrets.md) service element.
 
@@ -1608,7 +1608,7 @@ if not set, `root`.
 
 ### userns_mode
 
-`userns_mode` sets the user namespace for the service. Supported values are platform specific and MAY depend
+`userns_mode` sets the user namespace for the service. Supported values are platform specific and may depend
 on platform configuration
 
 ```yml
@@ -1619,7 +1619,7 @@ userns_mode: "host"
 
 `volumes` defines mount host paths or named volumes that must be accessible by service containers.
 
-If the mount is a host path and is only used by a single service, it MAY be declared as part of the service
+If the mount is a host path and is only used by a single service, it may be declared as part of the service
 definition instead of the top-level `volumes` key.
 
 To reuse a volume across multiple services, a named
@@ -1651,9 +1651,9 @@ volumes:
 The short syntax uses a single string with colon-separated values to specify a volume mount
 (`VOLUME:CONTAINER_PATH`), or an access mode (`VOLUME:CONTAINER_PATH:ACCESS_MODE`).
 
-- `VOLUME`: MAY be either a host path on the platform hosting containers (bind mount) or a volume name
+- `VOLUME`: may be either a host path on the platform hosting containers (bind mount) or a volume name
 - `CONTAINER_PATH`: the path in the container where the volume is mounted
-- `ACCESS_MODE`: a comma-separated `,` list of options. MAY be set to:
+- `ACCESS_MODE`: a comma-separated `,` list of options. may be set to:
   - `rw`: read and write access (default)
   - `ro`: read-only access
   - `z`: SELinux option indicating that the bind mount host content is shared among multiple containers

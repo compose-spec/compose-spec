@@ -1,7 +1,7 @@
 # The Compose Specification - Build support
 {:.no_toc}
 
-*Note:* Build is an OPTIONAL part of the Compose specification.
+*Note:* Build is an optional part of the Compose specification.
 
 * ToC
 {:toc}
@@ -14,7 +14,7 @@ in a portable way.
 
 ## Definitions
 
-Compose Specification can be extended to support an OPTIONAL `build` subsection on services.
+Compose Specification can be extended to support an optional `build` subsection on services.
 
 This section defines the build requirements for a service container image. Only a subset of Compose file services can be defined in such a `build`
 subsection, others may make use of the `image` attribute. When a `build` subsection is present for a service, it
@@ -35,14 +35,14 @@ from the Compose file parent folder. If it is absolute, the path prevents the Co
 When a service definition includes both the `image` attribute and a `build` section, Compose can't
 guarantee a pulled image is strictly equivalent to building the same image from source. Without any explicit
 user directives, Compose with Build support must first try to pull the image, then build from source
-if the image was not found on registry. Compose MAY offer options to customize this behaviour by user
+if the image was not found on registry. Compose may offer options to customize this behaviour by user
 request.
 
 ## Publishing built images
 
 Compose with Build support should offer an option to push built images to a registry. When doing so, it must not try to push service images without an `image` attribute. Compose should warn users about the missing `image` attribute which prevents images being pushed.
 
-Compose MAY offer a mechanism to compute an `image` attribute for services when not explicitly
+Compose may offer a mechanism to compute an `image` attribute for services when not explicitly
 declared in a yaml file. In such cases, the resulting Compose configuration is considered to have a valid `image`
 attribute, whenever the actual raw yaml file doesn't explicitly declare one.
 
@@ -225,7 +225,7 @@ For illustration, [BuildKit extended syntax](https://github.com/compose-spec/com
 
 Cache location syntax must follow the global format `[NAME|type=TYPE[,KEY=VALUE]]`. Simple `NAME` is actually a shortcut notation for `type=registry,ref=NAME`.
 
-Compose Builder implementations MAY support custom types, the Compose specification defines canonical types which must be supported:
+Compose Builder implementations may support custom types, the Compose specification defines canonical types which must be supported:
 
 - `registry` to retrieve build cache from an OCI image set by key `ref`
 
@@ -286,7 +286,7 @@ is the responsibility of the image builder (and is builder specific). Compose su
 absolute and relative paths to a directory AND Git repository URLs, like [context](#context) does. Other context flavours
 must be prefixed to avoid ambiguity with a `type://` prefix.
 
-Compose should warn the user if the image builder does not support additional contexts and MAY list
+Compose should warn the user if the image builder does not support additional contexts and may list
 the unused contexts.
 
 Illustrative examples of how this is used in Buildx can be found
@@ -430,7 +430,7 @@ the service's containers.
 - `mode`: The [permissions](http://permissions-calculator.org/) for the file to be mounted in `/run/secrets/`
   in the service's task containers, in octal notation.
   Default value is world-readable permissions (mode `0444`).
-  The writable bit must be ignored if set. The executable bit MAY be set.
+  The writable bit must be ignored if set. The executable bit may be set.
 
 The following example sets the name of the `server-certificate` secret file to `server.crt`
 within the container, sets the mode to `0440` (group-readable) and sets the user and group
@@ -453,7 +453,7 @@ secrets:
     external: true
 ```
 
-Service builds MAY be granted access to multiple secrets. Long and short syntax for secrets MAY be used in the
+Service builds may be granted access to multiple secrets. Long and short syntax for secrets may be used in the
 same Compose file. Defining a secret in the top-level `secrets` must not imply granting any service build access to it.
 Such grant must be explicit within service specification as [secrets](05-services.md#secrets) service element.
 

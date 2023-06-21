@@ -1,7 +1,7 @@
 # The Compose Specification - Deployment support
 {:.no_toc}
 
-*Note:* Deployment is an OPTIONAL part of the Compose Specification
+*Note:* Deployment is an optional part of the Compose Specification
 
 * ToC
 {:toc}
@@ -9,7 +9,7 @@
 ## Introduction
 
 Compose specification is a platform-neutral way to define multi-container applications. A Compose implementation supporting
-deployment of an application model MAY require some additional metadata as the Compose application model is an abstract way
+deployment of an application model may require some additional metadata as the Compose application model is an abstract way
 to reflect actual infrastructure needs per service, or lifecycle constraints.
 
 Compose Specification Deployment allows users to declare additional metadata on services so Composes gets
@@ -17,7 +17,7 @@ relevant data to allocate adequate resources on the platform and configure them 
 
 ## Definitions
 
-The Compose specification is extended to support an OPTIONAL `deploy` subsection on services. This section defines runtime requirements
+The Compose specification is extended to support an optional `deploy` subsection on services. This section defines runtime requirements
 for a service.
 
 ### endpoint_mode

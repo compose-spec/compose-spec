@@ -24,7 +24,7 @@ the expanded form.
 
 Profiles allow to adjust the Compose application model for various usages and environments. A Compose
 implementation should allow the user to define a set of active profiles. The exact mechanism is implementation
-specific and MAY include command line flags, environment variables, etc.
+specific and may include command line flags, environment variables, etc.
 
 The Services top-level element supports a `profiles` attribute to define a list of named profiles. Services without
 a `profiles` attribute set must always be enabled. A service must be ignored by the Compose
