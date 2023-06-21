@@ -164,7 +164,7 @@ If `external` is set to `true` and network configuration has other but `name` at
 not managed by compose lifecycle, Compose rejects the Compose file as invalid.
 
 In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network, Compose
-implementations should interrogate the platform for an existing network simply called `outside` and connect the
+queries the platform for an existing network simply called `outside` and connect the
 `proxy` service's containers to it.
 
 ```yml

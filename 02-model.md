@@ -18,7 +18,7 @@ A **Project** is an individual deployment of an application specification on a p
 resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. If you are creating resources on a platform, you must prefix resource names by project and
 set the label `com.docker.compose.project`.
 
-Project name can be set explicitly by top-level `name` attribute. Compose offers a way for user to set a custom project name and override this name, so that the same `compose.yaml` file can be deployed twice on the same infrastructure, without changes, by just passing a distinct name.
+Project name can be set explicitly by top-level `name` attribute. Compose offers a way for users to set a custom project name and override this name, so that the same `compose.yaml` file can be deployed twice on the same infrastructure, without changes, by just passing a distinct name.
 
 Project name must contain only lowercase letters, decimal digits, dashes, and underscores, and must begin with a lowercase letter or decimal digit.
 
@@ -122,5 +122,5 @@ This example illustrates the distinction between volumes, configs and secrets. W
 to service containers as mounted files or directories, only a volume can be configured for read+write access.
 Secrets and configs are read-only. The volume configuration allows you to select a volume driver and pass driver options
 to tweak volume management according to the actual infrastructure. Configs and Secrets rely on platform services,
-and are declared `external` as they are not managed as part of the application lifecycle.Compose uses a platform-specific lookup mechanism to retrieve runtime values.
+and are declared `external` as they are not managed as part of the application lifecycle. Compose uses a platform-specific lookup mechanism to retrieve runtime values.
 

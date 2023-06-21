@@ -42,7 +42,7 @@ request.
 
 Compose with Build support should offer an option to push built images to a registry. When doing so, it must not try to push service images without an `image` attribute. Compose should warn users about the missing `image` attribute which prevents images being pushed.
 
-Compose may offer a mechanism to compute an `image` attribute for services when not explicitly
+A Compose implementation may offer a mechanism to compute an `image` attribute for services when not explicitly
 declared in a yaml file. In such cases, the resulting Compose configuration is considered to have a valid `image`
 attribute, whenever the actual raw yaml file doesn't explicitly declare one.
 

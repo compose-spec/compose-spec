@@ -22,8 +22,7 @@ the expanded form.
 
 ### Profiles
 
-Profiles allow to adjust the Compose application model for various usages and environments. A Compose
-implementation should allow the user to define a set of active profiles. The exact mechanism is implementation
+Profiles allow to adjust the Compose application model for various usages and environments. Compose allows the user to define a set of active profiles. The exact mechanism is implementation
 specific and may include command line flags, environment variables, etc.
 
 The Services top-level element supports a `profiles` attribute to define a list of named profiles. Services without
@@ -33,7 +32,7 @@ explicitly targeted by a command. In that case its `profiles` must be added to t
 All other top-level elements are not affected by `profiles` and are always active.
 
 References to other services (by `links`, `extends` or shared resource syntax `service:xxx`) must not
-automatically enable a component that would otherwise have been ignored by active profiles. Instead the
+automatically enable a component that would otherwise have been ignored by active profiles. Instead
 Compose returns an error.
 
 #### Illustrative example

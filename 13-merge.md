@@ -22,7 +22,7 @@ services:
     key3: value3
 ```
 
-must result in a Compose application model equivalent to the YAML tree:
+Results in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:
@@ -83,7 +83,7 @@ services:
     command: ["echo", "bar"]
 ```
 
-must result in a Compose application model equivalent to the YAML tree:
+Results in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:
@@ -122,7 +122,7 @@ services:
       - bar:/work
 ```
 
-must result in a Compose application model equivalent to the YAML tree:
+Results in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:
@@ -151,7 +151,7 @@ services:
     build: !reset
 ```
 
-must result in a Compose application model equivalent to the YAML tree:
+Result in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:

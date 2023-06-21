@@ -6,7 +6,7 @@ Compose doesn't use this version to select an exact schema to validate the Compo
 prefer the most recent schema at the time it has been designed.
 
 Compose validates whether it can fully parse the Compose file. If some fields are unknown, typically
-because the Compose file was written with fields defined by a newer version of the specification, you'll recieve a warning message. Compose offers options to ignore unknown fields (as defined by ["loose"](01-status.md#requirements-and-optional-attributes) mode).
+because the Compose file was written with fields defined by a newer version of the specification, you'll receive a warning message. Compose offers options to ignore unknown fields (as defined by ["loose"](01-status.md#requirements-and-optional-attributes) mode).
 
 ## Name top-level element
 

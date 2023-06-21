@@ -31,7 +31,7 @@ to support those running modes:
 * Strict: warn the user about unsupported attributes and reject the Compose file
 * Loose: ignore unsupported attributes AND unknown attributes (that were not defined by the spec by the time implementation was created)
 
-From this point onwards, reference made to 'Compose' can be interpretted as 'Compose implementation'. 
+From this point onwards, references made to 'Compose' can be interpreted as 'a Compose implementation'. 
 ## The Compose application model
 
 The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
@@ -52,7 +52,7 @@ A **Project** is an individual deployment of an application specification on a p
 resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. If you are creating resources on a platform, you must prefix resource names by project and
 set the label `com.docker.compose.project`.
 
-Project name can be set explicitly by top-level `name` attribute. Compose offers a way for user to set a custom project name and override this name, so that the same `compose.yaml` file can be deployed twice on the same infrastructure, without changes, by just passing a distinct name.
+Project name can be set explicitly by top-level `name` attribute. Compose offers a way for users to set a custom project name and override this name, so that the same `compose.yaml` file can be deployed twice on the same infrastructure, without changes, by just passing a distinct name.
 
 Project name must contain only lowercase letters, decimal digits, dashes, and underscores, and must begin with a lowercase letter or decimal digit.
 
@@ -156,7 +156,7 @@ This example illustrates the distinction between volumes, configs and secrets. W
 to service containers as mounted files or directories, only a volume can be configured for read+write access.
 Secrets and configs are read-only. The volume configuration allows you to select a volume driver and pass driver options
 to tweak volume management according to the actual infrastructure. Configs and Secrets rely on platform services,
-and are declared `external` as they are not managed as part of the application lifecycle.Compose uses a platform-specific lookup mechanism to retrieve runtime values.
+and are declared `external` as they are not managed as part of the application lifecycle. Compose uses a platform-specific lookup mechanism to retrieve runtime values.
 
 ## Compose file
 
@@ -182,8 +182,7 @@ the expanded form.
 
 ### Profiles
 
-Profiles allow to adjust the Compose application model for various usages and environments. A Compose
-implementation should allow the user to define a set of active profiles. The exact mechanism is implementation
+Profiles allow to adjust the Compose application model for various usages and environments. Compose allows the user to define a set of active profiles. The exact mechanism is implementation
 specific and may include command line flags, environment variables, etc.
 
 The Services top-level element supports a `profiles` attribute to define a list of named profiles. Services without
@@ -193,7 +192,7 @@ explicitly targeted by a command. In that case its `profiles` must be added to t
 All other top-level elements are not affected by `profiles` and are always active.
 
 References to other services (by `links`, `extends` or shared resource syntax `service:xxx`) must not
-automatically enable a component that would otherwise have been ignored by active profiles. Instead the
+automatically enable a component that would otherwise have been ignored by active profiles. Instead
 Compose returns an error.
 
 #### Illustrative example
@@ -245,7 +244,7 @@ Compose doesn't use this version to select an exact schema to validate the Compo
 prefer the most recent schema at the time it has been designed.
 
 Compose validates whether it can fully parse the Compose file. If some fields are unknown, typically
-because the Compose file was written with fields defined by a newer version of the specification, you'll recieve a warning message. Compose offers options to ignore unknown fields (as defined by ["loose"](01-status.md#requirements-and-optional-attributes) mode).
+because the Compose file was written with fields defined by a newer version of the specification, you'll receive a warning message. Compose offers options to ignore unknown fields (as defined by ["loose"](01-status.md#requirements-and-optional-attributes) mode).
 
 ## Name top-level element
 
@@ -277,8 +276,7 @@ and whose values are service definitions. A service  definition contains the con
 container started for that service.
 
 Each service may also include a Build section, which defines how to create the Docker image for the service.
-Compose supports building docker images using this service definition. If not implemented,
-the Build section should be ignored and the Compose file must still be considered valid.
+Compose supports building docker images using this service definition. If not used, the Build section is ignored and the Compose file is still considered valid.
 
 Build support is an optional aspect of the Compose specification, and is
 described in detail in the [Build support](build.md) documentation.
@@ -365,12 +363,12 @@ Fine-tune bandwidth allocation by device. Each item in the list must have two ke
 
 ### cpu_period
 
-`cpu_period` allows you to configure CPU CFS (Completely Fair Scheduler) period when platform is based
+`cpu_period` configures CPU CFS (Completely Fair Scheduler) period when platform is based
 on Linux kernel.
 
 ### cpu_quota
 
-`cpu_quota` allows you to configure CPU CFS (Completely Fair Scheduler) quota when platform is based
+`cpu_quota` configures CPU CFS (Completely Fair Scheduler) quota when platform is based
 on Linux kernel.
 
 ### cpu_rt_runtime
@@ -1188,7 +1186,7 @@ healthcheck:
 
 ### hostname
 
-`hostname` declares a custom host name to use for the service container. must be a valid RFC 1123 hostname.
+`hostname` declares a custom host name to use for the service container. Must be a valid RFC 1123 hostname.
 
 ### image
 
@@ -1963,7 +1961,7 @@ expressed in the short form.
 read-only access (ro) or read-write (rw). If no access level is specified, then read-write must be used.
 
 String value defines another service in the Compose application model to mount volumes from. The
-`container:` prefix, if supported, allows to mount volumes from a container that is not managed by the
+`container:` prefix, if supported, allows to mount volumes from a container that is not managed by
 Compose.
 
 ```yaml
@@ -2144,7 +2142,7 @@ If `external` is set to `true` and network configuration has other but `name` at
 not managed by compose lifecycle, Compose rejects the Compose file as invalid.
 
 In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network, Compose
-implementations should interrogate the platform for an existing network simply called `outside` and connect the
+queries the platform for an existing network simply called `outside` and connect the
 `proxy` service's containers to it.
 
 ```yml
@@ -2453,7 +2451,7 @@ volumes:
 
 In the example above, a `default-volume` anchor is created based on the `db-data` volume. It is later reused by the alias `*default-volume` to define the `metrics` volume. 
 
-Anchor resolution must take place before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
+Anchor resolution takes place before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
 
 ### Example 2
 
@@ -2748,7 +2746,7 @@ services:
     key3: value3
 ```
 
-must result in a Compose application model equivalent to the YAML tree:
+Results in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:
@@ -2809,7 +2807,7 @@ services:
     command: ["echo", "bar"]
 ```
 
-must result in a Compose application model equivalent to the YAML tree:
+Results in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:
@@ -2848,7 +2846,7 @@ services:
       - bar:/work
 ```
 
-must result in a Compose application model equivalent to the YAML tree:
+Results in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:
@@ -2877,7 +2875,7 @@ services:
     build: !reset
 ```
 
-must result in a Compose application model equivalent to the YAML tree:
+Result in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:

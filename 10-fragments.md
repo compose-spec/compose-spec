@@ -19,7 +19,7 @@ volumes:
 
 In the example above, a `default-volume` anchor is created based on the `db-data` volume. It is later reused by the alias `*default-volume` to define the `metrics` volume. 
 
-Anchor resolution must take place before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
+Anchor resolution takes place before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
 
 ### Example 2
 

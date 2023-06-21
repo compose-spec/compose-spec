@@ -11,8 +11,7 @@ and whose values are service definitions. A service  definition contains the con
 container started for that service.
 
 Each service may also include a Build section, which defines how to create the Docker image for the service.
-Compose supports building docker images using this service definition. If not implemented,
-the Build section should be ignored and the Compose file must still be considered valid.
+Compose supports building docker images using this service definition. If not used, the Build section is ignored and the Compose file is still considered valid.
 
 Build support is an optional aspect of the Compose specification, and is
 described in detail in the [Build support](build.md) documentation.
@@ -99,12 +98,12 @@ Fine-tune bandwidth allocation by device. Each item in the list must have two ke
 
 ### cpu_period
 
-`cpu_period` allows you to configure CPU CFS (Completely Fair Scheduler) period when platform is based
+`cpu_period` configures CPU CFS (Completely Fair Scheduler) period when platform is based
 on Linux kernel.
 
 ### cpu_quota
 
-`cpu_quota` allows you to configure CPU CFS (Completely Fair Scheduler) quota when platform is based
+`cpu_quota` configures CPU CFS (Completely Fair Scheduler) quota when platform is based
 on Linux kernel.
 
 ### cpu_rt_runtime
@@ -922,7 +921,7 @@ healthcheck:
 
 ### hostname
 
-`hostname` declares a custom host name to use for the service container. must be a valid RFC 1123 hostname.
+`hostname` declares a custom host name to use for the service container. Must be a valid RFC 1123 hostname.
 
 ### image
 
@@ -1697,7 +1696,7 @@ expressed in the short form.
 read-only access (ro) or read-write (rw). If no access level is specified, then read-write must be used.
 
 String value defines another service in the Compose application model to mount volumes from. The
-`container:` prefix, if supported, allows to mount volumes from a container that is not managed by the
+`container:` prefix, if supported, allows to mount volumes from a container that is not managed by
 Compose.
 
 ```yaml

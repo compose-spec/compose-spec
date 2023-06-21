@@ -21,4 +21,4 @@ to support those running modes:
 * Strict: warn the user about unsupported attributes and reject the Compose file
 * Loose: ignore unsupported attributes AND unknown attributes (that were not defined by the spec by the time implementation was created)
 
-From this point onwards, reference made to 'Compose' can be interpretted as 'Compose implementation'. 
+From this point onwards, references made to 'Compose' can be interpreted as 'a Compose implementation'. 
