@@ -28,7 +28,7 @@ creating a volume. Optionally, you can configure it with the following keys:
 
 ### driver
 
-Specify which volume driver should be used for this volume. Default and available values are platform specific. If the driver is not available, Compose MUST return an error and stop application deployment.
+Specify which volume driver should be used for this volume. Default and available values are platform specific. If the driver is not available, Compose must return an error and stop application deployment.
 
 ```yml
 driver: foobar
@@ -50,7 +50,7 @@ volumes:
 ### external
 
 If set to `true`, `external` specifies that this volume already exists on the platform and its lifecycle is managed outside
-of that of the application. Compose doesn't attempt to create these volumes, and MUST return an error if they
+of that of the application. Compose doesn't attempt to create these volumes, and must return an error if they
 do not exist.
 
 If `external` is set to `true` and volume configuration has other but `name` attributes set, considering resource is

@@ -12,12 +12,12 @@ Compose also supports `docker-compose.yaml` and `docker-compose.yml` for backwar
 If both files exist, Compose prefers the canonical `compose.yaml` one.
 
 Multiple Compose files can be combined together to define the application model. The combination of YAML files
-MUST be implemented by appending/overriding YAML elements based on Compose file order set by the user. Simple
+must be implemented by appending/overriding YAML elements based on Compose file order set by the user. Simple
 attributes and maps get overridden by the highest order Compose file, lists get merged by appending. Relative
-paths MUST be resolved based on the **first** Compose file's parent folder, whenever complimentary files being
+paths must be resolved based on the **first** Compose file's parent folder, whenever complimentary files being
 merged are hosted in other folders.
 
-As some Compose file elements can both be expressed as single strings or complex objects, merges MUST apply to
+As some Compose file elements can both be expressed as single strings or complex objects, merges must apply to
 the expanded form.
 
 ### Profiles
@@ -27,12 +27,12 @@ implementation SHOULD allow the user to define a set of active profiles. The exa
 specific and MAY include command line flags, environment variables, etc.
 
 The Services top-level element supports a `profiles` attribute to define a list of named profiles. Services without
-a `profiles` attribute set MUST always be enabled. A service MUST be ignored by the Compose
+a `profiles` attribute set must always be enabled. A service must be ignored by the Compose
 implementation when none of the listed `profiles` match the active ones, unless the service is
-explicitly targeted by a command. In that case its `profiles` MUST be added to the set of active profiles.
+explicitly targeted by a command. In that case its `profiles` must be added to the set of active profiles.
 All other top-level elements are not affected by `profiles` and are always active.
 
-References to other services (by `links`, `extends` or shared resource syntax `service:xxx`) MUST not
+References to other services (by `links`, `extends` or shared resource syntax `service:xxx`) must not
 automatically enable a component that would otherwise have been ignored by active profiles. Instead the
 Compose returns an error.
 

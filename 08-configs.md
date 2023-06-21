@@ -4,8 +4,8 @@ Configs allow services to adapt their behaviour without the need to rebuild a Do
 
 When granted access to a config, the config content is mounted as a file in the container. The location of the mount point within the container defaults to `/<config-name>` in Linux containers and `C:\<config-name>` in Windows containers.
 
-By default, the config MUST be owned by the user running the container command but can be overridden by service configuration.
-By default, the config MUST have world-readable permissions (mode 0444), unless service is configured to override this.
+By default, the config must be owned by the user running the container command but can be overridden by service configuration.
+By default, the config must have world-readable permissions (mode 0444), unless service is configured to override this.
 
 Services can only access configs when explicitly granted by a [`configs`](05-services.md#configs) subsection.
 

@@ -32,7 +32,7 @@ driver is not available on the platform.
 driver: overlay
 ```
 
-Default and available values are platform specific. Compose specification MUST support the following specific drivers:
+Default and available values are platform specific. Compose specification must support the following specific drivers:
 `none` and `host`
 
 - `host` use the host's networking stack
@@ -41,7 +41,7 @@ Default and available values are platform specific. Compose specification MUST s
 #### host or none
 
 The syntax for using built-in networks such as `host` and `none` is different, as such networks implicitly exist outside
-the scope of Compose. To use them, one MUST define an external network with the name `host` or `none` and
+the scope of Compose. To use them, one must define an external network with the name `host` or `none` and
 an alias that Compose can use (`hostnet` and `nonet` in the following examples), then grant the service
 access to that network using its alias.
 

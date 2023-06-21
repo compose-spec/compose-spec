@@ -22,7 +22,7 @@ services:
     key3: value3
 ```
 
-MUST result in a Compose application model equivalent to the YAML tree:
+must result in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:
@@ -51,7 +51,7 @@ services:
       - 8.8.8.8
 ```
 
-MUST result in a Compose application model equivalent to the YAML tree:
+must result in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:
@@ -68,7 +68,7 @@ There are exceptions to those rules:
 ### Shell commands
 
 Service's [command](#command), [entrypoint](#entrypoint) and [healthcheck](#healthcheck) `test`: 
-For usability, the value MUST be overridden by the latest Compose file, and not appended.
+For usability, the value must be overridden by the latest Compose file, and not appended.
 
 Merging the following example YAML trees:
 ```yaml
@@ -83,7 +83,7 @@ services:
     command: ["echo", "bar"]
 ```
 
-MUST result in a Compose application model equivalent to the YAML tree:
+must result in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:
@@ -122,7 +122,7 @@ services:
       - bar:/work
 ```
 
-MUST result in a Compose application model equivalent to the YAML tree:
+must result in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:
@@ -151,7 +151,7 @@ services:
     build: !reset
 ```
 
-MUST result in a Compose application model equivalent to the YAML tree:
+must result in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:

@@ -46,7 +46,7 @@ services:
 
 ### labels
 
-`labels` specifies metadata for the service. These labels MUST only be set on the service and not on any containers for the service.
+`labels` specifies metadata for the service. These labels must only be set on the service and not on any containers for the service.
 This assumes the platform has some native concept of "service" that can match the Compose application model.
 
 ```yml
@@ -76,7 +76,7 @@ services:
 
 #### constraints
 
-`constraints` defines a REQUIRED property the platform's node MUST fulfill to run service container. Can be set either
+`constraints` defines a REQUIRED property the platform's node must fulfill to run service container. Can be set either
 by a list or a map with string values.
 
 ```yml
@@ -131,8 +131,8 @@ services:
 `resources` configures physical resource constraints for container to run on platform. Those constraints can be configured
 as:
 
-- `limits`: The platform MUST prevent container to allocate more
-- `reservations`: The platform MUST guarantee container can allocate at least the configured amount
+- `limits`: The platform must prevent container to allocate more
+- `reservations`: The platform must guarantee container can allocate at least the configured amount
 
 ```yml
 services:
@@ -165,7 +165,7 @@ services:
 
 `devices` configures reservations of the devices a container can use. It contains a list of reservations, each set as an object with the following parameters: `capabilities`, `driver`, `count`, `device_ids` and `options`.
 
-Devices are reserved using a list of capabilities, making `capabilities` the only required field. A device MUST satisfy all the requested capabilities for a successful reservation.
+Devices are reserved using a list of capabilities, making `capabilities` the only required field. A device must satisfy all the requested capabilities for a successful reservation.
 
 ##### capabilities
 
@@ -175,7 +175,7 @@ The following generic capabilities are recognized today:
 - `gpu`: Graphics accelerator
 - `tpu`: AI accelerator
 
-To avoid name clashes, driver specific capabilities MUST be prefixed with the driver name.
+To avoid name clashes, driver specific capabilities must be prefixed with the driver name.
 For example, reserving an nVidia CUDA-enabled accelerator might look like this:
 
 ```yml
@@ -252,7 +252,7 @@ deploy:
 - `delay`: How long to wait between restart attempts, specified as a [duration](11-extension.md#specifying-durations) (default: 0).
 - `max_attempts`: How many times to attempt to restart a container before giving up (default: never give up). If the restart does not
   succeed within the configured `window`, this attempt doesn't count toward the configured `max_attempts` value.
-  For example, if `max_attempts` is set to '2', and the restart fails on the first attempt, more than two restarts MUST be attempted.
+  For example, if `max_attempts` is set to '2', and the restart fails on the first attempt, more than two restarts must be attempted.
 - `window`: How long to wait before deciding if a restart has succeeded, specified as a [duration](#specifying-durations) (default:
   decide immediately).
 

@@ -14,7 +14,7 @@ Top-level `name` property is defined by the specification as project name to be 
 Compose offers a way for you to override this name, and sets a
 default project name to be used if the top-level `name` element is not set.
 
-Whenever project name is defined by top-level `name` or by some custom mechanism, it MUST be exposed for
+Whenever project name is defined by top-level `name` or by some custom mechanism, it must be exposed for
 [interpolation](12-interpolation.md) and environment variable resolution as `COMPOSE_PROJECT_NAME`
 
 ```yml
