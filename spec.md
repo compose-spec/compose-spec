@@ -31,7 +31,8 @@ to support those running modes:
 * Strict: warn the user about unsupported attributes and reject the Compose file
 * Loose: ignore unsupported attributes AND unknown attributes (that were not defined by the spec by the time implementation was created)
 
-From this point onwards, reference made to 'Compose' can be interpretted as 'Compose implementation'. ## The Compose application model
+From this point onwards, reference made to 'Compose' can be interpretted as 'Compose implementation'. 
+## The Compose application model
 
 The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
 
@@ -41,7 +42,7 @@ Services communicate with each other through [Networks](06-networks.md). In this
 
 Services store and share persistent data into [Volumes](07-volumes.md). The specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the Volumes definition and may be partially implemented on some platforms.
 
-Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept: [Configs](08-configs.md). From a Service container point of view, Configs are comparable to Volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
+Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept - [Configs](08-configs.md). From a Service container point of view, Configs are comparable to Volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
 
 A [Secret](09-secrets.md) is a specific flavor of configuration data for sensitive data that should not be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
 
