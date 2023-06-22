@@ -1,6 +1,6 @@
 ## Merge and override
 
-Compose allows users to define a Compose application model through multiple Compose files. 
+Compose lets you define a Compose application model through multiple Compose files. 
 When doing so, Compose follows the rules declared in this section to merge Compose files.
 
 ### Mapping
@@ -51,7 +51,7 @@ services:
       - 8.8.8.8
 ```
 
-must result in a Compose application model equivalent to the YAML tree:
+Results in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:
@@ -63,12 +63,9 @@ services:
 
 ## Exceptions
 
-There are exceptions to those rules:
-
 ### Shell commands
 
-Service's [command](#command), [entrypoint](#entrypoint) and [healthcheck](#healthcheck) `test`: 
-For usability, the value must be overridden by the latest Compose file, and not appended.
+When merging Compose files that use the services attributes [command](05-services.md#command), [entrypoint](05-services.md#entrypoint) and [healthcheck: `test`](05-services.md#healthcheck), the value is overridden by the latest Compose file, and not appended.
 
 Merging the following example YAML trees:
 ```yaml
@@ -92,20 +89,19 @@ services:
       command: ["echo", "bar"]
 ```
 
-
 ### Unique resources
 
-Applies to service [ports](#ports), [volumes](#volumes), [secrets](#secrets) and [configs](#configs).
+Applies to the [ports](05-services.md#ports), [volumes](05-services.md#volumes), [secrets](05-services.md#secrets) and [configs](05-services.md#configs) services attributes.
 While these types are modeled in a Compose file as a sequence, they have special uniqueness requirements:
 
-| attribute   | unique key               |
+| Attribute   | Unique key               |
 |-------------|--------------------------|
 | volumes     |  target                  |
 | secrets     |  source                  |
 | configs     |  source                  |
 | ports       |  {ip, target, published, protocol}   |
 
-While merging Compose files, Compose appends new entries that do not violate a uniqueness constraint and merge entries that share a unique key.
+When merging Compose files, Compose appends new entries that do not violate a uniqueness constraint and merge entries that share a unique key.
 
 Merging the following example YAML trees:
 ```yaml
@@ -133,9 +129,9 @@ services:
 
 ### Reset value
 
-In addition to the previously described mechanism, an override Compose file can also be used to remove elements from application model.
-For this purpose, custom YAML tag `!reset` can be set to override value set by the overriden Compose file, and replace with default
-value or `null` on target attribute.
+In addition to the previously described mechanism, an override Compose file can also be used to remove elements from your application model.
+For this purpose, the custom YAML tag `!reset` can be set to override a value set by the overriden Compose file, and replace it with a default
+value or `null`.
 
 Merging the following example YAML trees:
 ```yaml

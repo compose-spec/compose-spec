@@ -3,9 +3,9 @@
 As with [Fragments](10-fragments.md), Extensions can be used to make your Compose file more efficient and easier to maintain. Extensions can also be used with [anchors and aliases](10-fragments.md).
 
 Use the prefix `x-` on any top-level element to modularize configurations that you want to reuse. They can be used
-within any structure in a Compose file as Docker Compose ignores any fields that start with `x-`.  This is the sole exception where Compose silently ignores unrecognized fields.
+within any structure in a Compose file as Compose ignores any fields that start with `x-`.  This is the sole exception where Compose silently ignores unrecognized fields.
 
-The contents of any `x-` section is unspecified by Compose specification, so it can be used to enable custom features. If Compose encounters an unknown extension field it must not fail, but COULD warn the user about the unknown field.
+The contents of any `x-` section is unspecified by the Compose specification, so it can be used to enable custom features. If Compose encounters an unknown extension field it doesn't fail and may warn you about the unknown field.
 
 ### Example 1
 
@@ -21,7 +21,7 @@ services:
     x-foo: bar
 ```
 
-For platform extensions, it is highly recommended to prefix extension by platform/vendor name, the same way browsers add
+For platform extensions, it's highly recommended that you prefix extensions by platform or vendor name, the same way browsers add
 support for [custom CSS features](https://www.w3.org/TR/2011/REC-CSS2-20110607/syndata.html#vendor-keywords)
 
 ```yml
@@ -51,8 +51,8 @@ services:
     image: another-image:latest
 ```
 
-In this example, the environment variables do not belong to either of the services. They’ve been lifted out completely, into the `x-env` extension field.
-This defines a new node which contains the environment field. A YAML anchor is used (`&env`) so both services can reference the extension field’s value as `*env`.
+In this example, the environment variables do not belong to either of the services. They’ve been lifted out completely into the `x-env` extension field.
+This defines a new node which contains the environment field. The `&env` YAML anchor is used so both services can reference the extension field’s value as `*env`.
 
 ### Example 3
 
@@ -86,12 +86,12 @@ services:
      https_proxy: $https_proxy
 ```
 
-The `nodeinfo` and `echoit` services both use merge it in, then set their specific image and environment. 
+The `nodeinfo` and `echoit` services both use the `x-function` extension, then set their specific image and environment. 
 
 ### Example 4 
 
-Using [YAML merge](yaml.org/type/merge.html) it is also possible to use multiple extensions and shared
-and override additional  for specific needs:
+Using [YAML merge](http://yaml.org/type/merge.html) it is also possible to use multiple extensions and share
+and override additional attributes for specific needs:
 
 ```yml
 x-environment: &default-environment
@@ -107,14 +107,16 @@ services:
       YET_ANOTHER: VARIABLE
 ```
 
-Note that [YAML merge]((http://yaml.org/type/merge.html)) only applies to mappings, and can't be used with sequences. In previous example, the
-environment variables must be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
+> **Note**
+> [YAML merge](http://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
+>
+>In the example above, the environment variables are declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
 
 ### Informative Historical Notes
 
 This section is informative. At the time of writing, the following prefixes are known to exist:
 
-| prefix     | vendor/organization |
+| Prefix     | Vendor/Organization |
 | ---------- | ------------------- |
 | docker     | Docker              |
 | kubernetes | Kubernetes          |
