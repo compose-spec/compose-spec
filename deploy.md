@@ -1,7 +1,7 @@
 # The Compose Specification - Deployment support
 {:.no_toc}
 
-*Note:* Deployment is an OPTIONAL part of the Compose Specification
+*Note:* Deployment is an optional part of the Compose Specification
 
 * ToC
 {:toc}
@@ -9,15 +9,15 @@
 ## Introduction
 
 Compose specification is a platform-neutral way to define multi-container applications. A Compose implementation supporting
-deployment of an application model MAY require some additional metadata as the Compose application model is an abstract way
+deployment of an application model may require some additional metadata as the Compose application model is an abstract way
 to reflect actual infrastructure needs per service, or lifecycle constraints.
 
-Compose Specification Deployment allows users to declare additional metadata on services so the Compose implementations gets
+Compose Specification Deployment allows users to declare additional metadata on services so Composes gets
 relevant data to allocate adequate resources on the platform and configure them to match user's needs.
 
 ## Definitions
 
-The Compose specification is extended to support an OPTIONAL `deploy` subsection on services. This section defines runtime requirements
+The Compose specification is extended to support an optional `deploy` subsection on services. This section defines runtime requirements
 for a service.
 
 ### endpoint_mode
@@ -46,7 +46,7 @@ services:
 
 ### labels
 
-`labels` specifies metadata for the service. These labels MUST only be set on the service and not on any containers for the service.
+`labels` specifies metadata for the service. These labels must only be set on the service and not on any containers for the service.
 This assumes the platform has some native concept of "service" that can match the Compose application model.
 
 ```yml
@@ -76,7 +76,7 @@ services:
 
 #### constraints
 
-`constraints` defines a REQUIRED property the platform's node MUST fulfill to run service container. Can be set either
+`constraints` defines a required property the platform's node must fulfill to run service container. Can be set either
 by a list or a map with string values.
 
 ```yml
@@ -95,7 +95,7 @@ deploy:
 
 #### preferences
 
-`preferences` defines a property the platform's node SHOULD fulfill to run service container. Can be set either
+`preferences` defines a property the platform's node should fulfill to run service container. Can be set either
 by a list or a map with string values.
 
 ```yml
@@ -114,7 +114,7 @@ deploy:
 
 ### replicas
 
-If the service is `replicated` (which is the default), `replicas` specifies the number of containers that SHOULD be
+If the service is `replicated` (which is the default), `replicas` specifies the number of containers that should be
 running at any given time.
 
 ```yml
@@ -131,8 +131,8 @@ services:
 `resources` configures physical resource constraints for container to run on platform. Those constraints can be configured
 as:
 
-- `limits`: The platform MUST prevent container to allocate more
-- `reservations`: The platform MUST guarantee container can allocate at least the configured amount
+- `limits`: The platform must prevent container to allocate more
+- `reservations`: The platform must guarantee container can allocate at least the configured amount
 
 ```yml
 services:
@@ -165,7 +165,7 @@ services:
 
 `devices` configures reservations of the devices a container can use. It contains a list of reservations, each set as an object with the following parameters: `capabilities`, `driver`, `count`, `device_ids` and `options`.
 
-Devices are reserved using a list of capabilities, making `capabilities` the only required field. A device MUST satisfy all the requested capabilities for a successful reservation.
+Devices are reserved using a list of capabilities, making `capabilities` the only required field. A device must satisfy all the requested capabilities for a successful reservation.
 
 ##### capabilities
 
@@ -175,7 +175,7 @@ The following generic capabilities are recognized today:
 - `gpu`: Graphics accelerator
 - `tpu`: AI accelerator
 
-To avoid name clashes, driver specific capabilities MUST be prefixed with the driver name.
+To avoid name clashes, driver specific capabilities must be prefixed with the driver name.
 For example, reserving an nVidia CUDA-enabled accelerator might look like this:
 
 ```yml
@@ -201,7 +201,7 @@ deploy:
 
 ##### count
 
-If `count` is set to `all` or not specified, Compose implementations MUST reserve all devices that satisfy the requested capabilities. Otherwise, Compose implementations MUST reserve at least the number of devices specified. The value is specified as an integer.
+If `count` is set to `all` or not specified, Compose reserves all devices that satisfy the requested capabilities. Otherwise, Compose reserves at least the number of devices specified. The value is specified as an integer.
 
 ```yml
 deploy:
@@ -212,11 +212,11 @@ deploy:
           count: 2
 ```
 
-`count` and `device_ids` fields are exclusive. Compose implementations MUST return an error if both are specified.
+`count` and `device_ids` fields are exclusive. Compose returns an error if both are specified.
 
 ##### device_ids
 
-If `device_ids` is set, Compose implementations MUST reserve devices with the specified IDs provided they satisfy the requested capabilities. The value is specified as a list of strings.
+If `device_ids` is set, Compose reserves devices with the specified IDs provided they satisfy the requested capabilities. The value is specified as a list of strings.
 
 ```yml
 deploy:
@@ -227,7 +227,7 @@ deploy:
           device_ids: ["GPU-f123d1c9-26bb-df9b-1c23-4a731f61d8c7"]
 ```
 
-`count` and `device_ids` fields are exclusive. Compose implementations MUST return an error if both are specified.
+`count` and `device_ids` fields are exclusive. Compose returns an error if both are specified.
 
 ##### options
 
@@ -246,13 +246,13 @@ deploy:
 
 ### restart_policy
 
-`restart_policy` configures if and how to restart containers when they exit. If `restart_policy` is not set, Compose implementations MUST consider `restart` field set by service configuration.
+`restart_policy` configures if and how to restart containers when they exit. If `restart_policy` is not set, Compose considers the `restart` field set by service configuration.
 
 - `condition`: One of `none`, `on-failure` or `any` (default: `any`).
 - `delay`: How long to wait between restart attempts, specified as a [duration](11-extension.md#specifying-durations) (default: 0).
 - `max_attempts`: How many times to attempt to restart a container before giving up (default: never give up). If the restart does not
   succeed within the configured `window`, this attempt doesn't count toward the configured `max_attempts` value.
-  For example, if `max_attempts` is set to '2', and the restart fails on the first attempt, more than two restarts MUST be attempted.
+  For example, if `max_attempts` is set to '2', and the restart fails on the first attempt, more than two restarts must be attempted.
 - `window`: How long to wait before deciding if a restart has succeeded, specified as a [duration](#specifying-durations) (default:
   decide immediately).
 

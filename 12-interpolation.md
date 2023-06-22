@@ -37,15 +37,15 @@ web:
   command: "$$VAR_NOT_INTERPOLATED_BY_COMPOSE"
 ```
 
-If the Compose implementation can't resolve a substituted variable and no default value is defined, it MUST warn
+If Compose can't resolve a substituted variable and no default value is defined, it must warn
 the user and substitute the variable with an empty string.
 
 As any values in a Compose file can be interpolated with variable substitution, including compact string notation
-for complex elements, interpolation MUST be applied _before_ merge on a per-file basis.
+for complex elements, interpolation must be applied _before_ merge on a per-file basis.
 
 Interpolation applies only to YAML _values_, not to _keys_. For the few places where keys are actually arbitrary
 user-defined strings, such as [labels](#labels) or [environment](#environment), an alternate equal sign syntax
-MUST be used for interpolation to apply:
+must be used for interpolation to apply:
 
 ```yml
 services:

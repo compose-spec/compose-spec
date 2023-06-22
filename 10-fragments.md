@@ -19,7 +19,7 @@ volumes:
 
 In the example above, a `default-volume` anchor is created based on the `db-data` volume. It is later reused by the alias `*default-volume` to define the `metrics` volume. 
 
-Anchor resolution MUST take place before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
+Anchor resolution takes place before [variables interpolation](12-interpolation.md), so variables can't be used to set anchors or aliases.
 
 ### Example 2
 
@@ -81,4 +81,4 @@ services:
 ```
 
 Note that [YAML merge]((http://yaml.org/type/merge.html)) only applies to mappings, and can't be used with sequences. In previous example, the
-environment variables MUST be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved. 
+environment variables must be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved. 

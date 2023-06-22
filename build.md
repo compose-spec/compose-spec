@@ -1,7 +1,7 @@
 # The Compose Specification - Build support
 {:.no_toc}
 
-*Note:* Build is an OPTIONAL part of the Compose specification.
+*Note:* Build is an optional part of the Compose specification.
 
 * ToC
 {:toc}
@@ -14,36 +14,35 @@ in a portable way.
 
 ## Definitions
 
-Compose Specification can be extended to support an OPTIONAL `build` subsection on services.
+Compose Specification can be extended to support an optional `build` subsection on services.
 
 This section defines the build requirements for a service container image. Only a subset of Compose file services can be defined in such a `build`
 subsection, others may make use of the `image` attribute. When a `build` subsection is present for a service, it
-is valid for Compose to miss out the `image` attribute for the corresponding service, as the Compose implementation
+is valid for Compose to miss out the `image` attribute for the corresponding service, as Compose
 can build an image from source.
 
 `build` can be either specified as a single string defining a context path, or as a detailed build definition.
 
 In the former case, the whole path is used as a Docker context to execute a Docker build, looking for a canonical
-`Dockerfile` at the root of the directory. The path can be absolute or relative. If it is relative, it MUST be resolved
-from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so the Compose implementation SHOULD warn the users accordingly.
+`Dockerfile` at the root of the directory. The path can be absolute or relative. If it is relative, it must be resolved
+from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so Compose should warn the users accordingly.
 
-In the later case, build arguments can be specified, including an alternate `Dockerfile` location. The path can be absolute or relative. If it is relative, it MUST be resolved
-from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so the Compose implementation SHOULD warn the users accordingly.
+In the later case, build arguments can be specified, including an alternate `Dockerfile` location. The path can be absolute or relative. If it is relative, it must be resolved
+from the Compose file parent folder. If it is absolute, the path prevents the Compose file from being portable so Compose should warn the users accordingly.
 
 ## Consistency with `image`
 
-When a service definition includes both the `image` attribute and a `build` section, the Compose implementation can't
+When a service definition includes both the `image` attribute and a `build` section, Compose can't
 guarantee a pulled image is strictly equivalent to building the same image from source. Without any explicit
-user directives, the Compose implementation with Build support MUST first try to pull the image, then build from source
-if the image was not found on registry. The Compose implementation MAY offer options to customize this behaviour by user
+user directives, Compose with Build support must first try to pull the image, then build from source
+if the image was not found on registry. Compose may offer options to customize this behaviour by user
 request.
 
 ## Publishing built images
 
-The Compose implementation with Build support SHOULD offer an option to push built images to a registry. When doing so, it
-MUST NOT try to push service images without an `image` attribute. The Compose implementation SHOULD warn users about the missing `image` attribute which prevents images being pushed.
+Compose with Build support should offer an option to push built images to a registry. When doing so, it must not try to push service images without an `image` attribute. Compose should warn users about the missing `image` attribute which prevents images being pushed.
 
-The Compose implementation MAY offer a mechanism to compute an `image` attribute for services when not explicitly
+A Compose implementation may offer a mechanism to compute an `image` attribute for services when not explicitly
 declared in a yaml file. In such cases, the resulting Compose configuration is considered to have a valid `image`
 attribute, whenever the actual raw yaml file doesn't explicitly declare one.
 
@@ -71,17 +70,17 @@ When used to build service images from source, the Compose file creates three Do
 
 * `awesome/webapp` Docker image is built using `webapp` sub-directory, within the Compose file's parent folder, as the Docker build context. Lack of a `Dockerfile` within this folder throws an error.
 * `awesome/database` Docker image is built using `backend` sub-directory within the Compose file parent folder. `backend.Dockerfile` file is used to define build steps, this file is searched relative to the context path, which means `..` resolves to the Compose file parent folder, so `backend.Dockerfile` is a sibling file.
-* A Docker image is built using the `custom` directory with the user's HOME as the Docker context. The Compose implementation warns the user about the non-portable path used to build image.
+* A Docker image is built using the `custom` directory with the user's HOME as the Docker context. Compose warns the user about the non-portable path used to build image.
 
 On push, both `awesome/webapp` and `awesome/database` Docker images are pushed to the default registry. The `custom` service image is skipped as no `image` attribute is set and the user is warned about this missing attribute.
 
 ## Build definition
 
-The `build` element defines configuration options that are applied by Compose implementations to build Docker image from source.
+The `build` element defines configuration options that are applied by Compose to build Docker image from source.
 `build` can be specified either as a string containing a path to the build context or as a detailed structure:
 
 Using the string syntax, only the build context can be configured as either:
-- A relative path to the Compose file's parent folder. This path MUST be a directory and must contain a `Dockerfile`
+- A relative path to the Compose file's parent folder. This path must be a directory and must contain a `Dockerfile`
 
   ```yml
   services:
@@ -101,12 +100,12 @@ The second part represents a subdirectory inside the repository that is used as 
 
 Alternatively `build` can be an object with fields defined as follows:
 
-### context (REQUIRED)
+### context (Required)
 
 `context` defines either a path to a directory containing a Dockerfile, or a URL to a git repository.
 
-When the value supplied is a relative path, it MUST be interpreted as relative to the location of the Compose file.
-Compose implementations MUST warn users about the absolute path used to define the build context as those prevent the Compose file
+When the value supplied is a relative path, it must be interpreted as relative to the location of the Compose file.
+Compose warns users about the absolute path used to define the build context as those prevent the Compose file
 from being portable.
 
 ```yml
@@ -122,12 +121,12 @@ services:
 
 ### dockerfile
 
-`dockerfile` sets an alternate Dockerfile. A relative path MUST be resolved from the build context.
-Compose implementations MUST warn users about the absolute path used to define the Dockerfile as it prevents Compose files
+`dockerfile` sets an alternate Dockerfile. A relative path must be resolved from the build context.
+Compose warns users about the absolute path used to define the Dockerfile as it prevents Compose files
 from being portable.
 
-When set, `dockerfile_inline` attribute is not allowed and a Compose Implementation SHOULD
-reject any Compose file having both set.
+When set, `dockerfile_inline` attribute is not allowed and a Compose
+rejects any Compose file having both set.
 
 ```yml
 build:
@@ -138,7 +137,7 @@ build:
 ### dockerfile_inline
 
 `dockerfile_inline` defines Dockerfile content as inlined string in a Compose file. When set, the `dockerfile`
-attribute is not allowed and the Compose Implementation SHOULD reject any Compose file having both set.
+attribute is not allowed and Compose should reject any Compose file having both set.
 
 Use of YAML multi-line string syntax is recommended to define Dockerfile content:
 
@@ -178,7 +177,7 @@ build:
     - GIT_COMMIT=cdc3b19
 ```
 
-Values can be omitted when specifying a build argument, in which case its value at build time MUST be obtained by user interaction,
+Values can be omitted when specifying a build argument, in which case its value at build time must be obtained by user interaction,
 otherwise the build arg won't be set when building the Docker image.
 
 ```yml
@@ -188,7 +187,7 @@ args:
 
 ### ssh
 
-`ssh` defines SSH authentications that the image builder SHOULD use during image build (e.g., cloning private repository).
+`ssh` defines SSH authentications that the image builder should use during image build (e.g., cloning private repository).
 
 `ssh` property syntax can be either:
 * `default` - let the builder connect to the ssh-agent.
@@ -222,11 +221,11 @@ For illustration, [BuildKit extended syntax](https://github.com/compose-spec/com
 
 ### cache_from
 
-`cache_from` defines a list of sources the image builder SHOULD use for cache resolution.
+`cache_from` defines a list of sources the image builder should use for cache resolution.
 
-Cache location syntax MUST follow the global format `[NAME|type=TYPE[,KEY=VALUE]]`. Simple `NAME` is actually a shortcut notation for `type=registry,ref=NAME`.
+Cache location syntax must follow the global format `[NAME|type=TYPE[,KEY=VALUE]]`. Simple `NAME` is actually a shortcut notation for `type=registry,ref=NAME`.
 
-Compose Builder implementations MAY support custom types, the Compose specification defines canonical types which MUST be supported:
+Compose Builder implementations may support custom types, the Compose specification defines canonical types which must be supported:
 
 - `registry` to retrieve build cache from an OCI image set by key `ref`
 
@@ -240,7 +239,7 @@ build:
     - type=gha
 ```
 
-Unsupported caches MUST be ignored and not prevent users from building image.
+Unsupported caches must be ignored and not prevent users from building image.
 
 ### cache_to
 
@@ -256,11 +255,11 @@ build:
 
 Cache target is defined using the same `type=TYPE[,KEY=VALUE]` syntax defined by [`cache_from`](#cache_from).
 
-Unsupported cache target MUST be ignored and not prevent users from building image.
+Unsupported cache target must be ignored and not prevent users from building image.
 
 ### additional_contexts
 
-`additional_contexts` defines a list of named contexts the image builder SHOULD use during image build.
+`additional_contexts` defines a list of named contexts the image builder should use during image build.
 
 `additional_contexts` can be a mapping or a list:
 
@@ -283,11 +282,11 @@ build:
 ```
 
 When used as a list, the syntax should follow the `NAME=VALUE` format, where `VALUE` is a string. Validation beyond that
-is the responsibility of the image builder (and is builder specific). A Compose implementation MUST support at least
+is the responsibility of the image builder (and is builder specific). Compose supports at least
 absolute and relative paths to a directory AND Git repository URLs, like [context](#context) does. Other context flavours
-MUST be prefixed to avoid ambiguity with a `type://` prefix.
+must be prefixed to avoid ambiguity with a `type://` prefix.
 
-The Compose implementation SHOULD warn the user if the image builder does not support additional contexts and MAY list
+Compose should warn the user if the image builder does not support additional contexts and may list
 the unused contexts.
 
 Illustrative examples of how this is used in Buildx can be found
@@ -303,7 +302,7 @@ extra_hosts:
   - "otherhost:50.31.209.229"
 ```
 
-Compose implementations MUST create matching entry with the IP address and hostname in the container's network
+Compose creates matching entry with the IP address and hostname in the container's network
 configuration, which means for Linux `/etc/hosts` will get extra lines:
 
 ```
@@ -330,7 +329,7 @@ build:
 
 `labels` add metadata to the resulting image. `labels` can be set either as an array or a map.
 
-reverse-DNS notation SHOULD be used to prevent labels from conflicting with those used by other software.
+reverse-DNS notation should be used to prevent labels from conflicting with those used by other software.
 
 ```yml
 build:
@@ -392,7 +391,7 @@ build:
 `secrets` grants access to sensitive data defined by [secrets](05-services.md#secrets) on a per-service build basis. Two
 different syntax variants are supported: the short syntax and the long syntax.
 
-Compose implementations MUST report an error if the secret isn't defined in the
+Compose reports an error if the secret isn't defined in the
 [`secrets`](09-secrets.md) section of this Compose file.
 
 #### Short syntax
@@ -431,12 +430,12 @@ the service's containers.
 - `mode`: The [permissions](http://permissions-calculator.org/) for the file to be mounted in `/run/secrets/`
   in the service's task containers, in octal notation.
   Default value is world-readable permissions (mode `0444`).
-  The writable bit MUST be ignored if set. The executable bit MAY be set.
+  The writable bit must be ignored if set. The executable bit may be set.
 
 The following example sets the name of the `server-certificate` secret file to `server.crt`
 within the container, sets the mode to `0440` (group-readable) and sets the user and group
 to `103`. The value of `server-certificate` secret is provided by the platform through a lookup and
-the secret lifecycle not directly managed by the Compose implementation.
+the secret lifecycle not directly managed by Compose.
 
 ```yml
 services:
@@ -454,13 +453,13 @@ secrets:
     external: true
 ```
 
-Service builds MAY be granted access to multiple secrets. Long and short syntax for secrets MAY be used in the
-same Compose file. Defining a secret in the top-level `secrets` MUST NOT imply granting any service build access to it.
+Service builds may be granted access to multiple secrets. Long and short syntax for secrets may be used in the
+same Compose file. Defining a secret in the top-level `secrets` must not imply granting any service build access to it.
 Such grant must be explicit within service specification as [secrets](05-services.md#secrets) service element.
 
 ### tags
 
-`tags` defines a list of tag mappings that MUST be associated to the build image. This list comes in addition to
+`tags` defines a list of tag mappings that must be associated to the build image. This list comes in addition to
 the `image` [property defined in the service section](05-services.md#image)
 
 ```yml
@@ -481,13 +480,13 @@ build:
     - "linux/arm64"
 ```
 
-When the `platforms` attribute is omitted, Compose implementations MUST include the service's platform
+When the `platforms` attribute is omitted, Compose includes the service's platform
 in the list of the default build target platforms.
 
-When the `platforms` attribute is defined, Compose implementations SHOULD require it includes the service's
+When the `platforms` attribute is defined, Compose includes the service's
 platform, otherwise users won't be able to run images they built.
 
-Compose implementations SHOULD report an error in the following cases:
+Composes reports an error in the following cases:
 * when the list contains multiple platforms but the implementation is incapable of storing multi-platform images
 * when the list contains an unsupported platform
 
