@@ -238,21 +238,21 @@ services:
 
 ## Version top-level element
 
-Top-level `version` property is defined by the specification for backward compatibility but is only informative.
+The top-level `version` property is defined by the Compose Specification for backward compatibility. It is only informative.
 
-Compose doesn't use this version to select an exact schema to validate the Compose file, but
-prefer the most recent schema at the time it has been designed.
+Compose doesn't use `version` to select an exact schema to validate the Compose file, but
+prefers the most recent schema when it's implemented.
 
 Compose validates whether it can fully parse the Compose file. If some fields are unknown, typically
-because the Compose file was written with fields defined by a newer version of the specification, you'll receive a warning message. Compose offers options to ignore unknown fields (as defined by ["loose"](01-status.md#requirements-and-optional-attributes) mode).
+because the Compose file was written with fields defined by a newer version of the Specification, you'll receive a warning message. Compose offers options to ignore unknown fields (as defined by ["loose"](01-status.md#requirements-and-optional-attributes) mode).
 
 ## Name top-level element
 
-Top-level `name` property is defined by the specification as project name to be used if user doesn't set one explicitly.
+The top-level `name` property is defined by the Specification as the project name to be used if you don't set one explicitly.
 Compose offers a way for you to override this name, and sets a
 default project name to be used if the top-level `name` element is not set.
 
-Whenever project name is defined by top-level `name` or by some custom mechanism, it must be exposed for
+Whenever a project name is defined by top-level `name` or by some custom mechanism, it is exposed for
 [interpolation](12-interpolation.md) and environment variable resolution as `COMPOSE_PROJECT_NAME`
 
 ```yml
@@ -2373,20 +2373,24 @@ Compose file need to explicitly grant access to the configs to relevant services
 
 ## Secrets top-level element
 
-Secrets are a flavour of Configs focusing on sensitive data, with specific constraint for this usage. As the platform implementation may significantly differ from Configs, dedicated Secrets section allows to configure the related resources.
+Secrets are a flavor of [Configs](08-configs.md) focusing on sensitive data, with specific constraint for this usage. 
 
-The top-level `secrets` declaration defines or references sensitive data that can be granted to the services in this
-application. The source of the secret is either `file` or `external`.
+Services can only access secrets when explicitly granted by a [`secrets`](05-services.md#secrets) attribute.
+
+The top-level `secrets` declaration defines or references sensitive data that is granted to the services in your Compose
+application. The source of the secret is either `file` or `environment`.
 
 - `file`: The secret is created with the contents of the file at the specified path.
 - `environment`: The secret is created with the value of an environment variable.
-- `external`: If set to true, specifies that this secret has already been created. Compose does
+- `external`: If set to true, `external` specifies that this secret has already been created. Compose does
   not attempt to create it, and if it does not exist, an error occurs.
 - `name`: The name of the secret object in Docker. This field can be used to
   reference secrets that contain special characters. The name is used as is
-  and will **not** be scoped with the project name.
+  and isn't scoped with the project name.
 
-In this example, `server-certificate` secret is created as `<project_name>_server-certificate` when the application is deployed,
+### Example 1
+
+`server-certificate` secret is created as `<project_name>_server-certificate` when the application is deployed,
 by registering content of the `server.cert` as a platform secret.
 
 ```yml
@@ -2395,8 +2399,10 @@ secrets:
     file: ./server.cert
 ```
 
-In this example, `token` secret  is created as `<project_name>_token` when the application is deployed,
-by registering content of the `OAUTH_TOKEN` environment variable as a platform secret.
+### Example 2 
+
+`token` secret  is created as `<project_name>_token` when the application is deployed,
+by registering the content of the `OAUTH_TOKEN` environment variable as a platform secret.
 
 ```yml
 secrets:
@@ -2404,7 +2410,7 @@ secrets:
     environment: "OAUTH_TOKEN"
 ```
 
-Alternatively, `server-certificate` can be declared as external. Compose will lookup `server-certificate` secret to expose to relevant services.
+Alternatively, `server-certificate` can be declared as external. Compose looks up the `server-certificate` secret to expose to relevant services.
 
 ```yml
 secrets:
@@ -2412,9 +2418,12 @@ secrets:
     external: true
 ```
 
-External secrets lookup can also use a distinct key by specifying a `name`. The following
-example modifies the previous one to look up for secret using a parameter `CERTIFICATE_KEY`. The
-the actual lookup key will be set at deployment time by [interpolation](12-interpolation.md) of
+### Example 3
+
+External secrets lookup can also use a distinct key by specifying a `name`. 
+
+The following example modifies the previous example  to look up a secret using the name `CERTIFICATE_KEY`. The
+the actual lookup key is set at deployment time by the [interpolation](12-interpolation.md) of
 variables, but exposed to containers as hard-coded ID `server-certificate`.
 
 ```yml
@@ -2424,21 +2433,16 @@ secrets:
     name: "${CERTIFICATE_KEY}"
 ```
 
-If `external` is set to `true` and secret configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose rejects the Compose file as invalid.
+If `external` is set to `true`, all other attributes apart from `name` are irrelevant. If Compose detects any other attribute, it rejects the Compose file as invalid.
 
-Compose file needs to explicitly grant access to the secrets to relevant services in the application.
-
-
+Your Compose file needs to explicitly grant access to the secrets to relevant services in your application.
 ## Fragments
 
-With Docker Compose you can use built-in [YAML](http://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create re-usable blocks. This is useful if you start to find common configurations that span multiple services. Having re-usable blocks minimizes potential mistakes.
+With Compose, you can use built-in [YAML](http://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create re-usable blocks. This is useful if you start to find common configurations that span multiple services. Having re-usable blocks minimizes potential mistakes.
 
 Anchors are created using the `&` sign. The sign is followed by an alias name. You can use this alias with the `*` sign later to reference the value following the anchor. Make sure there is no space between the `&` and the `*` characters and the following alias name. 
 
 You can use more than one anchor and alias in a single Compose file.
-
-### Examples
 
 ### Example 1
 
@@ -2512,16 +2516,19 @@ services:
       YET_ANOTHER: VARIABLE
 ```
 
-Note that [YAML merge]((http://yaml.org/type/merge.html)) only applies to mappings, and can't be used with sequences. In previous example, the
-environment variables must be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved. 
+>**Note**
+>
+> [YAML merge](http://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
+
+In example above, the environment variables must be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved. 
 ## Extension
 
 As with [Fragments](10-fragments.md), Extensions can be used to make your Compose file more efficient and easier to maintain. Extensions can also be used with [anchors and aliases](10-fragments.md).
 
 Use the prefix `x-` on any top-level element to modularize configurations that you want to reuse. They can be used
-within any structure in a Compose file as Docker Compose ignores any fields that start with `x-`.  This is the sole exception where Compose silently ignores unrecognized fields.
+within any structure in a Compose file as Compose ignores any fields that start with `x-`.  This is the sole exception where Compose silently ignores unrecognized fields.
 
-The contents of any `x-` section is unspecified by Compose specification, so it can be used to enable custom features. If Compose encounters an unknown extension field it must not fail, but COULD warn the user about the unknown field.
+The contents of any `x-` section is unspecified by the Compose specification, so it can be used to enable custom features. If Compose encounters an unknown extension field it doesn't fail and may warn you about the unknown field.
 
 ### Example 1
 
@@ -2537,7 +2544,7 @@ services:
     x-foo: bar
 ```
 
-For platform extensions, it is highly recommended to prefix extension by platform/vendor name, the same way browsers add
+For platform extensions, it's highly recommended that you prefix extensions by platform or vendor name, the same way browsers add
 support for [custom CSS features](https://www.w3.org/TR/2011/REC-CSS2-20110607/syndata.html#vendor-keywords)
 
 ```yml
@@ -2567,8 +2574,8 @@ services:
     image: another-image:latest
 ```
 
-In this example, the environment variables do not belong to either of the services. They’ve been lifted out completely, into the `x-env` extension field.
-This defines a new node which contains the environment field. A YAML anchor is used (`&env`) so both services can reference the extension field’s value as `*env`.
+In this example, the environment variables do not belong to either of the services. They’ve been lifted out completely into the `x-env` extension field.
+This defines a new node which contains the environment field. The `&env` YAML anchor is used so both services can reference the extension field’s value as `*env`.
 
 ### Example 3
 
@@ -2602,12 +2609,12 @@ services:
      https_proxy: $https_proxy
 ```
 
-The `nodeinfo` and `echoit` services both use merge it in, then set their specific image and environment. 
+The `nodeinfo` and `echoit` services both include the `x-function` extension via the `&function` anchor, then set their specific image and environment. 
 
 ### Example 4 
 
-Using [YAML merge](yaml.org/type/merge.html) it is also possible to use multiple extensions and shared
-and override additional  for specific needs:
+Using [YAML merge](http://yaml.org/type/merge.html) it is also possible to use multiple extensions and share
+and override additional attributes for specific needs:
 
 ```yml
 x-environment: &default-environment
@@ -2623,14 +2630,16 @@ services:
       YET_ANOTHER: VARIABLE
 ```
 
-Note that [YAML merge]((http://yaml.org/type/merge.html)) only applies to mappings, and can't be used with sequences. In previous example, the
-environment variables must be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
+> **Note**
+> [YAML merge](http://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
+>
+>In the example above, the environment variables are declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
 
 ### Informative Historical Notes
 
 This section is informative. At the time of writing, the following prefixes are known to exist:
 
-| prefix     | vendor/organization |
+| Prefix     | Vendor/Organization |
 | ---------- | ------------------- |
 | docker     | Docker              |
 | kubernetes | Kubernetes          |
@@ -2663,7 +2672,7 @@ Values can combine multiple values without separator.
 ## Interpolation
 
 Values in a Compose file can be set by variables and interpolated at runtime. Compose files use a Bash-like
-syntax `${VARIABLE}`
+syntax `${VARIABLE}`.
 
 Both `$VARIABLE` and `${VARIABLE}` syntax is supported. Default values can be defined inline using typical shell syntax:
 
@@ -2676,7 +2685,7 @@ Similarly, the following syntax allows you to specify mandatory variables:
 
 - `${VARIABLE:?err}` exits with an error message containing `err` if
   `VARIABLE` is unset or empty in the environment.
-- `${VARIABLE?err}` exits with an error message containing `err` if
+- `${VARIABLE?err}` exits with an error message containing `err` only if
   `VARIABLE` is unset in the environment.
 
 Interpolation can also be nested:
@@ -2686,7 +2695,7 @@ Interpolation can also be nested:
 - `${VARIABLE:-${FOO:-default}}`
 
 Other extended shell-style features, such as `${VARIABLE/foo/bar}`, are not
-supported by the Compose specification.
+supported by Compose.
 
 You can use a `$$` (double-dollar sign) when your configuration needs a literal
 dollar sign. This also prevents Compose from interpolating a value, so a `$$`
@@ -2699,15 +2708,14 @@ web:
   command: "$$VAR_NOT_INTERPOLATED_BY_COMPOSE"
 ```
 
-If Compose can't resolve a substituted variable and no default value is defined, it must warn
-the user and substitute the variable with an empty string.
+If Compose can't resolve a substituted variable and no default value is defined, it displays a warning and substitutes the variable with an empty string.
 
 As any values in a Compose file can be interpolated with variable substitution, including compact string notation
-for complex elements, interpolation must be applied _before_ merge on a per-file basis.
+for complex elements, interpolation is applied before a merge on a per-file basis.
 
-Interpolation applies only to YAML _values_, not to _keys_. For the few places where keys are actually arbitrary
-user-defined strings, such as [labels](#labels) or [environment](#environment), an alternate equal sign syntax
-must be used for interpolation to apply:
+Interpolation applies only to YAML values, not to keys. For the few places where keys are actually arbitrary
+user-defined strings, such as [labels](05-services.md#labels) or [environment](05-services.md#environment), an alternate equal sign syntax
+must be used for interpolation to apply. For example:
 
 ```yml
 services:
@@ -2724,7 +2732,7 @@ services:
 ```
 ## Merge and override
 
-Compose allows users to define a Compose application model through multiple Compose files. 
+Compose lets you define a Compose application model through multiple Compose files. 
 When doing so, Compose follows the rules declared in this section to merge Compose files.
 
 ### Mapping
@@ -2775,7 +2783,7 @@ services:
       - 8.8.8.8
 ```
 
-must result in a Compose application model equivalent to the YAML tree:
+Results in a Compose application model equivalent to the YAML tree:
 
 ```yaml
 services:
@@ -2787,12 +2795,9 @@ services:
 
 ## Exceptions
 
-There are exceptions to those rules:
-
 ### Shell commands
 
-Service's [command](#command), [entrypoint](#entrypoint) and [healthcheck](#healthcheck) `test`: 
-For usability, the value must be overridden by the latest Compose file, and not appended.
+When merging Compose files that use the services attributes [command](05-services.md#command), [entrypoint](05-services.md#entrypoint) and [healthcheck: `test`](05-services.md#healthcheck), the value is overridden by the latest Compose file, and not appended.
 
 Merging the following example YAML trees:
 ```yaml
@@ -2816,20 +2821,19 @@ services:
       command: ["echo", "bar"]
 ```
 
-
 ### Unique resources
 
-Applies to service [ports](#ports), [volumes](#volumes), [secrets](#secrets) and [configs](#configs).
+Applies to the [ports](05-services.md#ports), [volumes](05-services.md#volumes), [secrets](05-services.md#secrets) and [configs](05-services.md#configs) services attributes.
 While these types are modeled in a Compose file as a sequence, they have special uniqueness requirements:
 
-| attribute   | unique key               |
+| Attribute   | Unique key               |
 |-------------|--------------------------|
 | volumes     |  target                  |
 | secrets     |  source                  |
 | configs     |  source                  |
 | ports       |  {ip, target, published, protocol}   |
 
-While merging Compose files, Compose appends new entries that do not violate a uniqueness constraint and merge entries that share a unique key.
+When merging Compose files, Compose appends new entries that do not violate a uniqueness constraint and merge entries that share a unique key.
 
 Merging the following example YAML trees:
 ```yaml
@@ -2857,9 +2861,9 @@ services:
 
 ### Reset value
 
-In addition to the previously described mechanism, an override Compose file can also be used to remove elements from application model.
-For this purpose, custom YAML tag `!reset` can be set to override value set by the overriden Compose file, and replace with default
-value or `null` on target attribute.
+In addition to the previously described mechanism, an override Compose file can also be used to remove elements from your application model.
+For this purpose, the custom YAML tag `!reset` can be set to override a value set by the overriden Compose file, and replace it with a default
+value or `null`.
 
 Merging the following example YAML trees:
 ```yaml
