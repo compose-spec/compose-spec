@@ -86,7 +86,7 @@ services:
      https_proxy: $https_proxy
 ```
 
-The `nodeinfo` and `echoit` services both use the `x-function` extension, then set their specific image and environment. 
+The `nodeinfo` and `echoit` services both include the `x-function` extension via the `&function` anchor, then set their specific image and environment. 
 
 ### Example 4 
 

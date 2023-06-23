@@ -23,7 +23,7 @@ Interpolation can also be nested:
 - `${VARIABLE?$FOO}`
 - `${VARIABLE:-${FOO:-default}}`
 
-Other extended shell-style features, such as `${VARIABLE/foo/bar}`, is not
+Other extended shell-style features, such as `${VARIABLE/foo/bar}`, are not
 supported by Compose.
 
 You can use a `$$` (double-dollar sign) when your configuration needs a literal

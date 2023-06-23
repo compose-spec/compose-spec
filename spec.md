@@ -2609,7 +2609,7 @@ services:
      https_proxy: $https_proxy
 ```
 
-The `nodeinfo` and `echoit` services both use the `x-function` extension, then set their specific image and environment. 
+The `nodeinfo` and `echoit` services both include the `x-function` extension via the `&function` anchor, then set their specific image and environment. 
 
 ### Example 4 
 
@@ -2694,7 +2694,7 @@ Interpolation can also be nested:
 - `${VARIABLE?$FOO}`
 - `${VARIABLE:-${FOO:-default}}`
 
-Other extended shell-style features, such as `${VARIABLE/foo/bar}`, is not
+Other extended shell-style features, such as `${VARIABLE/foo/bar}`, are not
 supported by Compose.
 
 You can use a `$$` (double-dollar sign) when your configuration needs a literal
