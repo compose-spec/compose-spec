@@ -4,10 +4,10 @@ With profiles you can define a set of active profiles so your Compose applicatio
 The exact mechanism is implementation specific and may include command line flags, environment variables, etc.
 
 The [services](05-services.md) top-level element supports a `profiles` attribute to define a list of named profiles. 
-Services without a `profiles` attribute set are always enabled. 
+Services without a `profiles` attribute are always enabled. 
 
 A service is ignored by Compose when none of the listed `profiles` match the active ones, unless the service is
-explicitly targeted by a command. In that case its `profiles` is added to the set of active profiles.
+explicitly targeted by a command. In that case its profile is added to the set of active profiles.
 
 >**Note**
 >

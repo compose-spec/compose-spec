@@ -1,6 +1,6 @@
 ## Include
 
-A Compose application can declare dependency on another Compose application, managed by another team
+A Compose application can declare dependency on another Compose application that is managed by another team
 or shared with others. This is useful if teams need to keep a Compose file reasonably complicated for the limited
 amount of resources it has to declare for it's own sub-domain, within a larger deployment.
 

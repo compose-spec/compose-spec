@@ -24,7 +24,7 @@ Project names must contain only lowercase letters, decimal digits, dashes, and u
 
 ### Illustrative example
 
-The following example illustrates the Compose Specification concepts outlined. The example is non-normative.
+The following example illustrates the Compose Specification concepts outlined above. The example is non-normative.
 
 Consider an application split into a frontend web application and a backend service.
 

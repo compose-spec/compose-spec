@@ -58,7 +58,7 @@ Project names must contain only lowercase letters, decimal digits, dashes, and u
 
 ### Illustrative example
 
-The following example illustrates the Compose Specification concepts outlined. The example is non-normative.
+The following example illustrates the Compose Specification concepts outlined above. The example is non-normative.
 
 Consider an application split into a frontend web application and a backend service.
 
@@ -167,19 +167,19 @@ The Compose file is a [YAML](http://yaml.org/) file defining:
 - [Configs](08-configs.md) 
 - [Secrets](09-secrets.md)
 
-The default path for a Compose file is `compose.yaml` that is placed in the working directory.
+The default path for a Compose file is `compose.yaml` (preferred) or `compose.yml` that is placed in the working directory.
 Compose also supports `docker-compose.yaml` and `docker-compose.yml` for backwards compatibility of earlier versions.
 If both files exist, Compose prefers the canonical `compose.yaml`.
 
 You can use [fragments](10-fragments.md) and [extensions](11-extension.md) to keep your Compose file efficient and easy to maintain.
 
-Multiple Compose files can be [merged](13-merge.md) together to define the application model. The combination of YAML files must be implemented by appending/overriding YAML elements based on the Compose file order set by the user. 
+Multiple Compose files can be [merged](13-merge.md) together to define the application model. The combination of YAML files are implemented by appending or overriding YAML elements based on the Compose file order you set. 
 Simple attributes and maps get overridden by the highest order Compose file, lists get merged by appending. Relative
-paths must be resolved based on the first Compose file's parent folder, whenever complimentary files being
-merged are hosted in other folders. As some Compose file elements can both be expressed as single strings or complex objects, merges must apply to
+paths are resolved based on the first Compose file's parent folder, whenever complimentary files being
+merged are hosted in other folders. As some Compose file elements can both be expressed as single strings or complex objects, merges apply to
 the expanded form.
 
-You can also use [`include`](14-include.md) in your Compose file if you want your Compose application to be dependent on another Compose application, managed by a different team or shared with others.
+You can also use [`include`](14-include.md) in your Compose file if you want your Compose application to be dependent on another Compose application that is managed by a different team or shared with others.
 ## Version top-level element
 
 The top-level `version` property is defined by the Compose Specification for backward compatibility. It is only informative.
@@ -2832,7 +2832,7 @@ services:
 ```
 ## Include
 
-A Compose application can declare dependency on another Compose application, managed by another team
+A Compose application can declare dependency on another Compose application that is managed by another team
 or shared with others. This is useful if teams need to keep a Compose file reasonably complicated for the limited
 amount of resources it has to declare for it's own sub-domain, within a larger deployment.
 
@@ -2924,10 +2924,10 @@ With profiles you can define a set of active profiles so your Compose applicatio
 The exact mechanism is implementation specific and may include command line flags, environment variables, etc.
 
 The [services](05-services.md) top-level element supports a `profiles` attribute to define a list of named profiles. 
-Services without a `profiles` attribute set are always enabled. 
+Services without a `profiles` attribute are always enabled. 
 
 A service is ignored by Compose when none of the listed `profiles` match the active ones, unless the service is
-explicitly targeted by a command. In that case its `profiles` is added to the set of active profiles.
+explicitly targeted by a command. In that case its profile is added to the set of active profiles.
 
 >**Note**
 >
