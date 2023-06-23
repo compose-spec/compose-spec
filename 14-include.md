@@ -1,29 +1,27 @@
-## Dependency on other compose projects
+## Include
 
-A Compose application can declare dependency on another compose application, managed by another team
-or shared with others. This allows to keep a compose file reasonably complicated for the limited
-amount of resources a single team has to declare for it's own sub-domain within a larger deployment.
+A Compose application can declare dependency on another Compose application, managed by another team
+or shared with others. This is useful if teams need to keep a Compose file reasonably complicated for the limited
+amount of resources it has to declare for it's own sub-domain, within a larger deployment.
 
-`include` top-level section is used to define dependency to another compose application (or subdomain).
-Each path listed in this section must be loaded as an individual compose model with it's own project
-directory to resolve relative paths. 
+The `include` top-level section is used to define the dependency on another Compose application, or sub-domain.
+Each path listed in the `include` section is loaded as an individual Compose application model, with it's own project directory, in order to resolve relative paths. 
 
-Once the application to be included has been loaded, all resources definitions are copied into the 
-current compose application model. Compose must warn user if some resource name conflict, and not 
-try to merge those. To enforce this, `include` must be evaluated after the compose file(s) selected 
-by user to define the Compose application model have been parsed and merged, so that conflicts 
-between included compose files and those selected are detected.
+Once the included Compose application is loaded, all resources definitions are copied into the 
+current Compose application model. Compose displays a warning if resource names conflict and doesn't 
+try to merge them. To enforce this, `include` is evaluated after the Compose file(s) selected 
+to define the Compose application model have been parsed and merged, so that conflicts 
+between Compose files are detected.
 
-`include` applies recursively: an included compose file which declares it's own `include` section
-will trigger those other files to be included as well.
+`include` applies recursively so an included Compose file which declares its own `include` section, triggers those other files to be included as well.
 
 The resulting resources can be used in the including compose model for cross-services references.
 
-### short syntax
+### Short syntax
 
-Short syntax only defines path to another compose file. File is loaded with parent
-folder as project directory, and optional `.env` file being loaded to define variables default values
-for interpolation, while local project environment can override those values. 
+The short syntax only defines paths to another Compose file. The file is loaded with the parent
+folder as the project directory, and an optional `.env` file that is loaded to define any variables' default values
+by interpolation. The local project's environment can override those values. 
 
 ```yaml
 include:
@@ -36,15 +34,15 @@ services:
       - included-service # defined by another_domain
 ```
 
-In this illustration example, when loading compose file, both `../commons/compose.yaml` and 
-`../another_domain/compose.yaml` are loaded as individual compose projects. Relative paths 
-in compose files being refered by `include` are resolved relative to their own compose 
-file path, not based on local project directory. Variables are interpolated using values set in
-`.env` optional file in same folder, and can be overriden by local project environment.
+In the above example, both `../commons/compose.yaml` and 
+`../another_domain/compose.yaml` are loaded as individual Compose projects. Relative paths 
+in Compose files being referred by `include` are resolved relative to their own Compose 
+file path, not based on the local project's directory. Variables are interpolated using values set in the optional
+`.env` file in same folder, and is overridden by the local project's environment.
 
-### long syntax
+### Long syntax
 
-Long syntax offer fine-grain control over the sub-project parsing:
+The long syntax offers more control over the sub-project parsing:
 
 ```yaml
 include:
@@ -53,11 +51,11 @@ include:
      env_file: ../another/.env
 ```
 
-#### path
-`path` is required and defines the location of the compose file(s) to be parsed and included into
-local compose model. `path` can be set either to a string when a single compose file is involved,
-or to a list of strings when multiple compose files need to be [merged together](14-merge.md) to 
-define the compose model to be included in local application.
+#### `path`
+`path` is required and defines the location of the Compose file(s) to be parsed and included into the
+local Compose model. `path` can be set either to a string when a single Compose file is involved,
+or to a list of strings when multiple Compose files need to be [merged together](14-merge.md) to 
+define the Compose model to be included in the local application.
 
 ```yaml
 include:
@@ -66,17 +64,17 @@ include:
        - ./commons-override.yaml
 ```
 
-#### project_directory
-`project_directory` defines base path to resolve relative paths set in compose file. It defaults to 
-the directory of the included compose file.
+#### `project_directory`
+`project_directory` defines a base path to resolve relative paths set in the Compose file. It defaults to 
+the directory of the included Compose file.
 
-#### env_file
+#### `env_file`
 `env_file` defines an environment file(s) to use to define default values when interpolating variables
-in the compose file being parsed. It defaults to `.env` file in the `project_directory` for the compose 
+in the Compose file being parsed. It defaults to `.env` file in the `project_directory` for the Compose 
 file being parsed. 
 
-`env_file` can be set either to a string or a list of strings when multiple env_file need to be merged
-to define project environment.
+`env_file` can be set either to a string or a list of strings when multiple environment files need to be merged
+to define a project environment.
 
 ```yaml
 include:
@@ -86,5 +84,5 @@ include:
        - ../another/dev.env
 ```
 
-Local project environment have precendence over values set in this file, so that local project can
+The local project's environment has precedence over the values set by the Compose file, so that the local project can
 override values for customization.
