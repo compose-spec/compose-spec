@@ -130,21 +130,36 @@ services:
 ### Reset value
 
 In addition to the previously described mechanism, an override Compose file can also be used to remove elements from your application model.
-For this purpose, the custom YAML tag `!reset` can be set to override a value set by the overriden Compose file, and replace it with a default
-value or `null`.
+For this purpose, the custom [YAML tag](https://yaml.org/spec/1.2.2/#24-tags) `!reset` can be set to
+override a value set by the overriden Compose file. A valid value for attribute must be provided,
+but will be ignored and target attribute will be set with type's default value or `null`. 
+
+For readability, it is recommended to explicitly set the attribute value to the null (`null`) or empty
+array `[]` (with `!reset null` or `!reset []`) so that it is clear that resulting attribute will be
+cleared.
 
 Merging the following example YAML trees:
 ```yaml
 services:
   foo:
-    build:
-      context: /path
+    build: 
+      dockerfile: foo.Dockerfile
+    read_only: true
+    environment:
+      FOO: BAR
+    ports:
+      - "8080:80"            
 ```    
 
 ```yaml
 services:
   foo:
-    build: !reset
+    image: foo
+    build: !reset null
+    read_only: !reset false
+    environment:
+      FOO: !reset null
+    ports: !reset []
 ```
 
 Result in a Compose application model equivalent to the YAML tree:
@@ -152,5 +167,9 @@ Result in a Compose application model equivalent to the YAML tree:
 ```yaml
 services:
   foo:
+    image: foo
     build: null
+    read_only: false
+    environment: {}
+    ports: []
 ```
