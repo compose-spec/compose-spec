@@ -29,7 +29,7 @@ services:
 
 ### Short syntax
 
-The short syntax only defines paths to another Compose file. The file is loaded with the parent
+The short syntax only defines paths to other Compose files. The file is loaded with the parent
 folder as the project directory, and an optional `.env` file that is loaded to define any variables' default values
 by interpolation. The local project's environment can override those values. 
 
