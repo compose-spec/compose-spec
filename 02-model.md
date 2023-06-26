@@ -12,7 +12,9 @@ Some services require configuration data that is dependent on the runtime or pla
 
 A [secret](09-secrets.md) is a specific flavor of configuration data for sensitive data that should not be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
 
-Distinction within Volumes, Configs and Secret allows implementations to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
+>**Note**
+>
+> With volumes, configs and secrets you can have a simple declaration at the top-level and then add more platform-specific information at the service level.
 
 A project is an individual deployment of an application specification on a platform. A project's name, set with the the top-level [`name`](04-verision-and-name.md) attribute, is used to group
 resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. If you are creating resources on a platform, you must prefix resource names by project and

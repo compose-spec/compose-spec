@@ -13,9 +13,19 @@ try to merge them. To enforce this, `include` is evaluated after the Compose fil
 to define the Compose application model have been parsed and merged, so that conflicts 
 between Compose files are detected.
 
-`include` applies recursively so an included Compose file which declares its own `include` section, triggers those other files to be included as well.
+`include` applies recursively so an included Compose file which declares its own `include` section, triggers those other files to be included as well. 
 
-The resulting resources can be used in the including compose model for cross-services references.
+Any volumes, networks, or other resources pulled in from the included Compose file can be used by the current Compose application for cross-service references. For example:
+
+```yaml
+include:
+  - my-compose-include.yaml  #with serviceB declared
+services:
+  serviceA:
+    build: .
+    depends_on:
+      - serviceB #use serviceB directly as if it was declared in this Compose file
+```
 
 ### Short syntax
 

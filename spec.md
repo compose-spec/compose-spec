@@ -46,7 +46,9 @@ Some services require configuration data that is dependent on the runtime or pla
 
 A [secret](09-secrets.md) is a specific flavor of configuration data for sensitive data that should not be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
 
-Distinction within Volumes, Configs and Secret allows implementations to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
+>**Note**
+>
+> With volumes, configs and secrets you can have a simple declaration at the top-level and then add more platform-specific information at the service level.
 
 A project is an individual deployment of an application specification on a platform. A project's name, set with the the top-level [`name`](04-verision-and-name.md) attribute, is used to group
 resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. If you are creating resources on a platform, you must prefix resource names by project and
@@ -2845,9 +2847,19 @@ try to merge them. To enforce this, `include` is evaluated after the Compose fil
 to define the Compose application model have been parsed and merged, so that conflicts 
 between Compose files are detected.
 
-`include` applies recursively so an included Compose file which declares its own `include` section, triggers those other files to be included as well.
+`include` applies recursively so an included Compose file which declares its own `include` section, triggers those other files to be included as well. 
 
-The resulting resources can be used in the including compose model for cross-services references.
+Any volumes, networks, or other resources pulled in from the included Compose file can be used by the current Compose application for cross-service references. For example:
+
+```yaml
+include:
+  - my-compose-include.yaml  #with serviceB declared
+services:
+  serviceA:
+    build: .
+    depends_on:
+      - serviceB #use serviceB directly as if it was declared in this Compose file
+```
 
 ### Short syntax
 
@@ -2962,7 +2974,7 @@ services:
 ```
 
 In the above example: 
-- If the Compose application model is parsed with no profile enabled, it  only contains the `foo` service.
+- If the Compose application model is parsed with no profile enabled, it only contains the `foo` service.
 - If the profile `test` is enabled, the model contains the services `bar` and `baz`, and service `foo`, which is always enabled.
 - If the profile `debug` is enabled, the model contains both `foo` and `zot` services, but not `bar` and `baz`,
   and as such the model is invalid regarding the `depends_on` constraint of `zot`.

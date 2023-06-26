@@ -42,7 +42,7 @@ services:
 ```
 
 In the above example: 
-- If the Compose application model is parsed with no profile enabled, it  only contains the `foo` service.
+- If the Compose application model is parsed with no profile enabled, it only contains the `foo` service.
 - If the profile `test` is enabled, the model contains the services `bar` and `baz`, and service `foo`, which is always enabled.
 - If the profile `debug` is enabled, the model contains both `foo` and `zot` services, but not `bar` and `baz`,
   and as such the model is invalid regarding the `depends_on` constraint of `zot`.
