@@ -160,7 +160,7 @@ and are declared `external` as they are not managed as part of the application l
 
 ## Compose file
 
-The Compose file is a [YAML](http://yaml.org/) file defining
+The Compose file is a [YAML](https://yaml.org/) file defining
 [version](04-version-and-name.md) (Deprecated),
 [services](05-services.md) (Required),
 [networks](06-networks.md),
@@ -405,7 +405,7 @@ _DEPRECATED: use [deploy.limits.cpus](deploy.md#cpus)_
 
 ### cap_add
 
-`cap_add` specifies additional container [capabilities](http://man7.org/linux/man-pages/man7/capabilities.7.html)
+`cap_add` specifies additional container [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html)
 as strings.
 
 ```
@@ -415,7 +415,7 @@ cap_add:
 
 ### cap_drop
 
-`cap_drop` specifies container [capabilities](http://man7.org/linux/man-pages/man7/capabilities.7.html) to drop
+`cap_drop` specifies container [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) to drop
 as strings.
 
 ```
@@ -434,7 +434,7 @@ select cgroup namespace to use, if supported.
 
 ### cgroup_parent
 
-`cgroup_parent` specifies an optional parent [cgroup](http://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
+`cgroup_parent` specifies an optional parent [cgroup](https://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
 
 ```
 cgroup_parent: m-executor-abcd
@@ -507,7 +507,7 @@ The long syntax provides more granularity in how the config is created within th
   task containers. Defaults to `/<source>` if not specified.
 - `uid` and `gid`: The numeric UID or GID that owns the mounted config file
   within the service's task containers. Default value when not specified is USER running container.
-- `mode`: The [permissions](http://permissions-calculator.org/) for the file that is mounted within the service's
+- `mode`: The [permissions](https://wintelguy.com/permissions-calc.pl) for the file that is mounted within the service's
   task containers, in octal notation. Default value is world-readable (`0444`).
   Writable bit must be ignored. The executable bit can be set.
 
@@ -1733,7 +1733,7 @@ the service's containers.
   service's task container, or absolute path of the file if an alternate location is required. Defaults to `source` if not specified.
 - `uid` and `gid`: The numeric UID or GID that owns the file within
   `/run/secrets/` in the service's task containers. Default value is USER running container.
-- `mode`: The [permissions](http://permissions-calculator.org/) for the file to be mounted in `/run/secrets/`
+- `mode`: The [permissions](https://wintelguy.com/permissions-calc.pl) for the file to be mounted in `/run/secrets/`
   in the service's task containers, in octal notation.
   Default value is world-readable permissions (mode `0444`).
   The writable bit must be ignored if set. The executable bit may be set.
@@ -2452,7 +2452,7 @@ If `external` is set to `true`, all other attributes apart from `name` are irrel
 Your Compose file needs to explicitly grant access to the secrets to relevant services in your application.
 ## Fragments
 
-With Compose, you can use built-in [YAML](http://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create re-usable blocks. This is useful if you start to find common configurations that span multiple services. Having re-usable blocks minimizes potential mistakes.
+With Compose, you can use built-in [YAML](https://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create re-usable blocks. This is useful if you start to find common configurations that span multiple services. Having re-usable blocks minimizes potential mistakes.
 
 Anchors are created using the `&` sign. The sign is followed by an alias name. You can use this alias with the `*` sign later to reference the value following the anchor. Make sure there is no space between the `&` and the `*` characters and the following alias name. 
 
@@ -2490,7 +2490,7 @@ If you have an anchor that you want to use in more than one service, use it in c
 
 ### Example 3
 
-You may want to partially override values. Compose follows the rule outlined by [YAML merge type](http://yaml.org/type/merge.html). 
+You may want to partially override values. Compose follows the rule outlined by [YAML merge type](https://yaml.org/type/merge.html). 
 
 In the following example, `metrics` volume specification uses alias
 to avoid repetition but overrides `name` attribute:
@@ -2530,9 +2530,9 @@ services:
       YET_ANOTHER: VARIABLE
 ```
 
->**Note**
+> **Note**
 >
-> [YAML merge](http://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
+> [YAML merge](https://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
 
 In example above, the environment variables must be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved. 
 ## Extension
@@ -2627,7 +2627,7 @@ The `nodeinfo` and `echoit` services both include the `x-function` extension via
 
 ### Example 4 
 
-Using [YAML merge](http://yaml.org/type/merge.html) it is also possible to use multiple extensions and share
+Using [YAML merge](https://yaml.org/type/merge.html) it is also possible to use multiple extensions and share
 and override additional attributes for specific needs:
 
 ```yml
@@ -2645,9 +2645,10 @@ services:
 ```
 
 > **Note**
-> [YAML merge](http://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
 >
->In the example above, the environment variables are declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
+> [YAML merge](https://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
+>
+> In the example above, the environment variables are declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
 
 ### Informative Historical Notes
 
