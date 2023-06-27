@@ -140,7 +140,7 @@ _DEPRECATED: use [deploy.limits.cpus](deploy.md#cpus)_
 
 ### cap_add
 
-`cap_add` specifies additional container [capabilities](http://man7.org/linux/man-pages/man7/capabilities.7.html)
+`cap_add` specifies additional container [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html)
 as strings.
 
 ```
@@ -150,7 +150,7 @@ cap_add:
 
 ### cap_drop
 
-`cap_drop` specifies container [capabilities](http://man7.org/linux/man-pages/man7/capabilities.7.html) to drop
+`cap_drop` specifies container [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) to drop
 as strings.
 
 ```
@@ -169,7 +169,7 @@ select cgroup namespace to use, if supported.
 
 ### cgroup_parent
 
-`cgroup_parent` specifies an optional parent [cgroup](http://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
+`cgroup_parent` specifies an optional parent [cgroup](https://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
 
 ```
 cgroup_parent: m-executor-abcd
@@ -242,7 +242,7 @@ The long syntax provides more granularity in how the config is created within th
   task containers. Defaults to `/<source>` if not specified.
 - `uid` and `gid`: The numeric UID or GID that owns the mounted config file
   within the service's task containers. Default value when not specified is USER running container.
-- `mode`: The [permissions](http://permissions-calculator.org/) for the file that is mounted within the service's
+- `mode`: The [permissions](https://wintelguy.com/permissions-calc.pl) for the file that is mounted within the service's
   task containers, in octal notation. Default value is world-readable (`0444`).
   Writable bit must be ignored. The executable bit can be set.
 
@@ -1468,7 +1468,7 @@ the service's containers.
   service's task container, or absolute path of the file if an alternate location is required. Defaults to `source` if not specified.
 - `uid` and `gid`: The numeric UID or GID that owns the file within
   `/run/secrets/` in the service's task containers. Default value is USER running container.
-- `mode`: The [permissions](http://permissions-calculator.org/) for the file to be mounted in `/run/secrets/`
+- `mode`: The [permissions](https://wintelguy.com/permissions-calc.pl) for the file to be mounted in `/run/secrets/`
   in the service's task containers, in octal notation.
   Default value is world-readable permissions (mode `0444`).
   The writable bit must be ignored if set. The executable bit may be set.

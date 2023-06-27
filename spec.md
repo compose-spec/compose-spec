@@ -351,7 +351,7 @@ _DEPRECATED: use [deploy.limits.cpus](deploy.md#cpus)_
 
 ### cap_add
 
-`cap_add` specifies additional container [capabilities](http://man7.org/linux/man-pages/man7/capabilities.7.html)
+`cap_add` specifies additional container [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html)
 as strings.
 
 ```
@@ -361,7 +361,7 @@ cap_add:
 
 ### cap_drop
 
-`cap_drop` specifies container [capabilities](http://man7.org/linux/man-pages/man7/capabilities.7.html) to drop
+`cap_drop` specifies container [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) to drop
 as strings.
 
 ```
@@ -380,7 +380,7 @@ select cgroup namespace to use, if supported.
 
 ### cgroup_parent
 
-`cgroup_parent` specifies an optional parent [cgroup](http://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
+`cgroup_parent` specifies an optional parent [cgroup](https://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
 
 ```
 cgroup_parent: m-executor-abcd
@@ -453,7 +453,7 @@ The long syntax provides more granularity in how the config is created within th
   task containers. Defaults to `/<source>` if not specified.
 - `uid` and `gid`: The numeric UID or GID that owns the mounted config file
   within the service's task containers. Default value when not specified is USER running container.
-- `mode`: The [permissions](http://permissions-calculator.org/) for the file that is mounted within the service's
+- `mode`: The [permissions](https://wintelguy.com/permissions-calc.pl) for the file that is mounted within the service's
   task containers, in octal notation. Default value is world-readable (`0444`).
   Writable bit must be ignored. The executable bit can be set.
 
@@ -1679,7 +1679,7 @@ the service's containers.
   service's task container, or absolute path of the file if an alternate location is required. Defaults to `source` if not specified.
 - `uid` and `gid`: The numeric UID or GID that owns the file within
   `/run/secrets/` in the service's task containers. Default value is USER running container.
-- `mode`: The [permissions](http://permissions-calculator.org/) for the file to be mounted in `/run/secrets/`
+- `mode`: The [permissions](https://wintelguy.com/permissions-calc.pl) for the file to be mounted in `/run/secrets/`
   in the service's task containers, in octal notation.
   Default value is world-readable permissions (mode `0444`).
   The writable bit must be ignored if set. The executable bit may be set.
@@ -1953,7 +1953,9 @@ networks:
 driver is not available on the platform.
 
 ```yml
-driver: overlay
+volumes:
+  db-data:
+    driver: overlay
 ```
 
 Default and available values are platform specific. Compose specification must support the following specific drivers:
@@ -2000,9 +2002,11 @@ networks:
 driver-dependent - consult the driver's documentation for more information. Optional.
 
 ```yml
-driver_opts:
-  foo: "bar"
-  baz: 1
+volumes:
+  db-data:
+    driver_opts:
+      foo: "bar"
+      baz: 1
 ```
 
 ### attachable
@@ -2064,17 +2068,21 @@ Add metadata to containers using Labels. Can use either an array or a dictionary
 Users should use reverse-DNS notation to prevent labels from conflicting with those used by other software.
 
 ```yml
-labels:
-  com.example.description: "Financial transaction network"
-  com.example.department: "Finance"
-  com.example.label-with-empty-value: ""
+volumes:
+  db-data:
+    labels:
+      com.example.description: "Financial transaction network"
+      com.example.department: "Finance"
+      com.example.label-with-empty-value: ""
 ```
 
 ```yml
-labels:
-  - "com.example.description=Financial transaction network"
-  - "com.example.department=Finance"
-  - "com.example.label-with-empty-value"
+volumes:
+  db-data:
+    labels:
+      - "com.example.description=Financial transaction network"
+      - "com.example.department=Finance"
+      - "com.example.label-with-empty-value"
 ```
 
 Compose sets `com.docker.compose.project` and `com.docker.compose.network` labels.
@@ -2163,7 +2171,9 @@ creating a volume. Optionally, you can configure it with the following keys:
 Specify which volume driver should be used for this volume. Default and available values are platform specific. If the driver is not available, Compose must return an error and stop application deployment.
 
 ```yml
-driver: foobar
+volumes:
+  db-data:
+    driver: foobar
 ```
 
 ### driver_opts
@@ -2213,17 +2223,21 @@ It's recommended that you use reverse-DNS notation to prevent your labels from
 conflicting with those used by other software.
 
 ```yml
-labels:
-  com.example.description: "Database volume"
-  com.example.department: "IT/Ops"
-  com.example.label-with-empty-value: ""
+volumes:
+  db-data:
+    labels:
+      com.example.description: "Database volume"
+      com.example.department: "IT/Ops"
+      com.example.label-with-empty-value: ""
 ```
 
 ```yml
-labels:
-  - "com.example.description=Database volume"
-  - "com.example.department=IT/Ops"
-  - "com.example.label-with-empty-value"
+volumes:
+  db-data:
+    labels:
+      - "com.example.description=Database volume"
+      - "com.example.department=IT/Ops"
+      - "com.example.label-with-empty-value"
 ```
 
 Compose sets `com.docker.compose.project` and `com.docker.compose.volume` labels.
@@ -2384,7 +2398,7 @@ If `external` is set to `true`, all other attributes apart from `name` are irrel
 Your Compose file needs to explicitly grant access to the secrets to relevant services in your application.
 ## Fragments
 
-With Compose, you can use built-in [YAML](http://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create re-usable blocks. This is useful if you start to find common configurations that span multiple services. Having re-usable blocks minimizes potential mistakes.
+With Compose, you can use built-in [YAML](https://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create re-usable blocks. This is useful if you start to find common configurations that span multiple services. Having re-usable blocks minimizes potential mistakes.
 
 Anchors are created using the `&` sign. The sign is followed by an alias name. You can use this alias with the `*` sign later to reference the value following the anchor. Make sure there is no space between the `&` and the `*` characters and the following alias name. 
 
@@ -2422,7 +2436,7 @@ If you have an anchor that you want to use in more than one service, use it in c
 
 ### Example 3
 
-You may want to partially override values. Compose follows the rule outlined by [YAML merge type](http://yaml.org/type/merge.html). 
+You may want to partially override values. Compose follows the rule outlined by [YAML merge type](https://yaml.org/type/merge.html). 
 
 In the following example, `metrics` volume specification uses alias
 to avoid repetition but overrides `name` attribute:
@@ -2462,9 +2476,9 @@ services:
       YET_ANOTHER: VARIABLE
 ```
 
->**Note**
+> **Note**
 >
-> [YAML merge](http://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
+> [YAML merge](https://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
 
 In example above, the environment variables must be declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved. 
 ## Extension
@@ -2559,7 +2573,7 @@ The `nodeinfo` and `echoit` services both include the `x-function` extension via
 
 ### Example 4 
 
-Using [YAML merge](http://yaml.org/type/merge.html) it is also possible to use multiple extensions and share
+Using [YAML merge](https://yaml.org/type/merge.html) it is also possible to use multiple extensions and share
 and override additional attributes for specific needs:
 
 ```yml
@@ -2577,9 +2591,10 @@ services:
 ```
 
 > **Note**
-> [YAML merge](http://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
 >
->In the example above, the environment variables are declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
+> [YAML merge](https://yaml.org/type/merge.html) only applies to mappings, and can't be used with sequences. 
+>
+> In the example above, the environment variables are declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
 
 ### Informative Historical Notes
 
@@ -2808,21 +2823,36 @@ services:
 ### Reset value
 
 In addition to the previously described mechanism, an override Compose file can also be used to remove elements from your application model.
-For this purpose, the custom YAML tag `!reset` can be set to override a value set by the overriden Compose file, and replace it with a default
-value or `null`.
+For this purpose, the custom [YAML tag](https://yaml.org/spec/1.2.2/#24-tags) `!reset` can be set to
+override a value set by the overriden Compose file. A valid value for attribute must be provided,
+but will be ignored and target attribute will be set with type's default value or `null`. 
+
+For readability, it is recommended to explicitly set the attribute value to the null (`null`) or empty
+array `[]` (with `!reset null` or `!reset []`) so that it is clear that resulting attribute will be
+cleared.
 
 Merging the following example YAML trees:
 ```yaml
 services:
   foo:
-    build:
-      context: /path
+    build: 
+      dockerfile: foo.Dockerfile
+    read_only: true
+    environment:
+      FOO: BAR
+    ports:
+      - "8080:80"            
 ```    
 
 ```yaml
 services:
   foo:
-    build: !reset
+    image: foo
+    build: !reset null
+    read_only: !reset false
+    environment:
+      FOO: !reset null
+    ports: !reset []
 ```
 
 Result in a Compose application model equivalent to the YAML tree:
@@ -2830,7 +2860,11 @@ Result in a Compose application model equivalent to the YAML tree:
 ```yaml
 services:
   foo:
+    image: foo
     build: null
+    read_only: false
+    environment: {}
+    ports: []
 ```
 ## Include
 

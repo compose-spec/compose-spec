@@ -29,7 +29,9 @@ networks:
 driver is not available on the platform.
 
 ```yml
-driver: overlay
+volumes:
+  db-data:
+    driver: overlay
 ```
 
 Default and available values are platform specific. Compose specification must support the following specific drivers:
@@ -76,9 +78,11 @@ networks:
 driver-dependent - consult the driver's documentation for more information. Optional.
 
 ```yml
-driver_opts:
-  foo: "bar"
-  baz: 1
+volumes:
+  db-data:
+    driver_opts:
+      foo: "bar"
+      baz: 1
 ```
 
 ### attachable
@@ -140,17 +144,21 @@ Add metadata to containers using Labels. Can use either an array or a dictionary
 Users should use reverse-DNS notation to prevent labels from conflicting with those used by other software.
 
 ```yml
-labels:
-  com.example.description: "Financial transaction network"
-  com.example.department: "Finance"
-  com.example.label-with-empty-value: ""
+volumes:
+  db-data:
+    labels:
+      com.example.description: "Financial transaction network"
+      com.example.department: "Finance"
+      com.example.label-with-empty-value: ""
 ```
 
 ```yml
-labels:
-  - "com.example.description=Financial transaction network"
-  - "com.example.department=Finance"
-  - "com.example.label-with-empty-value"
+volumes:
+  db-data:
+    labels:
+      - "com.example.description=Financial transaction network"
+      - "com.example.department=Finance"
+      - "com.example.label-with-empty-value"
 ```
 
 Compose sets `com.docker.compose.project` and `com.docker.compose.network` labels.

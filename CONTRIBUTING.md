@@ -45,7 +45,7 @@ problem and how it was solved-- including any caveats or follow up changes
 required. They should tell the story of the change and provide readers an
 understanding of what led to it.
 
-[How to Write a Git Commit Message](http://chris.beams.io/posts/git-commit/)
+[How to Write a Git Commit Message](https://cbea.ms/git-commit/)
 provides a good guide for how to do so.
 
 In practice, the best approach to maintaining a nice commit message is to
@@ -69,7 +69,7 @@ your chapter weird.
 The sign-off is a simple line at the end of the explanation for the patch. Your
 signature certifies that you wrote the patch or otherwise have the right to pass
 it on as an open-source patch. The rules are pretty simple: if you can certify
-the below (from [developercertificate.org](http://developercertificate.org/)):
+the below (from [developercertificate.org](https://developercertificate.org/)):
 
 ```
 Developer Certificate of Origin
