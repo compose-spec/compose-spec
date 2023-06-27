@@ -181,7 +181,7 @@ paths are resolved based on the first Compose file's parent folder, whenever com
 merged are hosted in other folders. As some Compose file elements can both be expressed as single strings or complex objects, merges apply to
 the expanded form.
 
-You can also use [`include`](14-include.md) in your Compose file if you want your Compose application to be dependent on another Compose application that is managed by a different team or shared with others.
+If you want to reuse other Compose files, or factor out parts of you application model into separate Compose files, you can also use [`include`](14-include.md). This is useful if your Compose application is dependent on another application which is managed by a different team, or needs to be shared with others.
 ## Version top-level element
 
 The top-level `version` property is defined by the Compose Specification for backward compatibility. It is only informative.
@@ -2835,8 +2835,10 @@ services:
 ## Include
 
 A Compose application can declare dependency on another Compose application that is managed by another team
-or shared with others. This is useful if teams need to keep a Compose file reasonably complicated for the limited
-amount of resources it has to declare for it's own sub-domain, within a larger deployment.
+or shared with others. This is useful if:
+- You want to reuse other Compose files
+- You need to factor out parts of your application model into separate Compose files so they can be managed separately or shared with others.
+- Teams need to keep a Compose file reasonably complicated for the limited amount of resources it has to declare for it's own sub-domain, within a larger deployment.
 
 The `include` top-level section is used to define the dependency on another Compose application, or sub-domain.
 Each path listed in the `include` section is loaded as an individual Compose application model, with it's own project directory, in order to resolve relative paths. 

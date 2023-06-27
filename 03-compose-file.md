@@ -20,4 +20,4 @@ paths are resolved based on the first Compose file's parent folder, whenever com
 merged are hosted in other folders. As some Compose file elements can both be expressed as single strings or complex objects, merges apply to
 the expanded form.
 
-You can also use [`include`](14-include.md) in your Compose file if you want your Compose application to be dependent on another Compose application that is managed by a different team or shared with others.
+If you want to reuse other Compose files, or factor out parts of you application model into separate Compose files, you can also use [`include`](14-include.md). This is useful if your Compose application is dependent on another application which is managed by a different team, or needs to be shared with others.
