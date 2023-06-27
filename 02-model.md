@@ -1,30 +1,32 @@
 ## The Compose application model
 
-The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
+The Compose Specification lets you define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
 
-Computing components of an application are defined as [Services](05-services.md). A Service is an abstract concept implemented on platforms by running the same container image (and configuration) one or more times.
+Computing components of an application are defined as [services](05-services.md). A service is an abstract concept implemented on platforms by running the same container image, and configuration, one or more times.
 
-Services communicate with each other through [Networks](06-networks.md). In this specification, a Network is a platform capability abstraction to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and may be partially implemented on some platforms.
+Services communicate with each other through [networks](06-networks.md). In the Compose Specification, a network is a platform capability abstraction to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and may be partially implemented on some platforms.
 
-Services store and share persistent data into [Volumes](07-volumes.md). The specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the Volumes definition and may be partially implemented on some platforms.
+Services store and share persistent data into [volumes](07-volumes.md). The Specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the volumes definition and may be partially implemented on some platforms.
 
-Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept - [Configs](08-configs.md). From a Service container point of view, Configs are comparable to Volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
+Some services require configuration data that is dependent on the runtime or platform. For this, the Specification defines a dedicated [configs](08-configs.md) concept. From a service container point of view, configs are comparable to volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
 
-A [Secret](09-secrets.md) is a specific flavor of configuration data for sensitive data that should not be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
+A [secret](09-secrets.md) is a specific flavor of configuration data for sensitive data that should not be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
 
-Distinction within Volumes, Configs and Secret allows implementations to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
+>**Note**
+>
+> With volumes, configs and secrets you can have a simple declaration at the top-level and then add more platform-specific information at the service level.
 
-A **Project** is an individual deployment of an application specification on a platform. A project's name is used to group
+A project is an individual deployment of an application specification on a platform. A project's name, set with the the top-level [`name`](04-verision-and-name.md) attribute, is used to group
 resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. If you are creating resources on a platform, you must prefix resource names by project and
 set the label `com.docker.compose.project`.
 
-Project name can be set explicitly by top-level `name` attribute. Compose offers a way for users to set a custom project name and override this name, so that the same `compose.yaml` file can be deployed twice on the same infrastructure, without changes, by just passing a distinct name.
+Compose offers a way for users to set a custom project name and override this name, so that the same `compose.yaml` file can be deployed twice on the same infrastructure, without changes, by just passing a distinct name.
 
-Project name must contain only lowercase letters, decimal digits, dashes, and underscores, and must begin with a lowercase letter or decimal digit.
+Project names must contain only lowercase letters, decimal digits, dashes, and underscores, and must begin with a lowercase letter or decimal digit.
 
 ### Illustrative example
 
-The following example illustrates Compose specification concepts with a concrete example application. The example is non-normative.
+The following example illustrates the Compose Specification concepts outlined above. The example is non-normative.
 
 Consider an application split into a frontend web application and a backend service.
 
@@ -32,7 +34,7 @@ The frontend is configured at runtime with an HTTP configuration file managed by
 
 The backend stores data in a persistent volume.
 
-Both services communicate with each other on an isolated back-tier network, while frontend is also connected to a front-tier network and exposes port 443 for external usage.
+Both services communicate with each other on an isolated back-tier network, while the frontend is also connected to a front-tier network and exposes port 443 for external usage.
 
 ```mermaid
     %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -121,6 +123,5 @@ networks:
 This example illustrates the distinction between volumes, configs and secrets. While all of them are all exposed
 to service containers as mounted files or directories, only a volume can be configured for read+write access.
 Secrets and configs are read-only. The volume configuration allows you to select a volume driver and pass driver options
-to tweak volume management according to the actual infrastructure. Configs and Secrets rely on platform services,
+to tweak volume management according to the actual infrastructure. Configs and secrets rely on platform services,
 and are declared `external` as they are not managed as part of the application lifecycle. Compose uses a platform-specific lookup mechanism to retrieve runtime values.
-

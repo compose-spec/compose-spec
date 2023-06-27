@@ -34,31 +34,33 @@ to support those running modes:
 From this point onwards, references made to 'Compose' can be interpreted as 'a Compose implementation'. 
 ## The Compose application model
 
-The Compose specification allows one to define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
+The Compose Specification lets you define a platform-agnostic container based application. Such an application is designed as a set of containers which have to both run together with adequate shared resources and communication channels.
 
-Computing components of an application are defined as [Services](05-services.md). A Service is an abstract concept implemented on platforms by running the same container image (and configuration) one or more times.
+Computing components of an application are defined as [services](05-services.md). A service is an abstract concept implemented on platforms by running the same container image, and configuration, one or more times.
 
-Services communicate with each other through [Networks](06-networks.md). In this specification, a Network is a platform capability abstraction to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and may be partially implemented on some platforms.
+Services communicate with each other through [networks](06-networks.md). In the Compose Specification, a network is a platform capability abstraction to establish an IP route between containers within services connected together. Low-level, platform-specific networking options are grouped into the Network definition and may be partially implemented on some platforms.
 
-Services store and share persistent data into [Volumes](07-volumes.md). The specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the Volumes definition and may be partially implemented on some platforms.
+Services store and share persistent data into [volumes](07-volumes.md). The Specification describes such a persistent data as a high-level filesystem mount with global options. Actual platform-specific implementation details are grouped into the volumes definition and may be partially implemented on some platforms.
 
-Some services require configuration data that is dependent on the runtime or platform. For this, the specification defines a dedicated concept - [Configs](08-configs.md). From a Service container point of view, Configs are comparable to Volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
+Some services require configuration data that is dependent on the runtime or platform. For this, the Specification defines a dedicated [configs](08-configs.md) concept. From a service container point of view, configs are comparable to volumes, in that they are files mounted into the container. But the actual definition involves distinct platform resources and services, which are abstracted by this type.
 
-A [Secret](09-secrets.md) is a specific flavor of configuration data for sensitive data that should not be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
+A [secret](09-secrets.md) is a specific flavor of configuration data for sensitive data that should not be exposed without security considerations. Secrets are made available to services as files mounted into their containers, but the platform-specific resources to provide sensitive data are specific enough to deserve a distinct concept and definition within the Compose specification.
 
-Distinction within Volumes, Configs and Secret allows implementations to offer a comparable abstraction at service level, but cover the specific configuration of adequate platform resources for well identified data usages.
+>**Note**
+>
+> With volumes, configs and secrets you can have a simple declaration at the top-level and then add more platform-specific information at the service level.
 
-A **Project** is an individual deployment of an application specification on a platform. A project's name is used to group
+A project is an individual deployment of an application specification on a platform. A project's name, set with the the top-level [`name`](04-verision-and-name.md) attribute, is used to group
 resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. If you are creating resources on a platform, you must prefix resource names by project and
 set the label `com.docker.compose.project`.
 
-Project name can be set explicitly by top-level `name` attribute. Compose offers a way for users to set a custom project name and override this name, so that the same `compose.yaml` file can be deployed twice on the same infrastructure, without changes, by just passing a distinct name.
+Compose offers a way for users to set a custom project name and override this name, so that the same `compose.yaml` file can be deployed twice on the same infrastructure, without changes, by just passing a distinct name.
 
-Project name must contain only lowercase letters, decimal digits, dashes, and underscores, and must begin with a lowercase letter or decimal digit.
+Project names must contain only lowercase letters, decimal digits, dashes, and underscores, and must begin with a lowercase letter or decimal digit.
 
 ### Illustrative example
 
-The following example illustrates Compose specification concepts with a concrete example application. The example is non-normative.
+The following example illustrates the Compose Specification concepts outlined above. The example is non-normative.
 
 Consider an application split into a frontend web application and a backend service.
 
@@ -66,7 +68,7 @@ The frontend is configured at runtime with an HTTP configuration file managed by
 
 The backend stores data in a persistent volume.
 
-Both services communicate with each other on an isolated back-tier network, while frontend is also connected to a front-tier network and exposes port 443 for external usage.
+Both services communicate with each other on an isolated back-tier network, while the frontend is also connected to a front-tier network and exposes port 443 for external usage.
 
 ```mermaid
     %%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
@@ -155,87 +157,31 @@ networks:
 This example illustrates the distinction between volumes, configs and secrets. While all of them are all exposed
 to service containers as mounted files or directories, only a volume can be configured for read+write access.
 Secrets and configs are read-only. The volume configuration allows you to select a volume driver and pass driver options
-to tweak volume management according to the actual infrastructure. Configs and Secrets rely on platform services,
+to tweak volume management according to the actual infrastructure. Configs and secrets rely on platform services,
 and are declared `external` as they are not managed as part of the application lifecycle. Compose uses a platform-specific lookup mechanism to retrieve runtime values.
-
 ## Compose file
 
-The Compose file is a [YAML](https://yaml.org/) file defining
-[version](04-version-and-name.md) (Deprecated),
-[services](05-services.md) (Required),
-[networks](06-networks.md),
-[volumes](07-volumes.md),
-[configs](08-configs.md) and
-[secrets](09-secrets.md).
-The default path for a Compose file is `compose.yaml` (preferred) or `compose.yml` in working directory.
-Compose also supports `docker-compose.yaml` and `docker-compose.yml` for backward compatibility.
-If both files exist, Compose prefers the canonical `compose.yaml` one.
+The Compose file is a [YAML](http://yaml.org/) file defining:
+- [Version](04-version-and-name.md) (Optional)
+- [Services](05-services.md) (Required)
+- [Networks](06-networks.md)
+- [Volumes](07-volumes.md)
+- [Configs](08-configs.md) 
+- [Secrets](09-secrets.md)
 
-Multiple Compose files can be combined together to define the application model. The combination of YAML files
-must be implemented by appending/overriding YAML elements based on Compose file order set by the user. Simple
-attributes and maps get overridden by the highest order Compose file, lists get merged by appending. Relative
-paths must be resolved based on the **first** Compose file's parent folder, whenever complimentary files being
-merged are hosted in other folders.
+The default path for a Compose file is `compose.yaml` (preferred) or `compose.yml` that is placed in the working directory.
+Compose also supports `docker-compose.yaml` and `docker-compose.yml` for backwards compatibility of earlier versions.
+If both files exist, Compose prefers the canonical `compose.yaml`.
 
-As some Compose file elements can both be expressed as single strings or complex objects, merges must apply to
+You can use [fragments](10-fragments.md) and [extensions](11-extension.md) to keep your Compose file efficient and easy to maintain.
+
+Multiple Compose files can be [merged](13-merge.md) together to define the application model. The combination of YAML files are implemented by appending or overriding YAML elements based on the Compose file order you set. 
+Simple attributes and maps get overridden by the highest order Compose file, lists get merged by appending. Relative
+paths are resolved based on the first Compose file's parent folder, whenever complimentary files being
+merged are hosted in other folders. As some Compose file elements can both be expressed as single strings or complex objects, merges apply to
 the expanded form.
 
-### Profiles
-
-Profiles allow to adjust the Compose application model for various usages and environments. Compose allows the user to define a set of active profiles. The exact mechanism is implementation
-specific and may include command line flags, environment variables, etc.
-
-The Services top-level element supports a `profiles` attribute to define a list of named profiles. Services without
-a `profiles` attribute set must always be enabled. A service must be ignored by the Compose
-implementation when none of the listed `profiles` match the active ones, unless the service is
-explicitly targeted by a command. In that case its `profiles` must be added to the set of active profiles.
-All other top-level elements are not affected by `profiles` and are always active.
-
-References to other services (by `links`, `extends` or shared resource syntax `service:xxx`) must not
-automatically enable a component that would otherwise have been ignored by active profiles. Instead
-Compose returns an error.
-
-#### Illustrative example
-
-```yaml
-services:
-  foo:
-    image: foo
-  bar:
-    image: bar
-    profiles:
-      - test
-  baz:
-    image: baz
-    depends_on:
-      - bar
-    profiles:
-      - test
-  zot:
-    image: zot
-    depends_on:
-      - bar
-    profiles:
-      - debug
-```
-
-- Compose application model parsed with no profile enabled only contains the `foo` service.
-- If profile `test` is enabled, model contains the services `bar` and `baz`, which are enabled by the
-  `test` profile, and service `foo`, which is always enabled.
-- If profile `debug` is enabled, model contains both `foo` and `zot` services, but not `bar` and `baz`,
-  and as such the model is invalid regarding the `depends_on` constraint of `zot`.
-- If profiles `debug` and `test` are enabled, model contains all services: `foo`, `bar`, `baz` and `zot`.
-- If Compose is executed with `bar` as explicit service to run, it and the `test` profile
-  will be active even if `test` profile is not enabled _by the user_.
-- If Compose is executed with `baz` as explicit service to run, the service `baz` and the
-  profile `test` will be active and `bar` will be pulled in by the `depends_on` constraint.
-- If Compose is executed with `zot` as explicit service to run, again the model will be
-  invalid regarding the `depends_on` constraint of `zot`, since `zot` and `bar` have no common `profiles`
-  listed.
-- If Compose is executed with `zot` as explicit service to run and profile `test` enabled,
-  profile `debug` is automatically enabled and service `bar` is pulled in as a dependency starting both
-  services `zot` and `bar`.
-
+If you want to reuse other Compose files, or factor out parts of you application model into separate Compose files, you can also use [`include`](14-include.md). This is useful if your Compose application is dependent on another application which is managed by a different team, or needs to be shared with others.
 ## Version top-level element
 
 The top-level `version` property is defined by the Compose Specification for backward compatibility. It is only informative.
@@ -2920,32 +2866,41 @@ services:
     environment: {}
     ports: []
 ```
-## Dependency on other compose projects
+## Include
 
-A Compose application can declare dependency on another compose application, managed by another team
-or shared with others. This allows to keep a compose file reasonably complicated for the limited
-amount of resources a single team has to declare for it's own sub-domain within a larger deployment.
+A Compose application can declare dependency on another Compose application. This is useful if:
+- You want to reuse other Compose files.
+- You need to factor out parts of your application model into separate Compose files so they can be managed separately or shared with others.
+- Teams need to keep a Compose file reasonably complicated for the limited amount of resources it has to declare for it's own sub-domain, within a larger deployment.
 
-`include` top-level section is used to define dependency to another compose application (or subdomain).
-Each path listed in this section must be loaded as an individual compose model with it's own project
-directory to resolve relative paths. 
+The `include` top-level section is used to define the dependency on another Compose application, or sub-domain.
+Each path listed in the `include` section is loaded as an individual Compose application model, with it's own project directory, in order to resolve relative paths. 
 
-Once the application to be included has been loaded, all resources definitions are copied into the 
-current compose application model. Compose must warn user if some resource name conflict, and not 
-try to merge those. To enforce this, `include` must be evaluated after the compose file(s) selected 
-by user to define the Compose application model have been parsed and merged, so that conflicts 
-between included compose files and those selected are detected.
+Once the included Compose application is loaded, all resources definitions are copied into the 
+current Compose application model. Compose displays a warning if resource names conflict and doesn't 
+try to merge them. To enforce this, `include` is evaluated after the Compose file(s) selected 
+to define the Compose application model have been parsed and merged, so that conflicts 
+between Compose files are detected.
 
-`include` applies recursively: an included compose file which declares it's own `include` section
-will trigger those other files to be included as well.
+`include` applies recursively so an included Compose file which declares its own `include` section, triggers those other files to be included as well. 
 
-The resulting resources can be used in the including compose model for cross-services references.
+Any volumes, networks, or other resources pulled in from the included Compose file can be used by the current Compose application for cross-service references. For example:
 
-### short syntax
+```yaml
+include:
+  - my-compose-include.yaml  #with serviceB declared
+services:
+  serviceA:
+    build: .
+    depends_on:
+      - serviceB #use serviceB directly as if it was declared in this Compose file
+```
 
-Short syntax only defines path to another compose file. File is loaded with parent
-folder as project directory, and optional `.env` file being loaded to define variables default values
-for interpolation, while local project environment can override those values. 
+### Short syntax
+
+The short syntax only defines paths to other Compose files. The file is loaded with the parent
+folder as the project directory, and an optional `.env` file that is loaded to define any variables' default values
+by interpolation. The local project's environment can override those values. 
 
 ```yaml
 include:
@@ -2958,15 +2913,15 @@ services:
       - included-service # defined by another_domain
 ```
 
-In this illustration example, when loading compose file, both `../commons/compose.yaml` and 
-`../another_domain/compose.yaml` are loaded as individual compose projects. Relative paths 
-in compose files being refered by `include` are resolved relative to their own compose 
-file path, not based on local project directory. Variables are interpolated using values set in
-`.env` optional file in same folder, and can be overriden by local project environment.
+In the above example, both `../commons/compose.yaml` and 
+`../another_domain/compose.yaml` are loaded as individual Compose projects. Relative paths 
+in Compose files being referred by `include` are resolved relative to their own Compose 
+file path, not based on the local project's directory. Variables are interpolated using values set in the optional
+`.env` file in same folder, and is overridden by the local project's environment.
 
-### long syntax
+### Long syntax
 
-Long syntax offer fine-grain control over the sub-project parsing:
+The long syntax offers more control over the sub-project parsing:
 
 ```yaml
 include:
@@ -2975,11 +2930,11 @@ include:
      env_file: ../another/.env
 ```
 
-#### path
-`path` is required and defines the location of the compose file(s) to be parsed and included into
-local compose model. `path` can be set either to a string when a single compose file is involved,
-or to a list of strings when multiple compose files need to be [merged together](14-merge.md) to 
-define the compose model to be included in local application.
+#### `path`
+`path` is required and defines the location of the Compose file(s) to be parsed and included into the
+local Compose model. `path` can be set either to a string when a single Compose file is involved,
+or to a list of strings when multiple Compose files need to be [merged together](14-merge.md) to 
+define the Compose model to be included in the local application.
 
 ```yaml
 include:
@@ -2988,17 +2943,17 @@ include:
        - ./commons-override.yaml
 ```
 
-#### project_directory
-`project_directory` defines base path to resolve relative paths set in compose file. It defaults to 
-the directory of the included compose file.
+#### `project_directory`
+`project_directory` defines a base path to resolve relative paths set in the Compose file. It defaults to 
+the directory of the included Compose file.
 
-#### env_file
+#### `env_file`
 `env_file` defines an environment file(s) to use to define default values when interpolating variables
-in the compose file being parsed. It defaults to `.env` file in the `project_directory` for the compose 
+in the Compose file being parsed. It defaults to `.env` file in the `project_directory` for the Compose 
 file being parsed. 
 
-`env_file` can be set either to a string or a list of strings when multiple env_file need to be merged
-to define project environment.
+`env_file` can be set either to a string or a list of strings when multiple environment files need to be merged
+to define a project environment.
 
 ```yaml
 include:
@@ -3008,5 +2963,66 @@ include:
        - ../another/dev.env
 ```
 
-Local project environment have precendence over values set in this file, so that local project can
+The local project's environment has precedence over the values set by the Compose file, so that the local project can
 override values for customization.
+## Profiles
+
+With profiles you can define a set of active profiles so your Compose application model is adjusted for various usages and environments.
+The exact mechanism is implementation specific and may include command line flags, environment variables, etc.
+
+The [services](05-services.md) top-level element supports a `profiles` attribute to define a list of named profiles. 
+Services without a `profiles` attribute are always enabled. 
+
+A service is ignored by Compose when none of the listed `profiles` match the active ones, unless the service is
+explicitly targeted by a command. In that case its profile is added to the set of active profiles.
+
+>**Note**
+>
+> All other top-level elements are not affected by `profiles` and are always active.
+
+References to other services (by `links`, `extends` or shared resource syntax `service:xxx`) do not
+automatically enable a component that would otherwise have been ignored by active profiles. Instead
+Compose returns an error.
+
+### Illustrative example
+
+```yaml
+services:
+  foo:
+    image: foo
+  bar:
+    image: bar
+    profiles:
+      - test
+  baz:
+    image: baz
+    depends_on:
+      - bar
+    profiles:
+      - test
+  zot:
+    image: zot
+    depends_on:
+      - bar
+    profiles:
+      - debug
+```
+
+In the above example: 
+- If the Compose application model is parsed with no profile enabled, it only contains the `foo` service.
+- If the profile `test` is enabled, the model contains the services `bar` and `baz`, and service `foo`, which is always enabled.
+- If the profile `debug` is enabled, the model contains both `foo` and `zot` services, but not `bar` and `baz`,
+  and as such the model is invalid regarding the `depends_on` constraint of `zot`.
+- If the profiles `debug` and `test` are enabled, the model contains all services; `foo`, `bar`, `baz` and `zot`.
+- If Compose is executed with `bar` as the explicit service to run, `bar` and the `test` profile
+  are active even if `test` profile is not enabled.
+- If Compose is executed with `baz` as the explicit service to run, the service `baz` and the
+  profile `test` are active and `bar` is pulled in by the `depends_on` constraint.
+- If Compose is executed with `zot` as the explicit service to run, again the model is
+  invalid regarding the `depends_on` constraint of `zot`, since `zot` and `bar` have no common `profiles`
+  listed.
+- If Compose is executed with `zot` as the explicit service to run and profile `test` is enabled,
+  profile `debug` is automatically enabled and service `bar` is pulled in as a dependency starting both
+  services `zot` and `bar`.
+
+See how you can use `profiles` in [Docker Compose](https://docs.docker.com/compose/profiles/).

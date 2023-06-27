@@ -28,6 +28,7 @@ RUN <<EOT
   cat 12-interpolation.md >> spec.md
   cat 13-merge.md >> spec.md
   cat 14-include.md >> spec.md
+  cat 15-profiles.md >> spec.md
 
   mkdir /out
   cp spec.md /out
