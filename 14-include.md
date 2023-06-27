@@ -1,7 +1,6 @@
 ## Include
 
-A Compose application can declare dependency on another Compose application that is managed by another team
-or shared with others. This is useful if:
+A Compose application can declare dependency on another Compose application. This is useful if:
 - You want to reuse other Compose files
 - You need to factor out parts of your application model into separate Compose files so they can be managed separately or shared with others.
 - Teams need to keep a Compose file reasonably complicated for the limited amount of resources it has to declare for it's own sub-domain, within a larger deployment.
