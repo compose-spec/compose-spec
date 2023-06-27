@@ -1671,7 +1671,7 @@ The short syntax uses a single string with colon-separated values to specify a v
 The long form syntax allows the configuration of additional fields that can't be
 expressed in the short form.
 
-- `type`: the mount type `volume`, `bind`, `tmpfs` or `npipe`
+- `type`: the mount type `volume`, `bind`, `tmpfs`, `npipe`, or `cluster`
 - `source`: the source of the mount, a path on the host for a bind mount, or the
   name of a volume defined in the
   [top-level `volumes` key](07-volumes.md). Not applicable for a tmpfs mount.
