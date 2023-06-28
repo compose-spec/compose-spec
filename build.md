@@ -100,7 +100,7 @@ The second part represents a subdirectory inside the repository that is used as 
 
 Alternatively `build` can be an object with fields defined as follows:
 
-### context (Required)
+### context
 
 `context` defines either a path to a directory containing a Dockerfile, or a URL to a git repository.
 
@@ -118,6 +118,8 @@ services:
   webapp:
     build: https://github.com/mycompany/webapp.git
 ```
+
+If not set explicitly, `context` defaults to project directory (`.`). 
 
 ### dockerfile
 
