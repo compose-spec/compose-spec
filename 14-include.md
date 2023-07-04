@@ -65,7 +65,7 @@ include:
 #### path
 `path` is required and defines the location of the Compose file(s) to be parsed and included into the
 local Compose model. `path` can be set either to a string when a single Compose file is involved,
-or to a list of strings when multiple Compose files need to be [merged together](14-merge.md) to 
+or to a list of strings when multiple Compose files need to be [merged together](13-merge.md) to
 define the Compose model to be included in the local application.
 
 ```yaml

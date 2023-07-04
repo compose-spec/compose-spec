@@ -16,7 +16,7 @@ A [secret](09-secrets.md) is a specific flavor of configuration data for sensiti
 >
 > With volumes, configs and secrets you can have a simple declaration at the top-level and then add more platform-specific information at the service level.
 
-A project is an individual deployment of an application specification on a platform. A project's name, set with the the top-level [`name`](04-verision-and-name.md) attribute, is used to group
+A project is an individual deployment of an application specification on a platform. A project's name, set with the the top-level [`name`](04-version-and-name.md) attribute, is used to group
 resources together and isolate them from other applications or other installation of the same Compose specified application with distinct parameters. If you are creating resources on a platform, you must prefix resource names by project and
 set the label `com.docker.compose.project`.
 
