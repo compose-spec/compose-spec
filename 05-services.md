@@ -386,6 +386,8 @@ expressed in the short form.
     service.
   - `service_completed_successfully`: specifies that a dependency is expected to run
     to successful completion before starting a dependent service.
+- `required`: when `false` Compose only warns you when the dependency service isn't started or available. If not defined
+    the default value of `required` is `true`.
 
 Service dependencies cause the following behaviors:
 
