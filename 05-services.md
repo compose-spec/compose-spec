@@ -951,7 +951,7 @@ If the image does not exist on the platform, Compose attempts to pull it based o
 If you are also using the Compose Build specification, there are alternative options for controling the precedence of
 pull over building the image from source, however pulling the image must be the default behavior.
 
-`image` may be omitted from a Compose file as long as a `build` section is declared. If you are not useing the Compose Build specification, Compose won't work if `image` is missing from the Compose file.
+`image` may be omitted from a Compose file as long as a `build` section is declared. If you are not using the Compose Build specification, Compose won't work if `image` is missing from the Compose file.
 
 ### init
 
