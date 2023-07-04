@@ -191,6 +191,10 @@
                   "additionalProperties": false,
                   "properties": {
                     "restart": {"type": "boolean"},
+                    "required": {
+                      "type":  "boolean",
+                      "default": true
+                    },
                     "condition": {
                       "type": "string",
                       "enum": ["service_started", "service_healthy", "service_completed_successfully"]
