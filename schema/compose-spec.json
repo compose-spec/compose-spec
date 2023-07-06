@@ -93,6 +93,7 @@
       "properties": {
         "deploy": {"$ref": "#/definitions/deployment"},
         "annotations": {"$ref": "#/definitions/list_or_dict"},
+        "attach": {"type": "boolean"},
         "build": {
           "oneOf": [
             {"type": "string"},
