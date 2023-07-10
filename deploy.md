@@ -119,7 +119,7 @@ running at any given time.
 
 ```yml
 services:
-  fronted:
+  frontend:
     image: awesome/webapp
     deploy:
       mode: replicated
