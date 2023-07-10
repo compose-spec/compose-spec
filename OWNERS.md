@@ -7,3 +7,4 @@ maintainers:
 - glours
 - milas
 - laurazard
+- aevesdocker
