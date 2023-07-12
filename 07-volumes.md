@@ -1,11 +1,13 @@
 ## Volumes top-level element
 
-Volumes are persistent data stores implemented by the platform. The Compose specification offers a neutral abstraction
-for services to mount volumes, and configuration parameters to allocate them on infrastructure.
+Volumes are persistent data stores implemented by the container engine. Compose offers a neutral way for services to mount volumes, and configuration parameters to allocate them to infrastructure.
 
-The `volumes` section allows the configuration of named volumes that can be reused across multiple services. Here's
-an example of a two-service setup where a database's data directory is shared with another service as a volume named
-`db-data` so that it can be periodically backed up:
+The top-level `volumes` declaration lets you configure named volumes that can be reused across multiple services. To use a volume across multiple services, you must explicitly grant each service access by using the [volumes](05-services.md) attribute. The `volumes` attribute has additional syntax that provides more granular control.
+
+### Example
+
+The following example shows a two-service setup where a database's data directory is shared with another service as a volume, named
+`db-data`, so that it can be periodically backed up.
 
 ```yml
 services:
@@ -23,12 +25,18 @@ volumes:
   db-data:
 ```
 
-An entry under the top-level `volumes` key can be empty, in which case it uses the platform's default configuration for
+The `db-data` volume is stored at `/var/lib/backup/data` and `/etc/data` container paths for backup and backend respectively.
+
+When `docker compose up` is run for the firs time, it creates the volume. Docker reuses the same volume when you run the command subsequently.
+
+### Attributes
+
+An entry under the top-level `volumes` section can be empty, in which case it uses the container engine's default configuration for
 creating a volume. Optionally, you can configure it with the following keys:
 
-### driver
+#### driver
 
-Specify which volume driver should be used for this volume. Default and available values are platform specific. If the driver is not available, Compose must return an error and stop application deployment.
+Specifies which volume driver should be used. Default and available values are platform specific. If the driver is not available, Compose returns an error and doesn't deploy the application.
 
 ```yml
 volumes:
@@ -36,9 +44,9 @@ volumes:
     driver: foobar
 ```
 
-### driver_opts
+#### driver_opts
 
-`driver_opts` specifies a list of options as key-value pairs to pass to the driver for this volume. Those options are driver-dependent.
+`driver_opts` specifies a list of options as key-value pairs to pass to the driver for this volume. The options are driver-dependent.
 
 ```yml
 volumes:
@@ -49,15 +57,12 @@ volumes:
       device: ":/docker/example"
 ```
 
-### external
+#### external
 
-If set to `true`, `external` specifies that this volume already exists on the platform and its lifecycle is managed outside
-of that of the application. Compose doesn't attempt to create these volumes, and must return an error if they
-do not exist.
-
-If `external` is set to `true` and volume configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose rejects the Compose file as invalid.
-
+If set to `true`:
+ - `external` specifies that this volume already exists on the platform and its lifecycle is managed outside
+of that of the application. Compose doesn't then create the volume, and returns an error if the volume doesn't  exist.
+ - All other attributes apart from `name` are irrelevant. If Compose detects any other attribute, it rejects the Compose file as invalid.
 
 In the example below, instead of attempting to create a volume called
 `{project_name}_db-data`, Compose looks for an existing volume simply
@@ -75,12 +80,11 @@ volumes:
     external: true
 ```
 
-### labels
+#### labels
 
 `labels` are used to add metadata to volumes. You can use either an array or a dictionary.
 
-It's recommended that you use reverse-DNS notation to prevent your labels from
-conflicting with those used by other software.
+Use reverse-DNS notation to prevent your labels from conflicting with those used by other software.
 
 ```yml
 volumes:
@@ -102,10 +106,10 @@ volumes:
 
 Compose sets `com.docker.compose.project` and `com.docker.compose.volume` labels.
 
-### name
+#### name
 
-`name` set a custom name for this volume. The name field can be used to reference volumes that contain special
-characters. The name is used as is and will **not** be scoped with the stack name.
+`name` sets a custom name for a volume. The name field can be used to reference volumes that contain special
+characters. The name is used as is and is not scoped with the stack name.
 
 ```yml
 volumes:
@@ -113,8 +117,7 @@ volumes:
     name: "my-app-data"
 ```
 
-It can also be used in conjunction with the `external` property. In that case the name of the volume used to lookup for
-actual volume on platform is set separately from the name used to refer to it within the Compose file:
+It can also be used in conjunction with the `external` property. This means the name of the volume used to lookup the actual volume on platform is set separately from the name used to refer to it within the Compose file:
 
 ```yml
 volumes:
@@ -123,8 +126,9 @@ volumes:
       name: actual-name-of-volume
 ```
 
-This makes it possible to make this lookup name a parameter of the Compose file, so that the model ID for volume is
-hard-coded but the actual volume ID on platform is set at runtime during deployment:
+This makes it possible to make this lookup name a parameter of the Compose file, so that the model ID for the volume is hard-coded but the actual volume ID on platform is set at runtime during deployment. 
+
+For example, if `DATABASE_VOLUME=my_volume_001` in your `.env` file:
 
 ```yml
 volumes:
@@ -133,4 +137,4 @@ volumes:
       name: ${DATABASE_VOLUME}
 ```
 
-
+Running `docker compose up` generates a volume called `my_volume_001`. 
