@@ -896,9 +896,10 @@ healthcheck:
   timeout: 10s
   retries: 3
   start_period: 40s
+  start_interval: 5s
 ```
 
-`interval`, `timeout` and `start_period` are [specified as durations](11-extension.md#specifying-durations).
+`interval`, `timeout`, `start_period`, and `start_interval` are [specified as durations](11-extension.md#specifying-durations).
 
 `test` defines the command Compose will run to check container health. It can be
 either a string or a list. If it's a list, the first item must be either `NONE`, `CMD` or `CMD-SHELL`.
