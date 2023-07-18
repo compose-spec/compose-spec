@@ -117,7 +117,19 @@ volumes:
     name: "my-app-data"
 ```
 
-It can also be used in conjunction with the `external` property. This means the name of the volume used to lookup the actual volume on platform is set separately from the name used to refer to it within the Compose file:
+This makes it possible to make this lookup name a parameter of the Compose file, so that the model ID for the volume is hard-coded but the actual volume ID on the platform is set at runtime during deployment. 
+
+For example, if `DATABASE_VOLUME=my_volume_001` in your `.env` file:
+
+```yml
+volumes:
+  db-data:
+      name: ${DATABASE_VOLUME}
+```
+
+Running `docker compose up` uses the volume called `my_volume_001`. 
+
+It can also be used in conjunction with the `external` property. This means the name of the volume used to lookup the actual volume on the platform is set separately from the name used to refer to it within the Compose file:
 
 ```yml
 volumes:
@@ -126,15 +138,3 @@ volumes:
       name: actual-name-of-volume
 ```
 
-This makes it possible to make this lookup name a parameter of the Compose file, so that the model ID for the volume is hard-coded but the actual volume ID on platform is set at runtime during deployment. 
-
-For example, if `DATABASE_VOLUME=my_volume_001` in your `.env` file:
-
-```yml
-volumes:
-  db-data:
-    external:
-      name: ${DATABASE_VOLUME}
-```
-
-Running `docker compose up` generates a volume called `my_volume_001`. 
