@@ -62,7 +62,7 @@ include:
      env_file: ../another/.env
 ```
 
-#### `path`
+#### path
 `path` is required and defines the location of the Compose file(s) to be parsed and included into the
 local Compose model. `path` can be set either to a string when a single Compose file is involved,
 or to a list of strings when multiple Compose files need to be [merged together](14-merge.md) to 
@@ -75,11 +75,11 @@ include:
        - ./commons-override.yaml
 ```
 
-#### `project_directory`
+#### project_directory
 `project_directory` defines a base path to resolve relative paths set in the Compose file. It defaults to 
 the directory of the included Compose file.
 
-#### `env_file`
+#### env_file
 `env_file` defines an environment file(s) to use to define default values when interpolating variables
 in the Compose file being parsed. It defaults to `.env` file in the `project_directory` for the Compose 
 file being parsed. 
