@@ -25,9 +25,9 @@ volumes:
   db-data:
 ```
 
-The `db-data` volume is stored at `/var/lib/backup/data` and `/etc/data` container paths for backup and backend respectively.
+The `db-data` volume is mounted at the `/var/lib/backup/data` and `/etc/data` container paths for backup and backend respectively.
 
-When `docker compose up` is run for the firs time, it creates the volume. Docker reuses the same volume when you run the command subsequently.
+Running `docker compose up` creates the volume if it doesn't already exist. Otherwise, the existing volume is used and is recreated if it's manually deleted outside of Compose.
 
 ### Attributes
 
@@ -84,7 +84,7 @@ volumes:
 
 `labels` are used to add metadata to volumes. You can use either an array or a dictionary.
 
-Use reverse-DNS notation to prevent your labels from conflicting with those used by other software.
+It's recommended that you use reverse-DNS notation to prevent your labels from conflicting with those used by other software.
 
 ```yml
 volumes:
