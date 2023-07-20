@@ -4,8 +4,9 @@ Networks are the layer that allow services to communicate with each other. The n
 is limited to a simple IP connection with target services and external resources, while the Network definition allows
 fine-tuning the actual implementation provided by the platform.
 
-Networks can be created by specifying the network name under a top-level `networks` section.
-Services can connect to networks by specifying the network name under the service [`networks`](05-services.md#networks) subsection
+The top-level `networks` element lets you configure named networks that can be reused across multiple services. To use a network across multiple services, you must explicitly grant each service access by using the [netowrks](05-services.md) attribute. The `netowrks` top-level element has additional syntax that provides more granular control.
+
+### Example
 
 In the following example, at runtime, networks `front-tier` and `back-tier` will be created and the `frontend` service
 will be connected to `front-tier` and `back-tier` networks.
@@ -23,7 +24,8 @@ networks:
   back-tier:
 ```
 
-### driver
+### Attributes 
+#### driver
 
 `driver` specifies which driver should be used for this network. Compose returns an error if the
 driver is not available on the platform.
@@ -72,7 +74,7 @@ networks:
     name: none
 ```
 
-### driver_opts
+#### driver_opts
 
 `driver_opts` specifies a list of options as key-value pairs to pass to the driver for this network. These options are
 driver-dependent - consult the driver's documentation for more information. Optional.
@@ -85,7 +87,7 @@ volumes:
       baz: 1
 ```
 
-### attachable
+#### attachable
 
 If `attachable` is set to `true`, then standalone containers should be able to attach to this network, in addition to services.
 If a standalone container attaches to the network, it can communicate with services and other standalone containers
