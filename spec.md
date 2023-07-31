@@ -213,39 +213,34 @@ services:
 
 A service is an abstract definition of a computing resource within an application which can be scaled or replaced
 independently from other components. Services are backed by a set of containers, run by the platform
-according to replication requirements and placement constraints. Being backed by containers, Services are defined
+according to replication requirements and placement constraints. As services are backed by containers, they are defined
 by a Docker image and set of runtime arguments. All containers within a service are identically created with these
 arguments.
 
-A Compose file must declare a `services` root element as a map whose keys are string representations of service names,
+A Compose file must declare a `services` top-level element as a map whose keys are string representations of service names,
 and whose values are service definitions. A service  definition contains the configuration that is applied to each
-container started for that service.
+service container.
 
-Each service may also include a Build section, which defines how to create the Docker image for the service.
-Compose supports building docker images using this service definition. If not used, the Build section is ignored and the Compose file is still considered valid.
+Each service may also include a `build` section, which defines how to create the Docker image for the service.
+Compose supports building docker images using this service definition. If not used, the `build` section is ignored and the Compose file is still considered valid. Build support is an optional aspect of the Compose Specification, and is
+described in detail in the [Compose Build Specification](build.md) documentation.
 
-Build support is an optional aspect of the Compose specification, and is
-described in detail in the [Build support](build.md) documentation.
-
-Each Service defines runtime constraints and requirements to run its containers. The `deploy` section groups
+Each service defines runtime constraints and requirements to run its containers. The `deploy` section groups
 these constraints and allows the platform to adjust the deployment strategy to best match containers' needs with
-available resources.
-
-Deploy support is an optional aspect of the Compose specification, and is
-described in detail in the [Deployment support](deploy.md) documentation.
-If not implemented the Deploy section should be ignored and the Compose file must still be considered valid.
+available resources. Deploy support is an optional aspect of the Compose Specification, and is
+described in detail in the [Compose Deploy Specification](deploy.md) documentation.
+If not implemented the `deploy` section is ignored and the Compose file is still considered valid.
 
 ### attach
 
-When `attach` is defined and set to `false` Compose will not collect service logs,
-until user explicitly requests to.
+When `attach` is defined and set to `false` Compose does not collect service logs,
+until you explicitly request it to.
 
-Default service configuration is `attach: true`.
+The default service configuration is `attach: true`.
 
 ### build
 
-`build` specifies the build configuration for creating a container image from source, as defined in the [Compsoe Build specification](build.md).
-
+`build` specifies the build configuration for creating a container image from source, as defined in the [Compsoe Build Specification](build.md).
 
 ### blkio_config
 
@@ -292,7 +287,7 @@ Each item in the list must have two keys:
 
 #### weight
 
-Modify the proportion of bandwidth allocated to this service relative to other services.
+Modify the proportion of bandwidth allocated to a service relative to other services.
 Takes an integer value between 10 and 1000, with 500 being the default.
 
 #### weight_device
@@ -312,7 +307,7 @@ Fine-tune bandwidth allocation by device. Each item in the list must have two ke
 
 ### cpu_shares
 
-`cpu_shares` defines, as integer value, a service container relative CPU weight versus other containers.
+`cpu_shares` defines, as integer value, a service container's relative CPU weight versus other containers.
 
 ### cpu_period
 
@@ -326,7 +321,7 @@ on Linux kernel.
 
 ### cpu_rt_runtime
 
-`cpu_rt_runtime` configures CPU allocation parameters for platforms with support for realtime scheduler. Can be either
+`cpu_rt_runtime` configures CPU allocation parameters for platforms with support for realtime scheduler. It can be either
 an integer value using microseconds as unit or a [duration](11-extension.md#specifying-durations).
 
 ```yml
@@ -336,7 +331,7 @@ an integer value using microseconds as unit or a [duration](11-extension.md#spec
 
 ### cpu_rt_period
 
-`cpu_rt_period` configures CPU allocation parameters for platforms with support for realtime scheduler. Can be either
+`cpu_rt_period` configures CPU allocation parameters for platforms with support for realtime scheduler. It can be either
 an integer value using microseconds as unit or a [duration](11-extension.md#specifying-durations).
 
 ```yml
@@ -354,7 +349,6 @@ _DEPRECATED: use [deploy.limits.cpus](deploy.md#cpus)_
 ### cpuset
 
 `cpuset` defines the explicit CPUs in which to allow execution. Can be a range `0-3` or a list `0,1`
-
 
 ### cap_add
 
@@ -380,7 +374,7 @@ cap_drop:
 ### cgroup
 
 `cgroup` specifies the cgroup namespace to join. When unset, it is the container runtime's decision to
-select cgroup namespace to use, if supported.
+select which cgroup namespace to use, if supported.
 
 - `host`: Runs the container in the Container runtime cgroup namespace.
 - `private`: Runs the container in its own private cgroup namespace.
@@ -395,7 +389,7 @@ cgroup_parent: m-executor-abcd
 
 ### command
 
-`command` overrides the default command declared by the container image (i.e. by Dockerfile's `CMD`).
+`command` overrides the default command declared by the container image, for examply by Dockerfile's `CMD`.
 
 ```yaml
 command: bundle exec thin -p 3000
@@ -414,10 +408,10 @@ i.e. overridden to be empty.
 
 ### configs
 
-`configs` grant access to configs on a per-service basis using the per-service `configs`
-configuration. Two different syntax variants are supported.
+Configs allow services to adapt their behaviour without the need to rebuild a Docker image. 
+Services can only access configs when explicitly granted by the `configs` attribute. Two different syntax variants are supported.
 
-Compose reports an error if config doesn't exist on platform or isn't defined in the
+Compose reports an error if `config` doesn't exist on the platform or isn't defined in the
 [`configs` top-level element](08-configs.md) in the Compose file.
 
 There are two syntaxes defined for configs. To remain compliant to this specification, an implementation
@@ -428,9 +422,7 @@ You can grant a service access to multiple configs, and you can mix long and sho
 #### Short syntax
 
 The short syntax variant only specifies the config name. This grants the
-container access to the config and mounts it at `/<config_name>`
-within the container. The source name and destination mount point are both set
-to the config name.
+container access to the config and mounts it as files into a service’s container’s filesystem. The location of the mount point within the container defaults to `/<config_name>` in Linux containers, and `C:\<config-name>` in Windows containers. 
 
 The following example uses the short syntax to grant the `redis` service
 access to the `my_config` and `my_other_config` configs. The value of
@@ -612,8 +604,6 @@ Service dependencies cause the following behaviors:
 - Compose removes services in dependency order. In the following
   example, `web` is removed before `db` and `redis`.
 
-Simple example:
-
 ```yml
 services:
   web:
@@ -637,7 +627,7 @@ Compose guarantees dependency services marked with
 
 ### deploy
 
-`deploy` specifies the configuration for the deployment and lifecycle of services, as defined [in the Compose Deploy specification](deploy.md).
+`deploy` specifies the configuration for the deployment and lifecycle of services, as defined [in the Compose Deploy Specification](deploy.md).
 
 ### device_cgroup_rules
 
@@ -664,7 +654,7 @@ devices:
 
 ### dns
 
-`dns` defines custom DNS servers to set on the container network interface configuration. Can be a single value or a list.
+`dns` defines custom DNS servers to set on the container network interface configuration. It can be a single value or a list.
 
 ```yml
 dns: 8.8.8.8
@@ -688,7 +678,7 @@ dns_opt:
 
 ### dns_search
 
-`dns` defines custom DNS search domains to set on container network interface configuration. Can be a single value or a list.
+`dns` defines custom DNS search domains to set on container network interface configuration. It can be a single value or a list.
 
 ```yml
 dns_search: example.com
@@ -707,14 +697,14 @@ dns_search:
 ### entrypoint
 
 `entrypoint` declares the default entrypoint for the service container.
-This overrided the `ENTRYPOINT` instruction from the service's Dockerfile.
+This overrides the `ENTRYPOINT` instruction from the service's Dockerfile.
 
-If `entrypoint` is non-null, Compose ignores any default command from the image (i.e. the `CMD`
-instruction in Dockerfile).
+If `entrypoint` is non-null, Compose ignores any default command from the image, for example the `CMD`
+instruction in the Dockerfile.
 
 See also [`command`](#command) to set or override the default command to be executed by the entrypoint process.
 
-In its short-form, the value can be defined as a string:
+In its short form, the value can be defined as a string:
 ```yml
 entrypoint: /code/entrypoint.sh
 ```
@@ -755,10 +745,9 @@ env_file:
 ```
 
 Relative path are resolved from the Compose file's parent folder. As absolute paths prevent the Compose
-file from being portable, Compose warns users when such a path is used to set `env_file`.
+file from being portable, Compose warns you when such a path is used to set `env_file`.
 
-Environment variables declared in the [environment](#environment) section
-must override these values – this holds true even if those values are
+Environment variables declared in the [environment](#environment) section override these values. This holds true even if those values are
 empty or undefined.
 
 #### Env_file format
@@ -859,11 +848,11 @@ Compose returns an error in all of these cases.
     file.
   - Absolute path.
 
-Service denoted by `service` must be present in the identified referenced Compose file.
+A service denoted by `service` must be present in the identified referenced Compose file.
 Compose returns an error if:
 
-- Service denoted by `service` is not found.
-- Compose file denoted by `file` is not found.
+- The service denoted by `service` is not found.
+- The Compose file denoted by `file` is not found.
 
 #### Merging service definitions
 
@@ -872,7 +861,7 @@ specified by `extends`, are merged in the following way:
 
 - Mappings: Keys in mappings of the main service definition override keys in mappings
   of the referenced service definition. Keys that aren't overridden are included as is.
-- Sequences: Items are combined together into a new sequence. Order of elements is
+- Sequences: Items are combined together into a new sequence. The order of elements is
   preserved with the referenced items coming first and main items after.
 - Scalars: Keys in the main service definition take precedence over keys in the
   referenced one.
@@ -933,7 +922,7 @@ services:
       - cli-volume:/var/lib/backup/data:ro
 ```
 
-Produces the following configuration for the `cli` service. Note that mounted path
+Produces the following configuration for the `cli` service. Note that the mounted path
 now points to the new volume name and `ro` flag was applied.
 
 ```yaml
@@ -1028,7 +1017,7 @@ annotations:
 
 ### external_links
 
-`external_links` link service containers to services managed outside the Compose application.
+`external_links` link service containers to services managed outside of your Compose application.
 `external_links` define the name of an existing service to retrieve using the platform lookup mechanism.
 An alias of the form `SERVICE:ALIAS` can be specified.
 
@@ -1061,7 +1050,7 @@ extra_hosts:
   otherhost: "50.31.209.229"
 ```
 
-Compose creates matching entry with the IP address and hostname in the container's network
+Compose creates a matching entry with the IP address and hostname in the container's network
 configuration, which means for Linux `/etc/hosts` get extra lines:
 
 ```
@@ -1154,10 +1143,10 @@ as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
 ```
 
 If the image does not exist on the platform, Compose attempts to pull it based on the `pull_policy`.
-If you are also using the [Compose Build specification](build.md), there are alternative options for controlling the precedence of
+If you are also using the [Compose Build Specification](build.md), there are alternative options for controlling the precedence of
 pull over building the image from source, however pulling the image is the default behavior.
 
-`image` may be omitted from a Compose file as long as a `build` section is declared. If you are not using the Compose Build specification, Compose won't work if `image` is missing from the Compose file.
+`image` may be omitted from a Compose file as long as a `build` section is declared. If you are not using the Compose Build Specification, Compose won't work if `image` is missing from the Compose file.
 
 ### init
 
@@ -1246,13 +1235,13 @@ web:
     - redis
 ```
 
-Containers for the linked service must be reachable at a hostname identical to the alias, or the service name
+Containers for the linked service are reachable at a hostname identical to the alias, or the service name
 if no alias is specified.
 
 Links are not required to enable services to communicate. When no specific network configuration is set,
-any service must be able to reach any other service at that service’s name on the `default` network. If services
-do declare networks they are attached to, `links` should not override the network configuration and services not
-attached to a shared network should not be able to communicate. Compose doesn't warn you about a configuration mismatch.
+any service is able to reach any other service at that service’s name on the `default` network. If services
+do declare networks they are attached to, `links` does not override the network configuration and services not
+attached to a shared network are not be able to communicate. Compose doesn't warn you about a configuration mismatch.
 
 Links also express implicit dependency between services in the same way as
 [depends_on](#depends_on), so they determine the order of service startup.
@@ -1273,11 +1262,11 @@ are platform specific. Driver specific options can be set with `options` as key-
 
 ### network_mode
 
-`network_mode` sets service container's network mode. Available values are platform specific, but Compose defines specific values which must be implemented as described if supported:
+`network_mode` sets a service container's network mode. Available values are platform specific, but Compose defines specific values which must be implemented as described if supported:
 
 - `none`: Turns off all container networking.
-- `host`: Gives the container raw access to host's network interface.
-- `service:{name}`: Gives the containers access to the specified service only
+- `host`: Gives the container raw access to the host's network interface.
+- `service:{name}`: Gives the containers access to the specified service only.
 
 ```yml
     network_mode: "host"
@@ -1523,7 +1512,7 @@ in the form:
 
 - `HOST` is `[IP:](port | range)`
 - `CONTAINER` is `port | range`
-- `PROTOCOL` to restrict port to specified protocol. `tcp` and `udp` values are defined by the specification,
+- `PROTOCOL` to restrict port to specified protocol. `tcp` and `udp` values are defined by the Specification,
   Compose offers support for platform-specific protocol names.
 
 If host IP is not set, it binds to all network interfaces. Ports can be either a single
@@ -1562,9 +1551,9 @@ expressed in the short form.
 
 - `target`: The container port
 - `published`: The publicly exposed port. Can be set as a range using syntax `start-end`, so it is defined as a string, then actual port should be assigned within this range based on available ports.
-- `host_ip`: the Host IP mapping, unspecified means all network interfaces (`0.0.0.0`)
-- `protocol`: the port protocol (`tcp` or `udp`), unspecified means any protocol
-- `mode`: `host` for publishing a host port on each node, or `ingress` for a port to be load balanced.
+- `host_ip`: The Host IP mapping, unspecified means all network interfaces (`0.0.0.0`).
+- `protocol`: The port protocol (`tcp` or `udp`), unspecified means any protocol.
+- `mode`: `host`: For publishing a host port on each node, or `ingress` for a port to be load balanced.
 
 ```yml
 ports:
@@ -1589,7 +1578,7 @@ ports:
 
 `profiles` defines a list of named profiles for the service to be enabled under. If unassigned, the service is always started but if assigned, it is only started if the profile is activated.
 
-If present, `profiles` should follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`.
+If present, `profiles` follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`.
 
 ```yaml
 services:
@@ -1609,13 +1598,13 @@ services:
 
 `pull_policy` defines the decisions Compose makes when it starts to pull images. Possible values are:
 
-* `always`: Compose always pull the image from the registry.
-* `never`: Compose doesn't pull the image from a registry and should rely on the platform cached image.
+* `always`: Compose always pulls the image from the registry.
+* `never`: Compose doesn't pull the image from a registry and relies on the platform cached image.
    If there is no cached image, a failure is reported.
 * `missing`: Compose pulls the image only if it's not available in the platform cache.
-   This should be the default option if you are not also using the [Compose Build specification](build.md).
-  `if_not_present` should be considered an alias for this value for backward compatibility
-* `build`: Compose builds the image. Compose rebuilds the image if already present.
+   This is the default option if you are not also using the [Compose Build Specification](build.md).
+  `if_not_present` is considered an alias for this value for backward compatibility.
+* `build`: Compose builds the image. Compose rebuilds the image if it's already present.
 
 If `pull_policy` and `build` are both present, Compose builds the image by default. Compose may override this behavior in the toolchain.
 
@@ -1627,10 +1616,10 @@ If `pull_policy` and `build` are both present, Compose builds the image by defau
 
 `restart` defines the policy that the platform applies on container termination.
 
-- `no`: The default restart policy. Does not restart the container under any circumstances.
+- `no`: The default restart policy. It does not restart the container under any circumstances.
 - `always`: The policy always restarts the container until its removal.
 - `on-failure`: The policy restarts the container if the exit code indicates an error.
-- `unless-stopped`: The policy restarts the container irrespective of the exit code but will stop
+- `unless-stopped`: The policy restarts the container irrespective of the exit code but stops
   restarting when the service is stopped or removed.
 
 ```yml
@@ -1644,7 +1633,7 @@ If `pull_policy` and `build` are both present, Compose builds the image by defau
 
 `runtime` specifies which runtime to use for the service’s containers.
 
-The value of `runtime` is specific to implementation.
+The value of `runtime` is specific to the implementation.
 For example, `runtime` can be the name of [an implementation of OCI Runtime Spec](https://github.com/opencontainers/runtime-spec/blob/master/implementations.md), such as "runc".
 
 ```yml
@@ -1742,17 +1731,17 @@ security_opt:
 ### shm_size
 
 `shm_size` configures the size of the shared memory (`/dev/shm` partition on Linux) allowed by the service container.
-Specified as a [byte value](11-extension.md#specifying-byte-values).
+It's specified as a [byte value](11-extension.md#specifying-byte-values).
 
 ### stdin_open
 
-`stdin_open` configures service containers to run with an allocated stdin.
+`stdin_open` configures a service containers to run with an allocated stdin.
 
 ### stop_grace_period
 
 `stop_grace_period` specifies how long Compose must wait when attempting to stop a container if it doesn't
 handle SIGTERM (or whichever stop signal has been specified with
-[`stop_signal`](#stop_signal)), before sending SIGKILL. Specified
+[`stop_signal`](#stop_signal)), before sending SIGKILL. It's specified
 as a [duration](11-extension.md#specifying-durations).
 
 ```yml
@@ -1764,7 +1753,7 @@ Default value is 10 seconds for the container to exit before sending SIGKILL.
 
 ### stop_signal
 
-`stop_signal` defines the signal that Compose must use to stop the service containers.
+`stop_signal` defines the signal that Compose uses to stop the service containers.
 If unset containers are stopped by Compose by sending `SIGTERM`.
 
 ```yml
@@ -1803,7 +1792,7 @@ parameters (sysctls) at runtime](https://docs.docker.com/engine/reference/comman
 
 ### tmpfs
 
-`tmpfs` mounts a temporary file system inside the container. Can be a single value or a list.
+`tmpfs` mounts a temporary file system inside the container. It can be a single value or a list.
 
 ```yml
 tmpfs: /run
@@ -1821,7 +1810,7 @@ tmpfs:
 
 ### ulimits
 
-`ulimits` overrides the default ulimits for a container. Specified either as an integer for a single limit
+`ulimits` overrides the default ulimits for a container. It's specified either as an integer for a single limit
 or as mapping for soft/hard limits.
 
 ```yml
@@ -1879,8 +1868,8 @@ volumes:
 The short syntax uses a single string with colon-separated values to specify a volume mount
 (`VOLUME:CONTAINER_PATH`), or an access mode (`VOLUME:CONTAINER_PATH:ACCESS_MODE`).
 
-- `VOLUME`: Can be either a host path on the platform hosting containers (bind mount) or a volume name
-- `CONTAINER_PATH`: The path in the container where the volume is mounted
+- `VOLUME`: Can be either a host path on the platform hosting containers (bind mount) or a volume name.
+- `CONTAINER_PATH`: The path in the container where the volume is mounted.
 - `ACCESS_MODE`: A comma-separated `,` list of options:
   - `rw`: Read and write access. This is the default if none is specified.
   - `ro`: Read-only access.
@@ -1912,7 +1901,7 @@ expressed in the short form.
 - `bind`: Used to configure additional bind options:
   - `propagation`: The propagation mode used for the bind.
   - `create_host_path`: Creates a directory at the source path on host if there is nothing present.
-    Do nothing if there is something present at the path. This is automatically implied by short syntax
+    Compose does nothing if there is something present at the path. This is automatically implied by short syntax
     for backward compatibility with `docker-compose` legacy.
   - `selinux`: The SELinux re-labeling option `z` (shared) or `Z` (private)
 - `volume`: Configures additional volume options:
@@ -1920,7 +1909,7 @@ expressed in the short form.
 - `tmpfs`: Configures additional tmpfs options:
   - `size`: The size for the tmpfs mount in bytes (either numeric or as bytes unit).
   - `mode`: The file mode for the tmpfs mount as Unix permission bits as an octal number.
-- `consistency`: the consistency requirements of the mount. Available values are platform specific.
+- `consistency`: The consistency requirements of the mount. Available values are platform specific.
 
 ### volumes_from
 
@@ -1939,8 +1928,7 @@ volumes_from:
 
 ### working_dir
 
-`working_dir` overrides the container's working directory which is specified by the image (i.e. Dockerfile's `WORKDIR`).
-
+`working_dir` overrides the container's working directory which is specified by the image, for example Dockerfile's `WORKDIR`.
 ## Networks top-level element
 
 Networks are the layer that allow services to communicate with each other.
