@@ -1,6 +1,6 @@
 ## Services top-level element
 
-A Service is an abstract definition of a computing resource within an application which can be scaled/replaced
+A service is an abstract definition of a computing resource within an application which can be scaled or replaced
 independently from other components. Services are backed by a set of containers, run by the platform
 according to replication requirements and placement constraints. Being backed by containers, Services are defined
 by a Docker image and set of runtime arguments. All containers within a service are identically created with these
@@ -33,12 +33,12 @@ Default service configuration is `attach: true`.
 
 ### build
 
-`build` specifies the build configuration for creating container image from source, as defined in the [Build support](build.md) documentation.
+`build` specifies the build configuration for creating a container image from source, as defined in the [Compsoe Build specification](build.md).
 
 
 ### blkio_config
 
-`blkio_config` defines a set of configuration options to set block IO limits for this service.
+`blkio_config` defines a set of configuration options to set block IO limits for a service.
 
 ```yml
 services:
@@ -68,16 +68,16 @@ services:
 Set a limit in bytes per second for read / write operations on a given device.
 Each item in the list must have two keys:
 
-- `path`: defining the symbolic path to the affected device.
-- `rate`: either as an integer value representing the number of bytes or as a string expressing a byte value.
+- `path`: Defines the symbolic path to the affected device.
+- `rate`: Either as an integer value representing the number of bytes or as a string expressing a byte value.
 
 #### device_read_iops, device_write_iops
 
 Set a limit in operations per second for read / write operations on a given device.
 Each item in the list must have two keys:
 
-- `path`: defining the symbolic path to the affected device.
-- `rate`: as an integer value representing the permitted number of operations per second.
+- `path`: Defines the symbolic path to the affected device.
+- `rate`: As an integer value representing the permitted number of operations per second.
 
 #### weight
 
@@ -88,8 +88,8 @@ Takes an integer value between 10 and 1000, with 500 being the default.
 
 Fine-tune bandwidth allocation by device. Each item in the list must have two keys:
 
-- `path`: defining the symbolic path to the affected device.
-- `weight`: an integer value between 10 and 1000.
+- `path`: Defines the symbolic path to the affected device.
+- `weight`: An integer value between 10 and 1000.
 
 ### cpu_count
 
@@ -101,21 +101,21 @@ Fine-tune bandwidth allocation by device. Each item in the list must have two ke
 
 ### cpu_shares
 
-`cpu_shares` defines (as integer value) service container relative CPU weight versus other containers.
+`cpu_shares` defines, as integer value, a service container relative CPU weight versus other containers.
 
 ### cpu_period
 
-`cpu_period` configures CPU CFS (Completely Fair Scheduler) period when platform is based
+`cpu_period` configures CPU CFS (Completely Fair Scheduler) period when a platform is based
 on Linux kernel.
 
 ### cpu_quota
 
-`cpu_quota` configures CPU CFS (Completely Fair Scheduler) quota when platform is based
+`cpu_quota` configures CPU CFS (Completely Fair Scheduler) quota when a platform is based
 on Linux kernel.
 
 ### cpu_rt_runtime
 
-`cpu_rt_runtime` configures CPU allocation parameters for platform with support for realtime scheduler. Can be either
+`cpu_rt_runtime` configures CPU allocation parameters for platforms with support for realtime scheduler. Can be either
 an integer value using microseconds as unit or a [duration](11-extension.md#specifying-durations).
 
 ```yml
@@ -125,7 +125,7 @@ an integer value using microseconds as unit or a [duration](11-extension.md#spec
 
 ### cpu_rt_period
 
-`cpu_rt_period` configures CPU allocation parameters for platform with support for realtime scheduler. Can be either
+`cpu_rt_period` configures CPU allocation parameters for platforms with support for realtime scheduler. Can be either
 an integer value using microseconds as unit or a [duration](11-extension.md#specifying-durations).
 
 ```yml
@@ -150,7 +150,7 @@ _DEPRECATED: use [deploy.limits.cpus](deploy.md#cpus)_
 `cap_add` specifies additional container [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html)
 as strings.
 
-```
+```yaml
 cap_add:
   - ALL
 ```
@@ -160,7 +160,7 @@ cap_add:
 `cap_drop` specifies container [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) to drop
 as strings.
 
-```
+```yaml
 cap_drop:
   - NET_ADMIN
   - SYS_ADMIN
@@ -168,17 +168,17 @@ cap_drop:
 
 ### cgroup
 
-`cgroup` specifies the cgroup namespace to join. When unset, it is container runtime decision to
+`cgroup` specifies the cgroup namespace to join. When unset, it is the container runtime's decision to
 select cgroup namespace to use, if supported.
 
-- `host`: Run the container in the Container runtime cgroup namespace
-- `private`: Run the container in its own private cgroup namespace
+- `host`: Runs the container in the Container runtime cgroup namespace.
+- `private`: Runs the container in its own private cgroup namespace.
 
 ### cgroup_parent
 
 `cgroup_parent` specifies an optional parent [cgroup](https://man7.org/linux/man-pages/man7/cgroups.7.html) for the container.
 
-```
+```yaml
 cgroup_parent: m-executor-abcd
 ```
 
@@ -186,19 +186,19 @@ cgroup_parent: m-executor-abcd
 
 `command` overrides the default command declared by the container image (i.e. by Dockerfile's `CMD`).
 
-```
+```yaml
 command: bundle exec thin -p 3000
 ```
 
 The value can also be a list, in a manner similar to [Dockerfile](https://docs.docker.com/engine/reference/builder/#cmd):
 
-```
+```yaml
 command: [ "bundle", "exec", "thin", "-p", "3000" ]
 ```
 
-If the value is `null`, the default command from the image must be used.
+If the value is `null`, the default command from the image is used.
 
-If the value is `[]` (empty list) or `''` (empty string), the default command declared by the image must be ignored,
+If the value is `[]` (empty list) or `''` (empty string), the default command declared by the image is ignored,
 i.e. overridden to be empty.
 
 ### configs
@@ -207,10 +207,12 @@ i.e. overridden to be empty.
 configuration. Two different syntax variants are supported.
 
 Compose reports an error if config doesn't exist on platform or isn't defined in the
-[`configs`](08-configs.md) section of this Compose file.
+[`configs` top-level element](08-configs.md) in the Compose file.
 
 There are two syntaxes defined for configs. To remain compliant to this specification, an implementation
 must support both syntaxes. Implementations must allow use of both short and long syntaxes within the same document.
+
+You can grant a service access to multiple configs, and you can mix long and short syntax.
 
 #### Short syntax
 
@@ -224,7 +226,7 @@ access to the `my_config` and `my_other_config` configs. The value of
 `my_config` is set to the contents of the file `./my_config.txt`, and
 `my_other_config` is defined as an external resource, which means that it has
 already been defined in the platform. If the external config does not exist,
-the deployment must fail.
+the deployment fails.
 
 ```yml
 services:
@@ -275,27 +277,25 @@ configs:
     external: true
 ```
 
-You can grant a service access to multiple configs, and you can mix long and short syntax.
-
 ### container_name
 
-`container_name` is a string that specifies a custom container name, rather than a generated default name.
+`container_name` is a string that specifies a custom container name, rather than a name generated by default.
 
 ```yml
 container_name: my-web-container
 ```
 
 Compose does not scale a service beyond one container if the Compose file specifies a
-`container_name`. Attempting to do so must result in an error.
+`container_name`. Attempting to do so results in an error.
 
-If present, `container_name` should follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`
+`container_name` follows the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`
 
 ### credential_spec
 
 `credential_spec` configures the credential spec for a managed service account.
 
 If you have services that use Windows containers, you can use `file:` and
-`registry:` protocols for credential_spec. Compose can also support additional
+`registry:` protocols for `credential_spec`. Compose also supports additional
 protocols for custom use-cases.
 
 The `credential_spec` must be in the format `file://<filename>` or `registry://<value-name>`.
@@ -375,18 +375,18 @@ starting a dependent service.
 The long form syntax enables the configuration of additional fields that can't be
 expressed in the short form.
 
-- `restart`: when `true` Compose restarts this service after it updated the dependency service.
+- `restart`: When set to `true` Compose restarts this service after it updates the dependency service.
   This applies to an explicit restart controlled by a Compose operation, and excludes automated restart by the container runtime
-  after container died.
+  after the container dies.
 
-- `condition`: condition under which dependency is considered satisfied
-  - `service_started`: is an equivalent of the short syntax described above
-  - `service_healthy`: specifies that a dependency is expected to be "healthy"
+- `condition`: Sets the condition under which dependency is considered satisfied
+  - `service_started`: An equivalent of the short syntax described above
+  - `service_healthy`: Specifies that a dependency is expected to be "healthy"
     (as indicated by [healthcheck](#healthcheck)) before starting a dependent
     service.
-  - `service_completed_successfully`: specifies that a dependency is expected to run
+  - `service_completed_successfully`: Specifies that a dependency is expected to run
     to successful completion before starting a dependent service.
-- `required`: when `false` Compose only warns you when the dependency service isn't started or available. If not defined
+- `required`: When set to `false` Compose only warns you when the dependency service isn't started or available. If it's not defined
     the default value of `required` is `true`.
 
 Service dependencies cause the following behaviors:
@@ -419,16 +419,14 @@ services:
     image: postgres
 ```
 
-Compose guarantees dependency services have been started before
+Compose guarantees dependency services are started before
 starting a dependent service.
 Compose guarantees dependency services marked with
 `service_healthy` are "healthy" before starting a dependent service.
 
-
 ### deploy
 
-`deploy` specifies the configuration for the deployment and lifecycle of services, as defined [here](deploy.md).
-
+`deploy` specifies the configuration for the deployment and lifecycle of services, as defined [in the Compose Deploy specification](deploy.md).
 
 ### device_cgroup_rules
 
@@ -493,24 +491,24 @@ dns_search:
 
 ### domainname
 
-`domainname` declares a custom domain name to use for the service container. must be a valid RFC 1123 hostname.
+`domainname` declares a custom domain name to use for the service container. It must be a valid RFC 1123 hostname.
 
 ### entrypoint
 
 `entrypoint` declares the default entrypoint for the service container.
-This will override the `ENTRYPOINT` instruction from the service's Dockerfile.
+This overrided the `ENTRYPOINT` instruction from the service's Dockerfile.
 
-If `entrypoint` is non-null, Compose also ignores any default command from the image (i.e. `CMD`
+If `entrypoint` is non-null, Compose ignores any default command from the image (i.e. the `CMD`
 instruction in Dockerfile).
 
-See also: [`command`](#command) to set or override the default command to be executed by the entrypoint process.
+See also [`command`](#command) to set or override the default command to be executed by the entrypoint process.
 
 In its short-form, the value can be defined as a string:
 ```yml
 entrypoint: /code/entrypoint.sh
 ```
 
-Alternatively, the value can also be a list, in a manner similar to
+Alternatively, the value can also be a list, in a manner similar to the
 [Dockerfile](https://docs.docker.com/engine/reference/builder/#cmd):
 
 ```yml
@@ -523,21 +521,21 @@ entrypoint:
   - vendor/bin/phpunit
 ```
 
-If the value is `null`, the default entrypoint from the image must be used.
+If the value is `null`, the default entrypoint from the image is used.
 
-If the value is `[]` (empty list) or `''` (empty string), the default entrypoint declared by the image must be ignored,
+If the value is `[]` (empty list) or `''` (empty string), the default entrypoint declared by the image is ignored,
 i.e. overridden to be empty.
 
 ### env_file
 
-`env_file` adds environment variables to the container based on file content.
+`env_file` adds environment variables to the container based on the file content.
 
 ```yml
 env_file: .env
 ```
 
-`env_file` can also be a list. The files in the list must be processed from the top down. For the same variable
-specified in two env files, the value from the last file in the list must stand.
+`env_file` can also be a list. The files in the list are processed from the top down. For the same variable
+specified in two env files, the value from the last file in the list stands.
 
 ```yml
 env_file:
@@ -545,7 +543,7 @@ env_file:
   - ./b.env
 ```
 
-Relative path must be resolved from the Compose file's parent folder. As absolute paths prevent the Compose
+Relative path are resolved from the Compose file's parent folder. As absolute paths prevent the Compose
 file from being portable, Compose warns users when such a path is used to set `env_file`.
 
 Environment variables declared in the [environment](#environment) section
@@ -554,15 +552,14 @@ empty or undefined.
 
 #### Env_file format
 
-Each line in an env file must be in `VAR[=[VAL]]` format. Lines beginning with `#` must be ignored.
-Blank lines must also be ignored.
+Each line in an `.env` file must be in `VAR[=[VAL]]` format. Lines beginning with `#` are ignored.
+Blank lines are also ignored.
 
-The value of `VAL` is used as a raw string and not modified at all. If the value is surrounded by quotes
-(as is often the case for shell variables), the quotes must be **included** in the value passed to containers
+The value of `VAL` is used as a raw string and not modified at all. If the value is surrounded by quotes, as is often the case for shell variables, the quotes are included in the value passed to containers
 created by Compose.
 
-`VAL` may be omitted, in such cases the variable value is empty string.
-`=VAL` may be omitted, in such cases the variable is **unset**.
+`VAL` may be omitted, in such cases the variable value is an empty string.
+`=VAL` may be omitted, in such cases the variable is unset.
 
 ```bash
 # Set Rails/Rack environment
@@ -576,9 +573,9 @@ VAR="quoted"
 map. Any boolean values; true, false, yes, no, should be enclosed in quotes to ensure
 they are not converted to True or False by the YAML parser.
 
-Environment variables may be declared by a single key (no value to equals sign). In such a case Compose
-implementations should rely on some user interaction to resolve the value. If they do not, the variable
-is unset and will be removed from the service container environment.
+Environment variables can be declared by a single key (no value to equals sign). In this case Compose
+relies on you to resolve the value. If the value is not resolved, the variable
+is unset and is removed from the service container environment.
 
 Map syntax:
 
@@ -602,7 +599,7 @@ When both `env_file` and `environment` are set for a service, values set by `env
 
 ### expose
 
-`expose` defines the ports that Compose exposes from container. These ports must be
+`expose` defines the ports that Compose exposes from the container. These ports must be
 accessible to linked services and should not be published to the host machine. Only the internal container
 ports can be specified.
 
@@ -614,8 +611,9 @@ expose:
 
 ### extends
 
-Extend another service, in the current file or another, optionally overriding configuration. You can use
-`extends` on any service together with other configuration keys. The `extends` value must be a mapping
+`extends` lets you share common configurations among different files, or even different projects entirely. With `extends` you can define a common set of service options in one place and refer to it from anywhere. You can refer to another Compose file and select a service you want to also use in your own application, with the ability to override some attributes for your own needs.
+
+You can use `extends` on any service together with other configuration keys. The `extends` value must be a mapping
 defined with a required `service` and an optional `file` key.
 
 ```yaml
@@ -624,10 +622,8 @@ extends:
   service: webapp
 ```
 
-If supported, Compose processes `extends` in the following way:
-
-- `service` defines the name of the service being referenced as a base, for example `web` or `database`.
-- `file` is the location of a Compose configuration file defining that service.
+- `service`: Defines the name of the service being referenced as a base, for example `web` or `database`.
+- `file`: The location of a Compose configuration file defining that service.
 
 #### Restrictions
 
@@ -655,20 +651,20 @@ Compose returns an error in all of these cases.
 Service denoted by `service` must be present in the identified referenced Compose file.
 Compose returns an error if:
 
-- Service denoted by `service` was not found
-- Compose file denoted by `file` was not found
+- Service denoted by `service` is not found.
+- Compose file denoted by `file` is not found.
 
 #### Merging service definitions
 
-Two service definitions (_main_ one in the current Compose file and _referenced_ one
-specified by `extends`) must be merged in the following way:
+Two service definitions, the main one in the current Compose file and the referenced one
+specified by `extends`, are merged in the following way:
 
-- Mappings: keys in mappings of _main_ service definition override keys in mappings
-  of _referenced_ service definition. Keys that aren't overridden are included as is.
-- Sequences: items are combined together into an new sequence. Order of elements is
-  preserved with the _referenced_ items coming first and _main_ items after.
-- Scalars: keys in _main_ service definition take precedence over keys in the
-  _referenced_ one.
+- Mappings: Keys in mappings of the main service definition override keys in mappings
+  of the referenced service definition. Keys that aren't overridden are included as is.
+- Sequences: Items are combined together into a new sequence. Order of elements is
+  preserved with the referenced items coming first and main items after.
+- Scalars: Keys in the main service definition take precedence over keys in the
+  referenced one.
 
 ##### Mappings
 
@@ -677,9 +673,8 @@ The following keys should be treated as mappings: `annotations`, `build.args`, `
 `deploy.restart_policy`, `deploy.resources.limits`, `environment`, `healthcheck`,
 `labels`, `logging.options`, `sysctls`, `storage_opt`, `extra_hosts`, `ulimits`.
 
-One exception that applies to `healthcheck` is that _main_ mapping cannot specify
-`disable: true` unless _referenced_ mapping also specifies `disable: true`. Compose
-implementations must return an error in this case.
+One exception that applies to `healthcheck` is that the main mapping cannot specify
+`disable: true` unless the  referenced mapping also specifies `disable: true`. Compose returns an error in this case.
 
 For example, the input below:
 
@@ -736,8 +731,8 @@ volumes:
 - cli-volume:/var/lib/backup/data:ro
 ```
 
-If _referenced_ service definition contains `extends` mapping, the items under it
-are simply copied into the new _merged_ definition. Merging process is then kicked
+If the referenced service definition contains `extends` mapping, the items under it
+are simply copied into the new merged definition. The merging process is then kicked
 off again until no `extends` keys are remaining.
 
 For example, the input below:
@@ -822,7 +817,7 @@ annotations:
 
 ### external_links
 
-`external_links` link service containers to services managed outside this Compose application.
+`external_links` link service containers to services managed outside the Compose application.
 `external_links` define the name of an existing service to retrieve using the platform lookup mechanism.
 An alias of the form `SERVICE:ALIAS` can be specified.
 
@@ -838,7 +833,7 @@ external_links:
 `extra_hosts` adds hostname mappings to the container network interface configuration (`/etc/hosts` for Linux).
 
 #### Short syntax
-Short syntax use plain strings in a list. Values must set hostname and IP address for additional hosts in the form of `HOSTNAME:IP`.
+Short syntax uses plain strings in a list. Values must set hostname and IP address for additional hosts in the form of `HOSTNAME:IP`.
 
 ```yml
 extra_hosts:
@@ -856,7 +851,7 @@ extra_hosts:
 ```
 
 Compose creates matching entry with the IP address and hostname in the container's network
-configuration, which means for Linux `/etc/hosts` will get extra lines:
+configuration, which means for Linux `/etc/hosts` get extra lines:
 
 ```
 162.242.195.82  somehost
@@ -865,7 +860,7 @@ configuration, which means for Linux `/etc/hosts` will get extra lines:
 
 ### group_add
 
-`group_add` specifies additional groups (by name or number) which the user inside the container must be a member of.
+`group_add` specifies additional groups, by name or number, which the user inside the container must be a member of.
 
 An example of where this is useful is when multiple containers (running as different users) need to all read or write
 the same file on a shared volume. That file can be owned by a group shared by all the containers, and specified in
@@ -884,8 +879,7 @@ been the case if `group_add` were not declared.
 
 ### healthcheck
 
-`healthcheck` declares a check that's run to determine whether or not containers for this
-service are "healthy". This overrides
+`healthcheck` declares a check that's run to determine whether or not the service containers are "healthy". This overrides the
 [HEALTHCHECK Dockerfile instruction](https://docs.docker.com/engine/reference/builder/#healthcheck)
 set by the service's Docker image.
 
@@ -901,7 +895,7 @@ healthcheck:
 
 `interval`, `timeout`, `start_period`, and `start_interval` are [specified as durations](11-extension.md#specifying-durations).
 
-`test` defines the command Compose will run to check container health. It can be
+`test` defines the command Compose runs to check container health. It can be
 either a string or a list. If it's a list, the first item must be either `NONE`, `CMD` or `CMD-SHELL`.
 If it's a string, it's equivalent to specifying `CMD-SHELL` followed by that string.
 
@@ -910,7 +904,7 @@ If it's a string, it's equivalent to specifying `CMD-SHELL` followed by that str
 test: ["CMD", "curl", "-f", "http://localhost"]
 ```
 
-Using `CMD-SHELL` will run the command configured as a string using the container's default shell
+Using `CMD-SHELL` runs the command configured as a string using the container's default shell
 (`/bin/sh` for Linux). Both forms below are equivalent:
 
 ```yml
@@ -921,7 +915,7 @@ test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
 test: curl -f https://localhost || exit 1
 ```
 
-`NONE` disables the healthcheck, and is mostly useful to disable Healthcheck set by image. Alternatively,
+`NONE` disables the healthcheck, and is mostly useful to disable the Healthcheck Dockerfile instruction set by the service's Docker image. Alternatively,
 the healthcheck set by the image can be disabled by setting `disable: true`:
 
 ```yml
@@ -931,11 +925,11 @@ healthcheck:
 
 ### hostname
 
-`hostname` declares a custom host name to use for the service container. Must be a valid RFC 1123 hostname.
+`hostname` declares a custom host name to use for the service container. It must be a valid RFC 1123 hostname.
 
 ### image
 
-`image` specifies the image to start the container from. Image must follow the Open Container Specification
+`image` specifies the image to start the container from. `image` must follow the Open Container Specification
 [addressable image format](https://github.com/opencontainers/org/blob/master/docs/docs/introduction/digests.md),
 as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
 
@@ -949,14 +943,14 @@ as `[<registry>/][<project>/]<image>[:<tag>|@<digest>]`.
 ```
 
 If the image does not exist on the platform, Compose attempts to pull it based on the `pull_policy`.
-If you are also using the Compose Build specification, there are alternative options for controling the precedence of
-pull over building the image from source, however pulling the image must be the default behavior.
+If you are also using the [Compose Build specification](build.md), there are alternative options for controlling the precedence of
+pull over building the image from source, however pulling the image is the default behavior.
 
 `image` may be omitted from a Compose file as long as a `build` section is declared. If you are not using the Compose Build specification, Compose won't work if `image` is missing from the Compose file.
 
 ### init
 
-`init` run an init process (PID 1) inside the container that forwards signals and reaps processes.
+`init` runs an init process (PID 1) inside the container that forwards signals and reaps processes.
 Set this option to `true` to enable this feature for the service.
 
 ```yml
@@ -970,13 +964,13 @@ The init binary that is used is platform specific.
 
 ### ipc
 
-`ipc` configures the IPC isolation mode set by service container. Available
-values are platform specific, but Compose specification defines specific values
+`ipc` configures the IPC isolation mode set by the service container. Available
+values are platform specific, but Compose defines specific values
 which must be implemented as described if supported:
 
-- `shareable` which gives the container its own private IPC namespace, with a
+- `shareable`: Gives the container its own private IPC namespace, with a
   possibility to share it with other containers.
-- `service:{name}` which makes the container join another container's
+- `service:{name}`: Makes the container join another container's
   (`shareable`) IPC namespace.
 
 ```yml
@@ -989,7 +983,7 @@ which must be implemented as described if supported:
 `uts` configures the UTS namespace mode set for the service container. When unspecified
 it is the runtime's decision to assign a UTS namespace, if supported. Available values are:
 
-- `'host'` which results in the container using the same UTS namespace as the host.
+- `'host'`: Results in the container using the same UTS namespace as the host.
 
 ```yml
     uts: "host"
@@ -997,7 +991,7 @@ it is the runtime's decision to assign a UTS namespace, if supported. Available 
 
 ### isolation
 
-`isolation` specifies a container’s isolation technology. Supported values are platform-specific.
+`isolation` specifies a container’s isolation technology. Supported values are platform specific.
 
 ### labels
 
@@ -1025,8 +1019,8 @@ Compose creates containers with canonical labels:
 - `com.docker.compose.project` set on all resources created by Compose to the user project name
 - `com.docker.compose.service` set on service containers with service name as defined in the Compose file
 
-The `com.docker.compose` label prefix is reserved. Specifying labels with this prefix in the Compose file must
-result in a runtime error.
+The `com.docker.compose` label prefix is reserved. Specifying labels with this prefix in the Compose file
+results in a runtime error.
 
 ### links
 
@@ -1042,13 +1036,12 @@ web:
 ```
 
 Containers for the linked service must be reachable at a hostname identical to the alias, or the service name
-if no alias was specified.
+if no alias is specified.
 
-Links are not required to enable services to communicate - when no specific network configuration is set,
+Links are not required to enable services to communicate. When no specific network configuration is set,
 any service must be able to reach any other service at that service’s name on the `default` network. If services
 do declare networks they are attached to, `links` should not override the network configuration and services not
-attached to a shared network should not be able to communicate. Compose doesn't warn the user
-about this configuration mismatch.
+attached to a shared network should not be able to communicate. Compose doesn't warn you about a configuration mismatch.
 
 Links also express implicit dependency between services in the same way as
 [depends_on](#depends_on), so they determine the order of service startup.
@@ -1069,12 +1062,11 @@ are platform specific. Driver specific options can be set with `options` as key-
 
 ### network_mode
 
-`network_mode` sets service containers network mode. Available values are platform specific, but Compose
-specification defines specific values which must be implemented as described if supported:
+`network_mode` sets service container's network mode. Available values are platform specific, but Compose defines specific values which must be implemented as described if supported:
 
-- `none` which disables all container networking
-- `host` which gives the container raw access to host's network interface
-- `service:{name}` which gives the containers access to the specified service only
+- `none`: Turns off all container networking.
+- `host`: Gives the container raw access to host's network interface.
+- `service:{name}`: Gives the containers access to the specified service only
 
 ```yml
     network_mode: "host"
@@ -1082,8 +1074,8 @@ specification defines specific values which must be implemented as described if 
     network_mode: "service:[service name]"
 ```
 
-When set, `networks` attribute is not allowed and Compose rejects any
-Compose file containing both attributes
+When set, the [`networks`](#networks) attribute is not allowed and Compose rejects any
+Compose file containing both attributes.
 
 ### networks
 
@@ -1100,15 +1092,14 @@ services:
 
 #### aliases
 
-`aliases` declares alternative hostnames for this service on the network. Other containers on the same
-network can use either the service name or this alias to connect to one of the service's containers.
+`aliases` declares alternative hostnames for the service on the network. Other containers on the same
+network can use either the service name or an alias to connect to one of the service's containers.
 
 Since `aliases` are network-scoped, the same service can have different aliases on different networks.
 
-> **Note**: A network-wide alias can be shared by multiple containers, and even by multiple services.
+> **Note**
+> A network-wide alias can be shared by multiple containers, and even by multiple services.
 > If it is, then exactly which container the name resolves to is not guaranteed.
-
-The general format is shown here:
 
 ```yml
 services:
@@ -1123,9 +1114,9 @@ services:
           - alias2
 ```
 
-In the example below, service `frontend` will be able to reach the `backend` service at
-the hostname `backend` or `database` on the `back-tier` network, and service `monitoring`
-will be able to reach same `backend` service at `backend` or `mysql` on the `admin` network.
+In the following example, service `frontend` is able to reach the `backend` service at
+the hostname `backend` or `database` on the `back-tier` network. The service `monitoring`
+is able to reach same `backend` service at `backend` or `mysql` on the `admin` network.
 
 ```yml
 services:
@@ -1158,10 +1149,10 @@ networks:
 
 #### ipv4_address, ipv6_address
 
-Specify a static IP address for containers for this service when joining the network.
+Specify a static IP address for a service container when joining the network.
 
 The corresponding network configuration in the [top-level networks section](06-networks.md) must have an
-`ipam` block with subnet configurations covering each static address.
+`ipam` attribute with subnet configurations covering each static address.
 
 ```yml
 services:
@@ -1185,7 +1176,7 @@ networks:
 
 `link_local_ips` specifies a list of link-local IPs. Link-local IPs are special IPs which belong to a well
 known subnet and are purely managed by the operator, usually dependent on the architecture where they are
-deployed. Implementation is Platform specific.
+deployed. Implementation is platform specific.
 
 Example:
 
@@ -1209,7 +1200,7 @@ networks:
 `priority` indicates in which order Compose connects the service’s containers to its
 networks. If unspecified, the default value is 0.
 
-In the following example, the app service connects to app_net_1 first as it has the highest priority. It then connects to app_net_3, then app_net_2, which uses the default priority value of 0.
+In the following example, the app service connects to `app_net_1` first as it has the highest priority. It then connects to app_net_3, then `app_net_2`, which uses the default priority value of 0.
 
 ```yaml
 services:
@@ -1231,7 +1222,7 @@ networks:
 
 ### mac_address
 
-`mac_address` sets a MAC address for service container.
+`mac_address` sets a MAC address for the service container.
 
 ### mem_limit
 
@@ -1243,18 +1234,18 @@ _DEPRECATED: use [deploy.reservations.memory](deploy.md#memory)_
 
 ### mem_swappiness
 
-`mem_swappiness` defines as a percentage (a value between 0 and 100) for the host kernel to swap out
+`mem_swappiness` defines as a percentage, a value between 0 and 100, for the host kernel to swap out
 anonymous memory pages used by a container.
 
-- a value of 0 turns off anonymous page swapping.
-- a value of 100 sets all anonymous pages as swappable.
+- `0`: Turns off anonymous page swapping.
+- `100`: Sets all anonymous pages as swappable.
 
-Default value is platform specific.
+The default value is platform specific.
 
 ### memswap_limit
 
-`memswap_limit` defines the amount of memory container is allowed to swap to disk. This is a modifier
-attribute that only has meaning if `memory` is also set. Using swap allows the container to write excess
+`memswap_limit` defines the amount of memory the container is allowed to swap to disk. This is a modifier
+attribute that only has meaning if [`memory`](#memor) is also set. Using swap allows the container to write excess
 memory requirements to disk when the container has exhausted all the memory that is available to it.
 There is a performance penalty for applications that swap memory to disk often.
 
@@ -1291,11 +1282,12 @@ pids_limit: 10
 
 ### platform
 
-`platform` defines the target platform containers for this service will run on, using the `os[/arch[/variant]]` syntax.
+`platform` defines the target platform the containers for the service run on. It uses the `os[/arch[/variant]]` syntax.
+
 The values of `os`, `arch`, and `variant` must conform to the convention used by the [OCI Image Spec](https://github.com/opencontainers/image-spec/blob/v1.0.2/image-index.md).
 
-Compose uses this attribute when declared to determine which version of the image will be pulled
-and/or on which platform the service’s build will be performed.
+Compose uses this attribute to determine which version of the image is pulled
+and/or on which platform the service’s build is performed.
 
 ```yml
 platform: darwin
@@ -1306,11 +1298,14 @@ platform: linux/arm64/v8
 ### ports
 
 Exposes container ports.
-Port mapping must not be used with `network_mode: host` and doing so must result in a runtime error.
+
+> **Note**
+>
+> Port mapping must not be used with `network_mode: host` otherwise a runtime error occurs.
 
 #### Short syntax
 
-The short syntax is a colon-separated string to set host IP, host port and container port
+The short syntax is a colon-separated string to set the host IP, host port, and container port
 in the form:
 
 `[HOST:]CONTAINER[/PROTOCOL]` where:
@@ -1320,16 +1315,16 @@ in the form:
 - `PROTOCOL` to restrict port to specified protocol. `tcp` and `udp` values are defined by the specification,
   Compose offers support for platform-specific protocol names.
 
-Host IP, if not set, must bind to all network interfaces. Port can be either a single
+If host IP is not set, it binds to all network interfaces. Ports can be either a single
 value or a range. Host and container must use equivalent ranges.
 
-Either specify both ports (`HOST:CONTAINER`), or just the container port. In the latter case, the
-Compose automatically allocates any unassigned host port.
+Either specify both ports (`HOST:CONTAINER`), or just the container port. In the latter case,
+Compose automatically allocates any unassigned host a port.
 
 `HOST:CONTAINER` should always be specified as a (quoted) string, to avoid conflicts
 with [yaml base-60 float](https://yaml.org/type/float.html).
 
-Samples:
+Examples:
 
 ```yml
 ports:
@@ -1344,16 +1339,18 @@ ports:
   - "6060:6060/udp"
 ```
 
-> **Note**: Host IP mapping may not be supported on the platform, in such case Compose rejects
-> the Compose file and must inform the user they will ignore the specified host IP.
+> **Note**
+>
+> If Host IP mapping is not supported by a container engine, Compose rejects
+> the Compose file and ignores the specified host IP.
 
 #### Long syntax
 
 The long form syntax allows the configuration of additional fields that can't be
 expressed in the short form.
 
-- `target`: the container port
-- `published`: the publicly exposed port. Can be set as a range using syntax `start-end`, so it is defined as a string, then actual port should be assigned within this range based on available ports.
+- `target`: The container port
+- `published`: The publicly exposed port. Can be set as a range using syntax `start-end`, so it is defined as a string, then actual port should be assigned within this range based on available ports.
 - `host_ip`: the Host IP mapping, unspecified means all network interfaces (`0.0.0.0`)
 - `protocol`: the port protocol (`tcp` or `udp`), unspecified means any protocol
 - `mode`: `host` for publishing a host port on each node, or `ingress` for a port to be load balanced.
@@ -1375,13 +1372,27 @@ ports:
 
 ### privileged
 
-`privileged` configures the service container to run with elevated privileges. Support and actual impacts are platform-specific.
+`privileged` configures the service container to run with elevated privileges. Support and actual impacts are platform specific.
 
 ### profiles
 
-`profiles` defines a list of named profiles for the service to be enabled under. When not set, service is always enabled.
+`profiles` defines a list of named profiles for the service to be enabled under. If unassigned, the service is always started but if assigned, it is only started if the profile is activated.
 
 If present, `profiles` should follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`.
+
+```yaml
+services:
+  frontend:
+    image: frontend
+    profiles: ["frontend"]
+
+  phpmyadmin:
+    image: phpmyadmin
+    depends_on:
+      - db
+    profiles:
+      - debug
+```
 
 ### pull_policy
 
@@ -1389,9 +1400,9 @@ If present, `profiles` should follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_
 
 * `always`: Compose always pull the image from the registry.
 * `never`: Compose doesn't pull the image from a registry and should rely on the platform cached image.
-   If there is no cached image, a failure must be reported.
+   If there is no cached image, a failure is reported.
 * `missing`: Compose pulls the image only if it's not available in the platform cache.
-   This should be the default option if you are not also using the Compose Build specification.
+   This should be the default option if you are not also using the [Compose Build specification](build.md).
   `if_not_present` should be considered an alias for this value for backward compatibility
 * `build`: Compose builds the image. Compose rebuilds the image if already present.
 
@@ -1399,11 +1410,11 @@ If `pull_policy` and `build` are both present, Compose builds the image by defau
 
 ### read_only
 
-`read_only` configures service container to be created with a read-only filesystem.
+`read_only` configures the service container to be created with a read-only filesystem.
 
 ### restart
 
-`restart` defines the policy that the platform will apply on container termination.
+`restart` defines the policy that the platform applies on container termination.
 
 - `no`: The default restart policy. Does not restart the container under any circumstances.
 - `always`: The policy always restarts the container until its removal.
@@ -1441,10 +1452,14 @@ _DEPRECATED: use [deploy/replicas](deploy.md#replicas)_
 ### secrets
 
 `secrets` grants access to sensitive data defined by [secrets](09-secrets.md) on a per-service basis. Two
-different syntax variants are supported: the short syntax and the long syntax.
+different syntax variants are supported; the short syntax and the long syntax.
 
 Compose reports an error if the secret doesn't exist on the platform or isn't defined in the
 [`secrets`](09-secrets.md) section of the Compose file.
+
+Services can be granted access to multiple secrets. Long and short syntax for secrets may be used in the
+same Compose file. Defining a secret in the top-level `secrets` must not imply granting any service access to it.
+Such grant must be explicit within service specification as [secrets](09-secrets.md) service element.
 
 #### Short syntax
 
@@ -1480,13 +1495,13 @@ the service's containers.
   `/run/secrets/` in the service's task containers. Default value is USER running container.
 - `mode`: The [permissions](https://wintelguy.com/permissions-calc.pl) for the file to be mounted in `/run/secrets/`
   in the service's task containers, in octal notation.
-  Default value is world-readable permissions (mode `0444`).
+  The default value is world-readable permissions (mode `0444`).
   The writable bit must be ignored if set. The executable bit may be set.
 
 The following example sets the name of the `server-certificate` secret file to `server.crt`
-within the container, sets the mode to `0440` (group-readable) and sets the user and group
+within the container, sets the mode to `0440` (group-readable), and sets the user and group
 to `103`. The value of `server-certificate` secret is provided by the platform through a lookup and
-the secret lifecycle is not directly managed by Compose.
+the secret's lifecycle is not directly managed by Compose.
 
 ```yml
 services:
@@ -1502,10 +1517,6 @@ secrets:
   server-certificate:
     external: true
 ```
-
-Services may be granted access to multiple secrets. Long and short syntax for secrets may be used in the
-same Compose file. Defining a secret in the top-level `secrets` must not imply granting any service access to it.
-Such grant must be explicit within service specification as [secrets](09-secrets.md) service element.
 
 ### security_opt
 
@@ -1612,13 +1623,12 @@ ulimits:
 
 ### user
 
-`user` overrides the user used to run the container process. Default is that set by image (i.e. Dockerfile `USER`),
-if not set, `root`.
+`user` overrides the user used to run the container process. The default is set by the image (i.e. Dockerfile `USER`). If it's not set, then `root`.
 
 ### userns_mode
 
 `userns_mode` sets the user namespace for the service. Supported values are platform specific and may depend
-on platform configuration
+on platform configuration.
 
 ```yml
 userns_mode: "host"
@@ -1626,16 +1636,14 @@ userns_mode: "host"
 
 ### volumes
 
-`volumes` defines mount host paths or named volumes that must be accessible by service containers.
+`volumes` define mount host paths or named volumes that must be accessible by service containers.
 
-If the mount is a host path and is only used by a single service, it may be declared as part of the service
-definition instead of the top-level `volumes` key.
-
-To reuse a volume across multiple services, a named
+If the mount is a host path and is only used by a single service, it can be declared as part of the service
+definition. To reuse a volume across multiple services, a named
 volume must be declared in the [top-level `volumes` key](07-volumes.md).
 
-This example shows a named volume (`db-data`) being used by the `backend` service,
-and a bind mount defined for a single service
+The following example shows a named volume (`db-data`) being used by the `backend` service,
+and a bind mount defined for a single service.
 
 ```yml
 services:
@@ -1660,17 +1668,20 @@ volumes:
 The short syntax uses a single string with colon-separated values to specify a volume mount
 (`VOLUME:CONTAINER_PATH`), or an access mode (`VOLUME:CONTAINER_PATH:ACCESS_MODE`).
 
-- `VOLUME`: may be either a host path on the platform hosting containers (bind mount) or a volume name
-- `CONTAINER_PATH`: the path in the container where the volume is mounted
-- `ACCESS_MODE`: a comma-separated `,` list of options. may be set to:
-  - `rw`: read and write access (default)
-  - `ro`: read-only access
-  - `z`: SELinux option indicating that the bind mount host content is shared among multiple containers
-  - `Z`: SELinux option indicating that the bind mount host content is private and unshared for other containers
+- `VOLUME`: Can be either a host path on the platform hosting containers (bind mount) or a volume name
+- `CONTAINER_PATH`: The path in the container where the volume is mounted
+- `ACCESS_MODE`: A comma-separated `,` list of options:
+  - `rw`: Read and write access. This is the default if none is specified.
+  - `ro`: Read-only access.
+  - `z`: SELinux option indicating that the bind mount host content is shared among multiple containers.
+  - `Z`: SELinux option indicating that the bind mount host content is private and unshared for other containers.
 
-> **Note**: The SELinux re-labeling bind mount option is ignored on platforms without SELinux.
+> **Note**
+>
+> The SELinux re-labeling bind mount option is ignored on platforms without SELinux.
 
-> **Note**: Relative host paths must only be supported by Compose  that deploy to a
+> **Note**
+> Relative host paths are only supported by Compose that deploy to a
 > local container runtime. This is because the relative path is resolved from the Compose file’s parent
 > directory which is only applicable in the local case. When Compose deploys to a non-local
 > platform it rejects Compose files which use relative host paths with an error. To avoid ambiguities
@@ -1681,33 +1692,31 @@ The short syntax uses a single string with colon-separated values to specify a v
 The long form syntax allows the configuration of additional fields that can't be
 expressed in the short form.
 
-- `type`: the mount type `volume`, `bind`, `tmpfs`, `npipe`, or `cluster`
-- `source`: the source of the mount, a path on the host for a bind mount, or the
+- `type`: The mount type. Either `volume`, `bind`, `tmpfs`, `npipe`, or `cluster`
+- `source`: The source of the mount, a path on the host for a bind mount, or the
   name of a volume defined in the
   [top-level `volumes` key](07-volumes.md). Not applicable for a tmpfs mount.
-- `target`: the path in the container where the volume is mounted
-- `read_only`: flag to set the volume as read-only
-- `bind`: configure additional bind options
-  - `propagation`: the propagation mode used for the bind
-  - `create_host_path`: create a directory at the source path on host if there is nothing present.
+- `target`: The path in the container where the volume is mounted.
+- `read_only`: Flag to set the volume as read-only.
+- `bind`: Used to configure additional bind options:
+  - `propagation`: The propagation mode used for the bind.
+  - `create_host_path`: Creates a directory at the source path on host if there is nothing present.
     Do nothing if there is something present at the path. This is automatically implied by short syntax
-    for backward compatibility with docker-compose legacy.
-  - `selinux`: the SELinux re-labeling option `z` (shared) or `Z` (private)
-- `volume`: configure additional volume options
-  - `nocopy`: flag to disable copying of data from a container when a volume is created
-- `tmpfs`: configure additional tmpfs options
-  - `size`: the size for the tmpfs mount in bytes (either numeric or as bytes unit)
-  - `mode`: the filemode for the tmpfs mount as Unix permission bits as an octal number
-- `consistency`: the consistency requirements of the mount. Available values are platform specific
+    for backward compatibility with `docker-compose` legacy.
+  - `selinux`: The SELinux re-labeling option `z` (shared) or `Z` (private)
+- `volume`: Configures additional volume options:
+  - `nocopy`: Flag to disable copying of data from a container when a volume is created.
+- `tmpfs`: Configures additional tmpfs options:
+  - `size`: The size for the tmpfs mount in bytes (either numeric or as bytes unit).
+  - `mode`: The file mode for the tmpfs mount as Unix permission bits as an octal number.
+- `consistency`: the consistency requirements of the mount. Available values are platform specific.
 
 ### volumes_from
 
-`volumes_from` mounts all of the volumes from another service or container, optionally specifying
-read-only access (ro) or read-write (rw). If no access level is specified, then read-write must be used.
+`volumes_from` mounts all of the volumes from another service or container. You can optionally specify
+read-only access `ro` or read-write `rw`. If no access level is specified, then read-write access is used.
 
-String value defines another service in the Compose application model to mount volumes from. The
-`container:` prefix, if supported, allows to mount volumes from a container that is not managed by
-Compose.
+You can also mount volumes from a container that is not managed by Compose by using the `container:` prefix.
 
 ```yaml
 volumes_from:
@@ -1719,5 +1728,5 @@ volumes_from:
 
 ### working_dir
 
-`working_dir` overrides the container's working directory from that specified by the image (i.e. Dockerfile `WORKDIR`).
+`working_dir` overrides the container's working directory which is specified by the image (i.e. Dockerfile's `WORKDIR`).
 
