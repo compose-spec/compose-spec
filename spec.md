@@ -2046,7 +2046,7 @@ networks:
 driver-dependent. Consult the driver's documentation for more information. 
 
 ```yml
-volumes:
+networks:
   db-data:
     driver_opts:
       foo: "bar"
@@ -2112,19 +2112,21 @@ networks:
 - `options`: Driver-specific options as a key-value mapping.
 
 ```yml
-ipam:
-  driver: default
-  config:
-    - subnet: 172.28.0.0/16
-      ip_range: 172.28.5.0/24
-      gateway: 172.28.5.254
-      aux_addresses:
-        host1: 172.28.1.5
-        host2: 172.28.1.6
-        host3: 172.28.1.7
-  options:
-    foo: bar
-    baz: "0"
+networks:
+  mynet1:
+    ipam:
+    driver: default
+    config:
+      - subnet: 172.28.0.0/16
+        ip_range: 172.28.5.0/24
+        gateway: 172.28.5.254
+        aux_addresses:
+          host1: 172.28.1.5
+          host2: 172.28.1.6
+          host3: 172.28.1.7
+    options:
+      foo: bar
+      baz: "0"
 ```
 
 ### internal
@@ -2136,11 +2138,11 @@ create an externally isolated network.
 
 Add metadata to containers using `labels`. You can use either an array or a dictionary.
 
-You should use reverse-DNS notation to prevent labels from conflicting with those used by other software.
+It is recommended that you use reverse-DNS notation to prevent labels from conflicting with those used by other software.
 
 ```yml
-volumes:
-  db-data:
+networks:
+  mynet1:
     labels:
       com.example.description: "Financial transaction network"
       com.example.department: "Finance"
@@ -2148,8 +2150,8 @@ volumes:
 ```
 
 ```yml
-volumes:
-  db-data:
+networks:
+  mynet1:
     labels:
       - "com.example.description=Financial transaction network"
       - "com.example.department=Finance"
