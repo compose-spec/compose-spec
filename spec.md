@@ -809,6 +809,10 @@ expose:
   - "8000"
 ```
 
+> **Note**
+>
+> If the Dockerfile for the image already exposes ports, it is visible to other containers on the network even is `expose` is not set in your Compose file. 
+
 ### extends
 
 `extends` lets you share common configurations among different files, or even different projects entirely. With `extends` you can define a common set of service options in one place and refer to it from anywhere. You can refer to another Compose file and select a service you want to also use in your own application, with the ability to override some attributes for your own needs.
@@ -1079,9 +1083,9 @@ been the case if `group_add` were not declared.
 
 ### healthcheck
 
-`healthcheck` declares a check that's run to determine whether or not the service containers are "healthy". This overrides the
+`healthcheck` declares a check that's run to determine whether or not the service containers are "healthy". It works in the same way, and has the same default values, as the
 [HEALTHCHECK Dockerfile instruction](https://docs.docker.com/engine/reference/builder/#healthcheck)
-set by the service's Docker image.
+set by the service's Docker image. Your Compose file can override the values set in the Dockerfile. 
 
 ```yml
 healthcheck:
@@ -1223,6 +1227,10 @@ The `com.docker.compose` label prefix is reserved. Specifying labels with this p
 results in a runtime error.
 
 ### links
+
+> **Note**
+>
+> Availability of the `links` attribute is implementation specific.
 
 `links` defines a network link to containers in another service. Either specify both the service name and
 a link alias (`SERVICE:ALIAS`), or just the service name.
@@ -1445,13 +1453,13 @@ The default value is platform specific.
 ### memswap_limit
 
 `memswap_limit` defines the amount of memory the container is allowed to swap to disk. This is a modifier
-attribute that only has meaning if [`memory`](#memor) is also set. Using swap allows the container to write excess
+attribute that only has meaning if [`memory`](deploy.md#memory) is also set. Using swap lets the container write excess
 memory requirements to disk when the container has exhausted all the memory that is available to it.
 There is a performance penalty for applications that swap memory to disk often.
 
 - If `memswap_limit` is set to a positive integer, then both `memory` and `memswap_limit` must be set. `memswap_limit` represents the total amount of memory and swap that can be used, and `memory` controls the amount used by non-swap memory. So if `memory`="300m" and `memswap_limit`="1g", the container can use 300m of memory and 700m (1g - 300m) swap.
-- If `memswap_limit` is set to 0, the setting must be ignored, and the value is treated as unset.
-- If `memswap_limit` is set to the same value as `memory`, and `memory` is set to a positive integer, the container does not have access to swap. See Prevent a container from using swap.
+- If `memswap_limit` is set to 0, the setting is ignored, and the value is treated as unset.
+- If `memswap_limit` is set to the same value as `memory`, and `memory` is set to a positive integer, the container does not have access to swap.
 - If `memswap_limit` is unset, and `memory` is set, the container can use as much swap as the `memory` setting, if the host container has swap memory configured. For instance, if `memory`="300m" and `memswap_limit` is not set, the container can use 600m in total of memory and swap.
 - If `memswap_limit` is explicitly set to -1, the container is allowed to use unlimited swap, up to the amount available on the host system.
 
@@ -1550,7 +1558,7 @@ The long form syntax allows the configuration of additional fields that can't be
 expressed in the short form.
 
 - `target`: The container port
-- `published`: The publicly exposed port. Can be set as a range using syntax `start-end`, so it is defined as a string, then actual port should be assigned within this range based on available ports.
+- `published`: The publicly exposed port. It is defined as a string and can be set as a range using syntax `start-end`. It means the actual port is assigned a remaining available port, within the set range.
 - `host_ip`: The Host IP mapping, unspecified means all network interfaces (`0.0.0.0`).
 - `protocol`: The port protocol (`tcp` or `udp`), unspecified means any protocol.
 - `mode`: `host`: For publishing a host port on each node, or `ingress` for a port to be load balanced.
@@ -1606,7 +1614,7 @@ services:
   `if_not_present` is considered an alias for this value for backward compatibility.
 * `build`: Compose builds the image. Compose rebuilds the image if it's already present.
 
-If `pull_policy` and `build` are both present, Compose builds the image by default. Compose may override this behavior in the toolchain.
+If `pull_policy` and `build` are both present, Compose builds the image by default. This behavior may be overridden in the toolchain, depending on the implementation. 
 
 ### read_only
 
@@ -1697,6 +1705,8 @@ the service's containers.
   in the service's task containers, in octal notation.
   The default value is world-readable permissions (mode `0444`).
   The writable bit must be ignored if set. The executable bit may be set.
+
+Note that the `uid`, `gid`, and `mode` attributes are implementation specific. 
 
 The following example sets the name of the `server-certificate` secret file to `server.crt`
 within the container, sets the mode to `0440` (group-readable), and sets the user and group
