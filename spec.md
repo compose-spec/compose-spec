@@ -1936,7 +1936,7 @@ volumes_from:
 
 Networks are the layer that allow services to communicate with each other.
 
-The top-level `networks` element lets you configure named networks that can be reused across multiple services. To use a network across multiple services, you must explicitly grant each service access by using the [networks](05-services.md) attribute. The `netowrks` top-level element has additional syntax that provides more granular control.
+The top-level `networks` element lets you configure named networks that can be reused across multiple services. To use a network across multiple services, you must explicitly grant each service access by using the [networks](05-services.md) attribute. The `networks` top-level element has additional syntax that provides more granular control.
 
 ### Examples
 
