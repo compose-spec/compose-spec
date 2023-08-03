@@ -1963,8 +1963,8 @@ networks:
 driver is not available on the platform.
 
 ```yml
-volumes:
-  db-data:
+networks:
+  mynet1:
     driver: overlay
 ```
 
@@ -1989,6 +1989,7 @@ services:
 
 networks:
   hostnet:
+    driver: host
     external: true
     name: host
 ```
@@ -2002,6 +2003,7 @@ services:
 
 networks:
   nonet:
+    driver: none
     external: true
     name: none
 ```
@@ -2012,8 +2014,8 @@ networks:
 driver-dependent - consult the driver's documentation for more information. Optional.
 
 ```yml
-volumes:
-  db-data:
+networks:
+  mynet1:
     driver_opts:
       foo: "bar"
       baz: 1
@@ -2051,25 +2053,44 @@ networks:
 A full example:
 
 ```yml
-ipam:
-  driver: default
-  config:
-    - subnet: 172.28.0.0/16
-      ip_range: 172.28.5.0/24
-      gateway: 172.28.5.254
-      aux_addresses:
-        host1: 172.28.1.5
-        host2: 172.28.1.6
-        host3: 172.28.1.7
-  options:
-    foo: bar
-    baz: "0"
+networks:
+  mynet1:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
+          ip_range: 172.28.5.0/24
+          gateway: 172.28.5.254
+          aux_addresses:
+            host1: 172.28.1.5
+            host2: 172.28.1.6
+            host3: 172.28.1.7
+      options:
+        foo: bar
+        baz: "0"
 ```
 
 ### internal
 
 By default, Compose provides external connectivity to networks. `internal`, when set to `true`, allows
-creating an externally isolated network.
+creating an externally isolated network. In the example below, `proxy` has access to the outside world through the `default` network and shares the isolated `inside` network with `app`. 
+
+```yml
+services:
+  proxy:
+    image: awesome/proxy
+    networks:
+      - inside
+      - default
+  app:
+    image: awesome/app
+    networks:
+      - inside
+
+networks:
+  inside:
+    internal: true
+```
 
 ### labels
 
@@ -2078,8 +2099,8 @@ Add metadata to containers using Labels. Can use either an array or a dictionary
 Users should use reverse-DNS notation to prevent labels from conflicting with those used by other software.
 
 ```yml
-volumes:
-  db-data:
+networks:
+  mynet1:
     labels:
       com.example.description: "Financial transaction network"
       com.example.department: "Finance"
@@ -2087,8 +2108,8 @@ volumes:
 ```
 
 ```yml
-volumes:
-  db-data:
+networks:
+  mynet1:
     labels:
       - "com.example.description=Financial transaction network"
       - "com.example.department=Finance"
@@ -2102,15 +2123,14 @@ Compose sets `com.docker.compose.project` and `com.docker.compose.network` label
 If set to `true`, `external` specifies that this network’s lifecycle is maintained outside of that of the application.
 Compose doesn't attempt to create these networks, and should raise an error if one doesn't exist.
 
-If `external` is set to `true` and network configuration has other but `name` attributes set, considering resource is
-not managed by compose lifecycle, Compose rejects the Compose file as invalid.
+If `external` is set to `true` and the network configuration has other than `name` attributes set, as the resource is
+not managed by the compose lifecycle, Compose rejects the Compose file as invalid.
 
 In the example below, `proxy` is the gateway to the outside world. Instead of attempting to create a network, Compose
 queries the platform for an existing network simply called `outside` and connect the
 `proxy` service's containers to it.
 
 ```yml
-
 services:
   proxy:
     image: awesome/proxy
