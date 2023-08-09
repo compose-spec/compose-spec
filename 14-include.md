@@ -28,6 +28,13 @@ services:
       - serviceB #use serviceB directly as if it was declared in this Compose file
 ```
 
+Compose also supports the use of interpolated variables with `include`. It's recommended that you [specify mandatory variables](12-interpolation.md). For example:
+
+```
+include:
+  -${INCLUDE_PATH:?FOO}/compose.yaml
+```
+
 ### Short syntax
 
 The short syntax only defines paths to other Compose files. The file is loaded with the parent
