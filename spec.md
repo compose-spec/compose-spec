@@ -389,7 +389,7 @@ cgroup_parent: m-executor-abcd
 
 ### command
 
-`command` overrides the default command declared by the container image, for examply by Dockerfile's `CMD`.
+`command` overrides the default command declared by the container image, for example by Dockerfile's `CMD`.
 
 ```yaml
 command: bundle exec thin -p 3000
@@ -1408,7 +1408,7 @@ networks:
 `priority` indicates in which order Compose connects the service’s containers to its
 networks. If unspecified, the default value is 0.
 
-In the following example, the app service connects to `app_net_1` first as it has the highest priority. It then connects to app_net_3, then `app_net_2`, which uses the default priority value of 0.
+In the following example, the app service connects to `app_net_1` first as it has the highest priority. It then connects to `app_net_3`, then `app_net_2`, which uses the default priority value of 0.
 
 ```yaml
 services:
@@ -1527,7 +1527,7 @@ If host IP is not set, it binds to all network interfaces. Ports can be either a
 value or a range. Host and container must use equivalent ranges.
 
 Either specify both ports (`HOST:CONTAINER`), or just the container port. In the latter case,
-Compose automatically allocates any unassigned host a port.
+Compose automatically allocates any unassigned port of the host.
 
 `HOST:CONTAINER` should always be specified as a (quoted) string, to avoid conflicts
 with [yaml base-60 float](https://yaml.org/type/float.html).
