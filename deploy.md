@@ -8,7 +8,7 @@
 >
 > Deploy is an optional part of the Compose Specification
 
-The Compose Deploy Specification lets you declare additional metadata on services so Composes gets
+The Compose Deploy Specification lets you declare additional metadata on services so Compose gets
 relevant data to allocate adequate resources on the platform and configure them to match your needs.
 
 ## Attributes

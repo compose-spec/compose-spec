@@ -14,7 +14,7 @@ in a portable way.
 ## Definitions
 
 Only a subset of Compose file services can be defined under a `build`
-subsection, others may make use of the `image` attribute. When a `build` subsection is present for a service, it Compose ignores the `image` attribute for the corresponding service, as Compose
+subsection, others may make use of the `image` attribute. When a `build` subsection is present for a service, Compose ignores the `image` attribute for the corresponding service, as Compose
 can build an image from source.
 
 `build` can be either specified as a single string defining a context path, or as a detailed build definition.
@@ -326,7 +326,7 @@ build:
 
 `labels` add metadata to the resulting image. `labels` can be set either as an array or a map.
 
-It's recommended that you use reverse-DNS notation to prevent your labels from conflicting with
+It's recommended that you use reverse-DNS notation to prevent your labels from conflicting with other software.
 
 ```yml
 build:
