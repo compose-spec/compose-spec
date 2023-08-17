@@ -190,6 +190,7 @@
                   "type": "object",
                   "additionalProperties": false,
                   "properties": {
+                    "service": {"type": "string"},
                     "restart": {"type": "boolean"},
                     "required": {
                       "type":  "boolean",
