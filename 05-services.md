@@ -29,7 +29,7 @@ The default service configuration is `attach: true`.
 
 ### build
 
-`build` specifies the build configuration for creating a container image from source, as defined in the [Compsoe Build Specification](build.md).
+`build` specifies the build configuration for creating a container image from source, as defined in the [Compose Build Specification](build.md).
 
 ### blkio_config
 
