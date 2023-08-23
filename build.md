@@ -1,8 +1,4 @@
 # Compose Build Specification
-{:.no_toc}
-
-* ToC
-{:toc}
 
 > **Note:** 
 >
