@@ -1,8 +1,4 @@
 # Compose Deploy Specification
-{:.no_toc}
-
-* ToC
-{:toc}
 
 > **Note:** 
 >
