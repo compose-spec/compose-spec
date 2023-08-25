@@ -104,7 +104,7 @@ implementation change is a change to the source code. An API change is a change
 to the API specification. A philosophy change is a change to the philosophy
 manifesto, and so on.
 
-All decisions affecting The Compose Specificiation, big and small, follow the
+All decisions affecting The Compose Specification, big and small, follow the
 same 3 steps:
 
 * Step 1: Open a pull request. Anyone can do this.
@@ -117,7 +117,7 @@ of the pull request and which areas of the project it affects.
 The [DCO or `Sign your work`](./CONTRIBUTING.md#sign-your-work) requirement is
 not intended as a roadblock or speed bump.
 
-Some Compose Specificaiton contributors are not as familiar with `git`, or have
+Some Compose Specification contributors are not as familiar with `git`, or have
 used a web based editor, and thus asking them to `git commit --amend -s` is not
 the best way forward.
 
