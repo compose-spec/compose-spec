@@ -1,0 +1,4 @@
+[codespell]
+skip = .git,*.pdf,*.svg,Gemfile.lock
+#
+# ignore-words-list =
