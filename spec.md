@@ -2559,10 +2559,11 @@ In example above, the environment variables must be declared using the `FOO: BAR
 
 As with [Fragments](10-fragments.md), Extensions can be used to make your Compose file more efficient and easier to maintain. Extensions can also be used with [anchors and aliases](10-fragments.md).
 
-Use the prefix `x-` on any top-level element to modularize configurations that you want to reuse. They can be used
-within any structure in a Compose file as Compose ignores any fields that start with `x-`.  This is the sole exception where Compose silently ignores unrecognized fields.
+Use the prefix `x-` as a top-level element to modularize configurations that you want to reuse. 
+Compose ignores any fields that start with `x-`, this is the sole exception where Compose silently ignores unrecognized fields.
 
-The contents of any `x-` section is unspecified by the Compose specification, so it can be used to enable custom features. If Compose encounters an unknown extension field it doesn't fail and may warn you about the unknown field.
+They also can be used within any structure in a Compose file where user-defined keys are not expected. 
+Compose use those to enable experimental features, the same way browsers add support for [custom CSS features](https://www.w3.org/TR/2011/REC-CSS2-20110607/syndata.html#vendor-keywords)
 
 ### Example 1
 
@@ -2577,9 +2578,6 @@ services:
     image: awesome/webapp
     x-foo: bar
 ```
-
-For platform extensions, it's highly recommended that you prefix extensions by platform or vendor name, the same way browsers add
-support for [custom CSS features](https://www.w3.org/TR/2011/REC-CSS2-20110607/syndata.html#vendor-keywords)
 
 ```yml
 service:
