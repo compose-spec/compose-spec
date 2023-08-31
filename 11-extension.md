@@ -18,7 +18,7 @@ x-custom:
 
 services:
   webapp:
-    image: awesome/webapp
+    image: example/webapp
     x-foo: bar
 ```
 
@@ -99,7 +99,7 @@ x-keys: &keys
   KEY: VALUE
 services:
   frontend:
-    image: awesome/webapp
+    image: example/webapp
     environment: 
       << : [*default-environment, *keys]
       YET_ANOTHER: VARIABLE

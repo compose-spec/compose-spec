@@ -14,7 +14,7 @@ is connected to `front-tier` and `back-tier` networks.
 ```yml
 services:
   frontend:
-    image: awesome/webapp
+    image: example/webapp
     networks:
       - front-tier
       - back-tier
@@ -151,12 +151,12 @@ queries the platform for an existing network simply called `outside` and connect
 
 services:
   proxy:
-    image: awesome/proxy
+    image: example/proxy
     networks:
       - outside
       - default
   app:
-    image: awesome/app
+    image: example/app
     networks:
       - default
 
