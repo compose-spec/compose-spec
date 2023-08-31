@@ -116,7 +116,7 @@ The example application is composed of the following parts:
 ```yml
 services:
   frontend:
-    image: awesome/webapp
+    image: example/webapp
     ports:
       - "443:8043"
     networks:
@@ -128,7 +128,7 @@ services:
       - server-certificate
 
   backend:
-    image: awesome/database
+    image: example/database
     volumes:
       - db-data:/etc/data
     networks:
@@ -1349,18 +1349,18 @@ is able to reach same `backend` service at `backend` or `mysql` on the `admin` n
 ```yml
 services:
   frontend:
-    image: awesome/webapp
+    image: example/webapp
     networks:
       - front-tier
       - back-tier
 
   monitoring:
-    image: awesome/monitoring
+    image: example/monitoring
     networks:
       - admin
 
   backend:
-    image: awesome/backend
+    image: example/backend
     networks:
       back-tier:
         aliases:
@@ -1385,7 +1385,7 @@ The corresponding network configuration in the [top-level networks section](06-n
 ```yml
 services:
   frontend:
-    image: awesome/webapp
+    image: example/webapp
     networks:
       front-tier:
         ipv4_address: 172.16.238.10
@@ -1703,7 +1703,7 @@ to the contents of the file `./server.cert`.
 ```yml
 services:
   frontend:
-    image: awesome/webapp
+    image: example/webapp
     secrets:
       - server-certificate
 secrets:
@@ -1736,7 +1736,7 @@ the secret's lifecycle is not directly managed by Compose.
 ```yml
 services:
   frontend:
-    image: awesome/webapp
+    image: example/webapp
     secrets:
       - source: server-certificate
         target: server.cert
@@ -1878,7 +1878,7 @@ and a bind mount defined for a single service.
 ```yml
 services:
   backend:
-    image: awesome/backend
+    image: example/backend
     volumes:
       - type: volume
         source: db-data
@@ -1975,7 +1975,7 @@ is connected to `front-tier` and `back-tier` networks.
 ```yml
 services:
   frontend:
-    image: awesome/webapp
+    image: example/webapp
     networks:
       - front-tier
       - back-tier
@@ -2112,12 +2112,12 @@ queries the platform for an existing network simply called `outside` and connect
 
 services:
   proxy:
-    image: awesome/proxy
+    image: example/proxy
     networks:
       - outside
       - default
   app:
-    image: awesome/app
+    image: example/app
     networks:
       - default
 
@@ -2222,7 +2222,7 @@ The following example shows a two-service setup where a database's data director
 ```yml
 services:
   backend:
-    image: awesome/database
+    image: example/database
     volumes:
       - db-data:/etc/data
 
@@ -2281,7 +2281,7 @@ called `db-data` and mounts it into the `backend` service's containers.
 ```yml
 services:
   backend:
-    image: awesome/database
+    image: example/database
     volumes:
       - db-data:/etc/data
 
@@ -2519,7 +2519,7 @@ to avoid repetition but overrides `name` attribute:
 
 services:
   backend:
-    image: awesome/database
+    image: example/database
     volumes:
       - db-data
       - metrics
@@ -2575,7 +2575,7 @@ x-custom:
 
 services:
   webapp:
-    image: awesome/webapp
+    image: example/webapp
     x-foo: bar
 ```
 
@@ -2656,7 +2656,7 @@ x-keys: &keys
   KEY: VALUE
 services:
   frontend:
-    image: awesome/webapp
+    image: example/webapp
     environment: 
       << : [*default-environment, *keys]
       YET_ANOTHER: VARIABLE

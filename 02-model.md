@@ -82,7 +82,7 @@ The example application is composed of the following parts:
 ```yml
 services:
   frontend:
-    image: awesome/webapp
+    image: example/webapp
     ports:
       - "443:8043"
     networks:
@@ -94,7 +94,7 @@ services:
       - server-certificate
 
   backend:
-    image: awesome/database
+    image: example/database
     volumes:
       - db-data:/etc/data
     networks:
