@@ -353,6 +353,30 @@ has been updated on registry (see [pull](#pull)).
 `pull` requires the image builder to pull referenced images (`FROM` Dockerfile directive), even if those are already
 available in the local image store.
 
+### network
+
+Set the network containers connect to for the `RUN` instructions during build.
+
+```yaml
+build:
+  context: .
+  network: host
+```  
+
+```yaml
+build:
+  context: .
+  network: custom_network_1
+```
+
+Use `none` to disable networking during build:
+
+```yaml
+build:
+  context: .
+  network: none
+```
+
 ### shm_size
 
 `shm_size` sets the size of the shared memory (`/dev/shm` partition on Linux) allocated for building Docker images. Specify
