@@ -1,26 +1,17 @@
-# The Compose Specification - Development support
-{:.no_toc}
+# Compose Develop Specification 
 
-*Note:* Development support is an OPTIONAL part of the Compose Specification.
-
-* ToC
-{:toc}
+> **Note:** 
+>
+> Develop is an optional part of the Compose Specification
 
 ## Introduction
 
-Compose specification is a platform-neutral way to define multi-container applications. Compose focusing on development
-use-case to run application on local machine also supports some development hooks to improve developers velocity on their
-local workflow (also known as "inner loop"). This document defines how Compose behaves to efficiently assist the developer.
+Compose focuses on the development use-case of running applications on a local machine. It also supports some development hooks to improve the velocity of your local workflow, also known as your "inner loop". This document defines how Compose behaves to efficiently assist the developer.
 
-## Definitions
+This section defines the development constraints and workflows set by Compose. Only a subset of
+Compose file services may require a `develop` subsection.
 
-Compose Specification supports an OPTIONAL `develop` subsection on services. This section defines the development
-constraints and workflows to be set by Compose to assist the developer working on service codebase. Only a subset of
-Compose file services may define such a `develop` subsection.
-
-## Illustrative sample
-
-The following sample illustrates Compose specification concepts with a concrete sample application:
+## Illustrative example
 
 ```yaml
 services:
@@ -46,29 +37,27 @@ services:
           action: rebuild
 ```
 
-## develop
+## Attributes
 
-The `develop` element defines configuration options that are applied by Compose to assist developer during development of
-a service with optimized workflows.
+The `develop` subsection defines configuration options that are applied by Compose to assist you during development of a service with optimized workflows.
 
 ### watch
 
-The `watch` attribute defines event sources and strategy to be adopted to update a running service as Compose detects
-changes in source code. `watch` is a sequence, each individual item in the sequence defines a rule to be applied by 
-Compose to monitor source code for changes.
+The `watch` attribute defines a list of rules that control automatic service updates based on local file changes. `watch` is a sequence, each individual item in the sequence defines a rule to be applied by 
+Compose to monitor source code for changes. For more information, see [Use Compose Watch](https://docs.docker.com/compose/file-watch/).
 
-##### action
+#### action
 
-`action` define the action to take place as changes have been detected:
+`action` defines the action to take when changes are detected. If `action` is set to:
 
-- `rebuild` strategy will rebuild service image based on the `build` section and recreate the service with updated image.
-- `sync` strategy keep existing service container(s) running, but synchronize source files with container content according to `target` attribute. 
+- `rebuild`, Compose rebuilds the service image based on the `build` section and recreates the service with the updated image.
+- `sync`, Compose keeps the existing service container(s) running, but synchronizes source files with container content according to the `target` attribute. 
 
 
-##### ignore
+#### ignore
 
 The `ignore` attribute can be used to define a list of patterns for paths to be ignored. Any updated file
-that matches a pattern, or belongs to a folder that matches a pattern, won't trigger service to be re-created. 
+that matches a pattern, or belongs to a folder that matches a pattern, won't trigger services to be re-created. 
 The syntax is the same as `.dockerignore` file: 
 
 - `*` matches 0 or more characters in a file name. 
@@ -76,16 +65,16 @@ The syntax is the same as `.dockerignore` file:
 - `*/*` matches two nested folders with arbitrary names
 - `**` matches an arbitrary number of nested folders
 
-If the build context includes a `.dockerignore` file, the patterns in this file are loaded as implicit content
+If the build context includes a `.dockerignore` file, the patterns in this file is loaded as implicit content
 for the `ignores` file, and values set in the Compose model are appended.
 
-##### path
+#### path
 
 `path` attribute defines the path to source code (relative to the project directory) to monitor for changes. Updates to any file
-inside path, which doesn't match any `ignore` rule, will trigger configured action.
+inside the path, which doesn't match any `ignore` rule, triggers the configured action.
 
-##### target
+#### target
 
-`target` attribute only applies when `action` is configured for `sync`. Files within `path` with changes will be synchronized
+`target` attribute only applies when `action` is configured for `sync`. Files within `path` with changes are synchronized
 with container filesystem, so that the latter is always running with up-to-date content.
 
