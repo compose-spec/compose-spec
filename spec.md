@@ -2099,7 +2099,7 @@ networks:
 
 #### enable_ipv6
 
-`enable_ipv6` enables IPv6 networking. 
+`enable_ipv6` enables IPv6 networking. For an example, see step four of [Create an IPv6 network](https://docs.docker.com/config/daemon/ipv6/).
 
 ### external
 
@@ -2768,7 +2768,7 @@ services:
 ```
 ## Merge and override
 
-Compose lets you define a Compose application model through multiple Compose files. 
+Compose lets you define a Compose application model through [multiple Compose files](https://docs.docker.com/compose/multiple-compose-files/). 
 When doing so, Compose follows the rules declared in this section to merge Compose files.
 
 ### Mapping
