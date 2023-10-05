@@ -2,7 +2,7 @@
 
 Secrets are a flavor of [Configs](08-configs.md) focusing on sensitive data, with specific constraint for this usage. 
 
-Services can only access secrets when explicitly granted by a [`secrets`](05-services.md#secrets) attribute.
+Services can only access secrets when explicitly granted by a [`secrets`](05-services.md#secrets) attribute within the `services` top-level element.
 
 The top-level `secrets` declaration defines or references sensitive data that is granted to the services in your Compose
 application. The source of the secret is either `file` or `environment`.

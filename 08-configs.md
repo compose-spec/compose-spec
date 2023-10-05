@@ -2,7 +2,7 @@
 
 Configs allow services to adapt their behaviour without the need to rebuild a Docker image.
 
-Services can only access configs when explicitly granted by a [`configs`](05-services.md#configs) attribute.
+Services can only access configs when explicitly granted by a [`configs`](05-services.md#configs) attribute within the `services` top-level element.
 
 As with volumes, configs are mounted as files into a service's container's filesystem. The location of the mount point within the container defaults to `/<config-name>` in Linux containers and `C:\<config-name>` in Windows containers. 
 

@@ -1967,7 +1967,7 @@ volumes_from:
 
 Networks are the layer that allow services to communicate with each other.
 
-The top-level `networks` element lets you configure named networks that can be reused across multiple services. To use a network across multiple services, you must explicitly grant each service access by using the [networks](05-services.md) attribute. The `networks` top-level element has additional syntax that provides more granular control.
+The top-level `networks` element lets you configure named networks that can be reused across multiple services. To use a network across multiple services, you must explicitly grant each service access by using the [networks](05-services.md) attribute within the `services` top-level element. The `networks` top-level element has additional syntax that provides more granular control.
 
 ### Examples
 
@@ -2215,7 +2215,7 @@ networks:
 
 Volumes are persistent data stores implemented by the container engine. Compose offers a neutral way for services to mount volumes, and configuration parameters to allocate them to infrastructure.
 
-The top-level `volumes` declaration lets you configure named volumes that can be reused across multiple services. To use a volume across multiple services, you must explicitly grant each service access by using the [volumes](05-services.md) attribute. The `volumes` attribute has additional syntax that provides more granular control.
+The top-level `volumes` declaration lets you configure named volumes that can be reused across multiple services. To use a volume across multiple services, you must explicitly grant each service access by using the [volumes](05-services.md) attribute within the `services` top-level element. The `volumes` attribute has additional syntax that provides more granular control.
 
 ### Example
 
@@ -2355,7 +2355,7 @@ volumes:
 
 Configs allow services to adapt their behaviour without the need to rebuild a Docker image.
 
-Services can only access configs when explicitly granted by a [`configs`](05-services.md#configs) attribute.
+Services can only access configs when explicitly granted by a [`configs`](05-services.md#configs) attribute within the `services` top-level element.
 
 As with volumes, configs are mounted as files into a service's container's filesystem. The location of the mount point within the container defaults to `/<config-name>` in Linux containers and `C:\<config-name>` in Windows containers. 
 
@@ -2412,7 +2412,7 @@ If `external` is set to `true`, all other attributes apart from `name` are irrel
 
 Secrets are a flavor of [Configs](08-configs.md) focusing on sensitive data, with specific constraint for this usage. 
 
-Services can only access secrets when explicitly granted by a [`secrets`](05-services.md#secrets) attribute.
+Services can only access secrets when explicitly granted by a [`secrets`](05-services.md#secrets) attribute within the `services` top-level element.
 
 The top-level `secrets` declaration defines or references sensitive data that is granted to the services in your Compose
 application. The source of the secret is either `file` or `environment`.
