@@ -1551,6 +1551,8 @@ security_opt:
   - label:role:ROLE
 ```
 
+For further default labeling schemes you can override, see [Security configuration](https://docs.docker.com/engine/reference/run/#security-configuration).
+
 ### shm_size
 
 `shm_size` configures the size of the shared memory (`/dev/shm` partition on Linux) allowed by the service container.
