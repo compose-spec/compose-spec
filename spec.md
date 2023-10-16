@@ -1762,6 +1762,8 @@ security_opt:
   - label:role:ROLE
 ```
 
+For further default labeling schemes you can override, see [Security configuration](https://docs.docker.com/engine/reference/run/#security-configuration).
+
 ### shm_size
 
 `shm_size` configures the size of the shared memory (`/dev/shm` partition on Linux) allowed by the service container.
@@ -2459,8 +2461,7 @@ secrets:
 
 External secrets lookup can also use a distinct key by specifying a `name`. 
 
-The following example modifies the previous example  to look up a secret using the name `CERTIFICATE_KEY`. The
-the actual lookup key is set at deployment time by the [interpolation](12-interpolation.md) of
+The following example modifies the previous example  to look up a secret using the name `CERTIFICATE_KEY`. The actual lookup key is set at deployment time by the [interpolation](12-interpolation.md) of
 variables, but exposed to containers as hard-coded ID `server-certificate`.
 
 ```yml
