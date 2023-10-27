@@ -835,7 +835,7 @@ expose:
 
 > **Note**
 >
-> If the Dockerfile for the image already exposes ports, it is visible to other containers on the network even is `expose` is not set in your Compose file. 
+> If the Dockerfile for the image already exposes ports, it is visible to other containers on the network even if `expose` is not set in your Compose file. 
 
 ### extends
 
