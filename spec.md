@@ -2368,6 +2368,8 @@ By default, the config:
 The top-level `configs` declaration defines or references configuration data that is granted to services in your Compose application. The source of the config is either `file` or `external`.
 
 - `file`: The config is created with the contents of the file at the specified path.
+- `environment`: The config content is created with the value of an environment variable.
+- `content`: The content is created with the inlined value.
 - `external`: If set to true, `external` specifies that this config has already been created. Compose does not
   attempt to create it, and if it does not exist, an error occurs.
 - `name`: The name of the config object in the container engine to look up. This field can be used to
@@ -2394,6 +2396,22 @@ configs:
 ```
 
 ### Example 2
+
+`<project_name>_app_config` is created when the application is deployed,
+by registering the inlined content as the configuration data. This comes with the
+benefits Compose will infer variables when creating the config, which allows to
+adjust content according to service configuration:
+
+```yml
+configs:
+  app_config:
+    content: |
+      debug=${DEBUG}
+      spring.application.admin.enabled=${DEBUG}
+      spring.application.name=${COMPOSE_PROJECT_NAME}
+```
+
+### Example 3
 
 External configs lookup can also use a distinct key by specifying a `name`. 
 
