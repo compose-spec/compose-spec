@@ -120,6 +120,7 @@
                 "privileged": {"type": "boolean"},
                 "secrets": {"$ref": "#/definitions/service_config_or_secret"},
                 "tags": {"type": "array", "items": {"type": "string"}},
+                "ulimits": {"$ref": "#/definitions/ulimits"},
                 "platforms": {"type": "array", "items": {"type": "string"}}
               },
               "additionalProperties": false,
@@ -356,26 +357,7 @@
         "storage_opt": {"type": "object"},
         "tmpfs": {"$ref": "#/definitions/string_or_list"},
         "tty": {"type": "boolean"},
-        "ulimits": {
-          "type": "object",
-          "patternProperties": {
-            "^[a-z]+$": {
-              "oneOf": [
-                {"type": "integer"},
-                {
-                  "type": "object",
-                  "properties": {
-                    "hard": {"type": "integer"},
-                    "soft": {"type": "integer"}
-                  },
-                  "required": ["soft", "hard"],
-                  "additionalProperties": false,
-                  "patternProperties": {"^x-": {}}
-                }
-              ]
-            }
-          }
-        },
+        "ulimits": {"$ref": "#/definitions/ulimits"},
         "user": {"type": "string"},
         "uts": {"type": "string"},
         "userns_mode": {"type": "string"},
@@ -613,12 +595,12 @@
       "items": {
         "type": "object",
         "properties": {
-            "capabilities": {"$ref": "#/definitions/list_of_strings"},
-            "count": {"type": ["string", "integer"]},
-            "device_ids": {"$ref": "#/definitions/list_of_strings"},
-            "driver":{"type": "string"},
-            "options":{"$ref": "#/definitions/list_or_dict"}
-          },
+          "capabilities": {"$ref": "#/definitions/list_of_strings"},
+          "count": {"type": ["string", "integer"]},
+          "device_ids": {"$ref": "#/definitions/list_of_strings"},
+          "driver":{"type": "string"},
+          "options":{"$ref": "#/definitions/list_or_dict"}
+        },
         "additionalProperties": false,
         "patternProperties": {"^x-": {}}
       }
@@ -835,7 +817,6 @@
       },
       "additionalProperties": false
     },
-
     "service_config_or_secret": {
       "type": "array",
       "items": {
@@ -856,7 +837,26 @@
         ]
       }
     },
-
+    "ulimits": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z]+$": {
+          "oneOf": [
+            {"type": "integer"},
+            {
+              "type": "object",
+              "properties": {
+                "hard": {"type": "integer"},
+                "soft": {"type": "integer"}
+              },
+              "required": ["soft", "hard"],
+              "additionalProperties": false,
+              "patternProperties": {"^x-": {}}
+            }
+          ]
+        }
+      }
+    },
     "constraints": {
       "service": {
         "id": "#/definitions/constraints/service",
