@@ -1582,7 +1582,7 @@ If host IP is not set, it binds to all network interfaces. Ports can be either a
 value or a range. Host and container must use equivalent ranges.
 
 Either specify both ports (`HOST:CONTAINER`), or just the container port. In the latter case,
-Compose automatically allocates any unassigned port of the host.
+the container runtime automatically allocates any unassigned port of the host.
 
 `HOST:CONTAINER` should always be specified as a (quoted) string, to avoid conflicts
 with [yaml base-60 float](https://yaml.org/type/float.html).
@@ -1615,8 +1615,8 @@ expressed in the short form.
 - `target`: The container port
 - `published`: The publicly exposed port. It is defined as a string and can be set as a range using syntax `start-end`. It means the actual port is assigned a remaining available port, within the set range.
 - `host_ip`: The Host IP mapping, unspecified means all network interfaces (`0.0.0.0`).
-- `protocol`: The port protocol (`tcp` or `udp`), unspecified means any protocol.
-- `mode`: `host`: For publishing a host port on each node, or `ingress` for a port to be load balanced.
+- `protocol`: The port protocol (`tcp` or `udp`). Defaults to `tcp`.
+- `mode`: `host`: For publishing a host port on each node, or `ingress` for a port to be load balanced. Defaults to `ingress`.
 
 ```yml
 ports:
