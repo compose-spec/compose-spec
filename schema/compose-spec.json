@@ -120,6 +120,7 @@
                 "privileged": {"type": "boolean"},
                 "secrets": {"$ref": "#/definitions/service_config_or_secret"},
                 "tags": {"type": "array", "items": {"type": "string"}},
+                "ulimits": {"type": "#/definitions/ulimits"},
                 "platforms": {"type": "array", "items": {"type": "string"}}
               },
               "additionalProperties": false,
@@ -355,27 +356,8 @@
         "stop_signal": {"type": "string"},
         "storage_opt": {"type": "object"},
         "tmpfs": {"$ref": "#/definitions/string_or_list"},
-        "tty": {"type": "boolean"},
-        "ulimits": {
-          "type": "object",
-          "patternProperties": {
-            "^[a-z]+$": {
-              "oneOf": [
-                {"type": "integer"},
-                {
-                  "type": "object",
-                  "properties": {
-                    "hard": {"type": "integer"},
-                    "soft": {"type": "integer"}
-                  },
-                  "required": ["soft", "hard"],
-                  "additionalProperties": false,
-                  "patternProperties": {"^x-": {}}
-                }
-              ]
-            }
-          }
-        },
+        "tty": {"type": "#/definitions/string_or_list"},
+        "ulimits": {"type": "#/definitions/ulimits"},
         "user": {"type": "string"},
         "uts": {"type": "string"},
         "userns_mode": {"type": "string"},
@@ -854,6 +836,27 @@
             "patternProperties": {"^x-": {}}
           }
         ]
+      }
+    },
+
+    "ulimits": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z]+$": {
+          "oneOf": [
+            {"type": "integer"},
+            {
+              "type": "object",
+              "properties": {
+                "hard": {"type": "integer"},
+                "soft": {"type": "integer"}
+              },
+              "required": ["soft", "hard"],
+              "additionalProperties": false,
+              "patternProperties": {"^x-": {}}
+            }
+          ]
+        }
       }
     },
 
