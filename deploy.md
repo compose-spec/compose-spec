@@ -239,7 +239,7 @@ deploy:
 
 - `condition`. When set to:
   - `none`, containers are not automatically restarted regardless of the exit status.
-  - `on-failure`, Compose restarts the container if it exits due to an error, which manifests as a non-zero exit code.
+  - `on-failure`, the container is restarted if it exits due to an error, which manifests as a non-zero exit code.
   - `any` (default), containers are restarted regardless of the exit status. 
 - `delay`: How long to wait between restart attempts, specified as a [duration](11-extension.md#specifying-durations). The default is 0, meaning restart attempts can occur immediately.
 - `max_attempts`: How many times to attempt to restart a container before giving up (default: never give up). If the restart does not
