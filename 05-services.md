@@ -549,7 +549,7 @@ Each line in an `.env` file must be in `VAR[=[VAL]]` format. The following synta
 
 - Lines beginning with `#` are processed as comments and ignored.
 - Blank lines are ignored.
-- Unquoted and double-quoted (`"`) values have [parameter expansion](#parameter-expansion) applied.
+- Unquoted and double-quoted (`"`) values have [Interpolation](12-interpolation.md) applied.
 - Each line represents a key-value pair. Values can optionally be quoted.
   - `VAR=VAL` -> `VAL`
   - `VAR="VAL"` -> `VAL`
