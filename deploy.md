@@ -108,7 +108,7 @@ running at any given time.
 
 ```yml
 services:
-  fronted:
+  frontend:
     image: example/webapp
     deploy:
       mode: replicated
