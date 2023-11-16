@@ -461,6 +461,7 @@
               "target": {"type": "string"}
             }
           },
+          "required": ["path", "action"],
           "additionalProperties": false,
           "patternProperties": {"^x-": {}}
         }
