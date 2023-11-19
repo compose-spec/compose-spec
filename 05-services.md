@@ -471,7 +471,7 @@ dns_opt:
 
 ### dns_search
 
-`dns` defines custom DNS search domains to set on container network interface configuration. It can be a single value or a list.
+`dns_search` defines custom DNS search domains to set on container network interface configuration. It can be a single value or a list.
 
 ```yml
 dns_search: example.com
