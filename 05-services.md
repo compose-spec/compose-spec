@@ -1216,6 +1216,10 @@ networks:
     driver: bridge
 ```
 
+#### mac_address
+
+`mac_address` sets the MAC address used by the service container when connecting to this particular network.
+
 #### priority
 
 `priority` indicates in which order Compose connects the service’s containers to its
@@ -1244,6 +1248,9 @@ networks:
 ### mac_address
 
 `mac_address` sets a MAC address for the service container.
+
+> **Note**
+> Container runtimes might reject this value (ie. Docker Engine >= v25.0). In that case, you should use [networks.mac_address](#mac_address) instead.
 
 ### mem_limit
 

@@ -682,7 +682,7 @@ dns_opt:
 
 ### dns_search
 
-`dns` defines custom DNS search domains to set on container network interface configuration. It can be a single value or a list.
+`dns_search` defines custom DNS search domains to set on container network interface configuration. It can be a single value or a list.
 
 ```yml
 dns_search: example.com
@@ -1427,6 +1427,10 @@ networks:
     driver: bridge
 ```
 
+#### mac_address
+
+`mac_address` sets the MAC address used by the service container when connecting to this particular network.
+
 #### priority
 
 `priority` indicates in which order Compose connects the service’s containers to its
@@ -1455,6 +1459,9 @@ networks:
 ### mac_address
 
 `mac_address` sets a MAC address for the service container.
+
+> **Note**
+> Container runtimes might reject this value (ie. Docker Engine >= v25.0). In that case, you should use [networks.mac_address](#mac_address) instead.
 
 ### mem_limit
 
