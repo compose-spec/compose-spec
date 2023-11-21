@@ -1,4 +1,4 @@
-# Compose file specification 
+# Compose file specification
 
 The Compose file specification has been broken up into the following easy-to-navigate pages:
 
