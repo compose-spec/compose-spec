@@ -1063,12 +1063,28 @@ external_links:
 `extra_hosts` adds hostname mappings to the container network interface configuration (`/etc/hosts` for Linux).
 
 ### Short syntax
-Short syntax uses plain strings in a list. Values must set hostname and IP address for additional hosts in the form of `HOSTNAME:IP`.
+Short syntax uses plain strings in a list. Values must set hostname and IP address for additional hosts in the form of `HOSTNAME=IP`.
+
+```yml
+extra_hosts:
+  - "somehost=162.242.195.82"
+  - "otherhost=50.31.209.229"
+  - "myhostv6=::1"
+```
+
+IPv6 addresses can be enclosed in square brackets, for example:
+
+```yml
+extra_hosts:
+  - "myhostv6=[::1]"
+```
+
+The separator `=` is preferred, but `:` can also be used. For example:
 
 ```yml
 extra_hosts:
   - "somehost:162.242.195.82"
-  - "otherhost:50.31.209.229"
+  - "myhostv6:::1"
 ```
 
 ### Long syntax
@@ -1078,6 +1094,7 @@ Alternatively, `extra_hosts` can be set as a mapping between hostname(s) and IP(
 extra_hosts:
   somehost: "162.242.195.82"
   otherhost: "50.31.209.229"
+  myhostv6: "::1"
 ```
 
 Compose creates a matching entry with the IP address and hostname in the container's network
@@ -1086,6 +1103,7 @@ configuration, which means for Linux `/etc/hosts` get extra lines:
 ```
 162.242.195.82  somehost
 50.31.209.229   otherhost
+::1             myhostv6
 ```
 
 ## group_add
