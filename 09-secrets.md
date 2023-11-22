@@ -1,4 +1,4 @@
-## Secrets top-level element
+# Secrets top-level element
 
 Secrets are a flavor of [Configs](08-configs.md) focusing on sensitive data, with specific constraint for this usage. 
 
@@ -15,7 +15,7 @@ application. The source of the secret is either `file` or `environment`.
   reference secrets that contain special characters. The name is used as is
   and isn't scoped with the project name.
 
-### Example 1
+## Example 1
 
 `server-certificate` secret is created as `<project_name>_server-certificate` when the application is deployed,
 by registering content of the `server.cert` as a platform secret.
@@ -26,7 +26,7 @@ secrets:
     file: ./server.cert
 ```
 
-### Example 2 
+## Example 2 
 
 `token` secret  is created as `<project_name>_token` when the application is deployed,
 by registering the content of the `OAUTH_TOKEN` environment variable as a platform secret.
@@ -45,7 +45,7 @@ secrets:
     external: true
 ```
 
-### Example 3
+## Example 3
 
 External secrets lookup can also use a distinct key by specifying a `name`. 
 

@@ -1,4 +1,4 @@
-## Configs top-level element
+# Configs top-level element
 
 Configs allow services to adapt their behaviour without the need to rebuild a Docker image.
 
@@ -21,7 +21,7 @@ The top-level `configs` declaration defines or references configuration data tha
   reference configs that contain special characters. The name is used as is
   and will **not** be scoped with the project name.
 
-### Example 1
+## Example 1
 
 `<project_name>_http_config` is created when the application is deployed,
 by registering the content of the `httpd.conf` as the configuration data.
@@ -40,7 +40,7 @@ configs:
     external: true
 ```
 
-### Example 2
+## Example 2
 
 `<project_name>_app_config` is created when the application is deployed,
 by registering the inlined content as the configuration data. This comes with the
@@ -56,7 +56,7 @@ configs:
       spring.application.name=${COMPOSE_PROJECT_NAME}
 ```
 
-### Example 3
+## Example 3
 
 External configs lookup can also use a distinct key by specifying a `name`. 
 
