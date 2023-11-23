@@ -612,14 +612,18 @@ When both `env_file` and `environment` are set for a service, values set by `env
 
 ## expose
 
-`expose` defines the ports that Compose exposes from the container. These ports must be
+`expose` defines the (incoming) port or a range of ports that Compose exposes from the container. These ports must be
 accessible to linked services and should not be published to the host machine. Only the internal container
 ports can be specified.
+
+Syntax is `<portnum>/[<proto>]` or `<startport-endport>/[<proto>]` for a port range.
+When not explicitly set, `tcp` protocol is used.
 
 ```yml
 expose:
   - "3000"
   - "8000"
+  - "8080-8085/tcp
 ```
 
 > **Note**
