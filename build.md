@@ -291,8 +291,23 @@ Illustrative examples of how this is used in Buildx can be found
 
 ```yml
 extra_hosts:
+  - "somehost=162.242.195.82"
+  - "otherhost=50.31.209.229"
+  - "myhostv6=::1"
+```
+IPv6 addresses can be enclosed in square brackets, for example:
+
+```yml
+extra_hosts:
+  - "myhostv6=[::1]"
+```
+
+The separator `=` is preferred, but `:` can also be used. For example:
+
+```yml
+extra_hosts:
   - "somehost:162.242.195.82"
-  - "otherhost:50.31.209.229"
+  - "myhostv6:::1"
 ```
 
 Compose creates matching entry with the IP address and hostname in the container's network
@@ -301,6 +316,7 @@ configuration, which means for Linux `/etc/hosts` will get extra lines:
 ```
 162.242.195.82  somehost
 50.31.209.229   otherhost
+::1             myhostv6
 ```
 
 ### isolation
