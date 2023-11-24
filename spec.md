@@ -1708,9 +1708,8 @@ web:
 
 ## scale
 
-_DEPRECATED: use [deploy/replicas](deploy.md#replicas)_
-
 `scale` specifies the default number of containers to deploy for this service.
+When both are set, `scale` must be consistent with the `replicas` attribute in the [Deploy Specification](deploy.md#replicas).
 
 ## secrets
 
