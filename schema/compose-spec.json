@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema#",
-  "id": "compose_spec.json",
+  "$id": "compose_spec.json",
   "type": "object",
   "title": "Compose Specification",
   "description": "The Compose file is a YAML file defining a multi-containers based application.",
