@@ -1,0 +1,35 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+.header {
+    position: absolute;
+    top: 0;
+
+    box-sizing: border-box;
+    width: 64rem;
+    height: 64px;
+    padding: 8px;
+    background-image: url("{{ '/assets/images/compose_logo.png' | relative_url }}");
+    background-repeat: no-repeat;
+    background-size: 322px 44px;
+    background-position: left center;
+}
+
+.page-header {
+    margin-top: 64px;
+    padding: 1rem;
+
+    .project-name {
+        display: none;
+    }
+
+    .project-tagline {
+        margin: 0;
+    }
+
+    .btn {
+        display: none;
+    }
+}
