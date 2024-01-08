@@ -1334,7 +1334,7 @@ Supported values are platform specific.
 
 ## pids_limit
 
-_DEPRECATED: use [deploy.reservations.pids](deploy.md#pids)_
+_DEPRECATED: use [deploy.resources.limits.pids](deploy.md#pids)_
 
 `pids_limit` tunes a container’s PIDs limit. Set to -1 for unlimited PIDs.
 
