@@ -537,6 +537,18 @@ env_file:
   - ./b.env
 ```
 
+List elements can also be declared as a mapping, which then lets you set an additional
+attribute `required`. This defaults to `true`. When `required` is set to `false` and the `.env` file is missing,
+Compose silently ignores the entry.
+
+```yml
+env_file:
+  - path: ./default.env
+    required: true # default
+  - path: ./override.env
+    required: false
+```
+
 Relative path are resolved from the Compose file's parent folder. As absolute paths prevent the Compose
 file from being portable, Compose warns you when such a path is used to set `env_file`.
 
@@ -1322,7 +1334,7 @@ Supported values are platform specific.
 
 ## pids_limit
 
-_DEPRECATED: use [deploy.reservations.pids](deploy.md#pids)_
+_DEPRECATED: use [deploy.resources.limits.pids](deploy.md#pids)_
 
 `pids_limit` tunes a container’s PIDs limit. Set to -1 for unlimited PIDs.
 
