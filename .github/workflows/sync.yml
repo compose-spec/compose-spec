@@ -1,0 +1,29 @@
+name: Sync compose-spec json
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  schema:
+    name: Update Schema
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download schema
+        run: curl -fSL -o schema/compose-spec.json https://raw.githubusercontent.com/compose-spec/compose-go/main/schema/compose-spec.json
+
+      - name: Show diff
+        run: git diff schema/compose-spec.json
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          title: Update compose-spec.json
+          commit-message: Update compose-spec.json
+          signoff: true
+          branch: compose-spec-json
