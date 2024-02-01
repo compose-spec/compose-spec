@@ -1681,8 +1681,6 @@ services:
   `if_not_present` is considered an alias for this value for backward compatibility.
 * `build`: Compose builds the image. Compose rebuilds the image if it's already present.
 
-If `pull_policy` and `build` are both present, Compose builds the image by default. This behavior may be overridden in the toolchain, depending on the implementation. 
-
 ## read_only
 
 `read_only` configures the service container to be created with a read-only filesystem.
