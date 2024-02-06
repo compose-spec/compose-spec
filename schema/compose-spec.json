@@ -322,6 +322,7 @@
               {
                 "type": "object",
                 "properties": {
+                  "name": {"type": "string"},
                   "mode": {"type": "string"},
                   "host_ip": {"type": "string"},
                   "target": {"type": "integer"},
