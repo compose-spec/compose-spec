@@ -660,15 +660,15 @@ extends:
 
 ### Restrictions
 
-The following restrictions apply to the service being referenced:
+Service being referenced by `extends` can have dependency declared on other resources. Typically it can have an explicit `volumes` declaration.
+`extends` then will not import the target volume definition in the extending compose model, it is Compose file author responsibility to define
+an equivalent resource for the extended service to be consistent. Compose will check a resource with referenced ID exists in the Compose model
 
-- Services that have dependencies on other services cannot be used as a base. Therefore, any key
-  that introduces a dependency on another service is incompatible with `extends`. The
-  non-exhaustive list of such keys is: `links`, `volumes_from`, `container` mode (in `ipc`, `pid`,
-  `network_mode` and `net`), `service` mode (in `ipc`, `pid` and `network_mode`), `depends_on`.
-- Services cannot have circular references with `extends`.
+Dependencies on other resources in an `extends` target can be:
+- An explicit references by `volumes`, `networks`, `configs`, `secrets`, `links`, `volumes_from` or `depends_on`
+- A reference to another service using the `service:{name}` syntax in namespace declaration (`ipc`, `pid`, `network_mode`)
 
-Compose returns an error in all of these cases.
+Circular references with `extends` are not supported, Compose returns an error when one is detected.
 
 ### Finding referenced service
 
