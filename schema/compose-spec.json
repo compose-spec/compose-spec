@@ -390,7 +390,8 @@
                   "volume": {
                     "type": "object",
                     "properties": {
-                      "nocopy": {"type": "boolean"}
+                      "nocopy": {"type": "boolean"},
+                      "subpath": {"type": "string"}
                     },
                     "additionalProperties": false,
                     "patternProperties": {"^x-": {}}
