@@ -14,7 +14,7 @@ The top-level `configs` declaration defines or references configuration data tha
 
 - `file`: The config is created with the contents of the file at the specified path.
 - `environment`: The config content is created with the value of an environment variable.
-- `content`: The content is created with the inlined value.
+- `content`: The content is created with the inlined value. (_Available since Docker Compose v2.23.1_)
 - `external`: If set to true, `external` specifies that this config has already been created. Compose does not
   attempt to create it, and if it does not exist, an error occurs.
 - `name`: The name of the config object in the container engine to look up. This field can be used to
@@ -42,10 +42,9 @@ configs:
 
 ## Example 2
 
-`<project_name>_app_config` is created when the application is deployed,
-by registering the inlined content as the configuration data. This comes with the
-benefits Compose will infer variables when creating the config, which allows to
-adjust content according to service configuration:
+`<project_name>_app_config` is created when the application is deployed, by registering the inlined content as the configuration data.
+
+This comes with the benefits Compose will [infer variables][interpolation] when creating the config, which allows to adjust content according to service configuration:
 
 ```yml
 configs:
@@ -62,7 +61,7 @@ External configs lookup can also use a distinct key by specifying a `name`.
 
 The following
 example modifies the previous one to look up a config using the parameter `HTTP_CONFIG_KEY`. The
-the actual lookup key will is set at deployment time by the [interpolation](12-interpolation.md) of
+the actual lookup key will is set at deployment time by the [interpolation] of
 variables, but exposed to containers as hard-coded ID `http_config`.
 
 ```yml
@@ -73,3 +72,5 @@ configs:
 ```
 
 If `external` is set to `true`, all other attributes apart from `name` are irrelevant. If Compose detecs any other attribute, it rejects the Compose file as invalid.
+
+[interpolation]: 12-interpolation.md
