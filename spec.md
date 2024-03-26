@@ -594,6 +594,7 @@ expressed in the short form.
     to successful completion before starting a dependent service.
 - `required`: When set to `false` Compose only warns you when the dependency service isn't started or available. If it's not defined
     the default value of `required` is `true`.
+- `service`: name of the target service (defaults to mapping key). Value can be set by a variable.
 
 Service dependencies cause the following behaviors:
 
@@ -612,7 +613,8 @@ services:
   web:
     build: .
     depends_on:
-      db:
+      database:
+        service: db
         condition: service_healthy
         restart: true
       redis:
