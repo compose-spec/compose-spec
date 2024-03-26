@@ -327,7 +327,8 @@
                   "host_ip": {"type": "string"},
                   "target": {"type": "integer"},
                   "published": {"type": ["string", "integer"]},
-                  "protocol": {"type": "string"}
+                  "protocol": {"type": "string"},
+                  "app_protocol": {"type": "string"}
                 },
                 "additionalProperties": false,
                 "patternProperties": {"^x-": {}}
@@ -457,6 +458,7 @@
           "type": "array",
           "items": {
             "type": "object",
+            "required": ["path", "action"],
             "properties": {
               "ignore": {"type": "array", "items": {"type": "string"}},
               "path": {"type": "string"},
@@ -464,7 +466,6 @@
               "target": {"type": "string"}
             }
           },
-          "required": ["path", "action"],
           "additionalProperties": false,
           "patternProperties": {"^x-": {}}
         }
