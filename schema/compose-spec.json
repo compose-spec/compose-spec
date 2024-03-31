@@ -327,7 +327,8 @@
                   "host_ip": {"type": "string"},
                   "target": {"type": "integer"},
                   "published": {"type": ["string", "integer"]},
-                  "protocol": {"type": "string"}
+                  "protocol": {"type": "string"},
+                  "app_protocol": {"type": "string"}
                 },
                 "additionalProperties": false,
                 "patternProperties": {"^x-": {}}
