@@ -1,5 +1,7 @@
 # Include
 
+[![Compose v2.20.0](https://img.shields.io/badge/compose-v2.20.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.20.0)
+
 A Compose application can declare dependency on another Compose application. This is useful if:
 - You want to reuse other Compose files.
 - You need to factor out parts of your application model into separate Compose files so they can be managed separately or shared with others.

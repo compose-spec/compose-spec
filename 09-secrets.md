@@ -8,7 +8,7 @@ The top-level `secrets` declaration defines or references sensitive data that is
 application. The source of the secret is either `file` or `environment`.
 
 - `file`: The secret is created with the contents of the file at the specified path.
-- `environment`: The secret is created with the value of an environment variable.
+- `environment`: The secret is created with the value of an environment variable. [![Compose v2.6.0](https://img.shields.io/badge/compose-v2.6.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.6.0)
 - `external`: If set to true, `external` specifies that this secret has already been created. Compose does
   not attempt to create it, and if it does not exist, an error occurs.
 - `name`: The name of the secret object in Docker. This field can be used to

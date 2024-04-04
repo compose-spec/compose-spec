@@ -125,6 +125,8 @@ build:
 
 ### dockerfile_inline
 
+[![Compose v2.17.0](https://img.shields.io/badge/compose-v2.17.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.17.0)
+
 `dockerfile_inline` defines the Dockerfile content as an inlined string in a Compose file. When set, the `dockerfile`
 attribute is not allowed and Compose rejects any Compose file having both set.
 
@@ -175,6 +177,8 @@ args:
 ```
 
 ### ssh
+
+[![Compose v2.4.0](https://img.shields.io/badge/compose-v2.4.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.4.0)
 
 `ssh` defines SSH authentications that the image builder should use during image build (e.g., cloning private repository).
 
@@ -231,6 +235,9 @@ Unsupported caches are ignored and don't prevent you from building images.
 
 ### cache_to
 
+[![Compose v2.4.0](https://img.shields.io/badge/compose-v2.4.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.4.0)
+
+
 `cache_to` defines a list of export locations to be used to share build cache with future builds.
 
 ```yml
@@ -246,6 +253,8 @@ Cache target is defined using the same `type=TYPE[,KEY=VALUE]` syntax defined by
 Unsupported caches are ignored and don't prevent you from building images.
 
 ### additional_contexts
+
+[![Compose v2.17.0](https://img.shields.io/badge/compose-v2.17.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.17.0)
 
 `additional_contexts` defines a list of named contexts the image builder should use during image build.
 
@@ -308,6 +317,7 @@ extra_hosts:
 ```
 
 The separator `=` is preferred, but `:` can also be used. For example:
+[![Compose v2.24.1](https://img.shields.io/badge/compose-v2.24.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.24.1)
 
 ```yml
 extra_hosts:
@@ -330,6 +340,8 @@ configuration, which means for Linux `/etc/hosts` will get extra lines:
 are platform specific.
 
 ### privileged
+
+[![Compose v2.15.0](https://img.shields.io/badge/compose-v2.15.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.15.0)
 
 `privileged` configures the service image to build with elevated privileges. Support and actual impacts are platform specific.
 
@@ -365,11 +377,15 @@ build:
 
 ### no_cache
 
+[![Compose v2.4.0](https://img.shields.io/badge/compose-v2.4.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.4.0)
+
 `no_cache` disables image builder cache and enforces a full rebuild from source for all image layers. This only
 applies to layers declared in the Dockerfile, referenced images COULD be retrieved from local image store whenever tag
 has been updated on registry (see [pull](#pull)).
 
 ### pull
+
+[![Compose v2.4.0](https://img.shields.io/badge/compose-v2.4.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.4.0)
 
 `pull` requires the image builder to pull referenced images (`FROM` Dockerfile directive), even if those are already
 available in the local image store.
@@ -426,6 +442,10 @@ build:
 ```
 
 ### secrets
+
+[![Compose v2.5.0](https://img.shields.io/badge/compose-v2.5.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.5.0)
+
+
 `secrets` grants access to sensitive data defined by [secrets](05-services.md#secrets) on a per-service build basis. Two
 different syntax variants are supported: the short syntax and the long syntax.
 
@@ -497,6 +517,8 @@ Such grant must be explicit within service specification as [secrets](05-service
 
 ### tags
 
+[![Compose v2.5.1](https://img.shields.io/badge/compose-v2.5.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.5.1)
+
 `tags` defines a list of tag mappings that must be associated to the build image. This list comes in addition to
 the `image` [property defined in the service section](05-services.md#image)
 
@@ -507,6 +529,8 @@ tags:
 ```
 
 ### ulimits
+
+[![Compose v2.23.1](https://img.shields.io/badge/compose-v2.23.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.23.1)
 
 `ulimits` overrides the default ulimits for a container. It's specified either as an integer for a single limit
 or as mapping for soft/hard limits.
@@ -520,10 +544,12 @@ services:
         nproc: 65535
         nofile:
           soft: 20000
-          hard: 40000
+          hard: 40000 
 ```
 
 ### platforms
+
+[![Compose v2.10.0](https://img.shields.io/badge/compose-v2.10.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.10.0)
 
 `platforms` defines a list of target [platforms](05-services.md#platform).
 

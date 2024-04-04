@@ -22,6 +22,8 @@ If not implemented the `deploy` section is ignored and the Compose file is still
 
 ## attach
 
+[![Compose v2.20.0](https://img.shields.io/badge/compose-v2.20.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.20.0)
+
 When `attach` is defined and set to `false` Compose does not collect service logs,
 until you explicitly request it to.
 
@@ -162,6 +164,9 @@ cap_drop:
 ```
 
 ## cgroup
+
+[![Compose v2.15.0](https://img.shields.io/badge/compose-v2.15.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.15.0)
+
 
 `cgroup` specifies the cgroup namespace to join. When unset, it is the container runtime's decision to
 select which cgroup namespace to use, if supported.
@@ -370,7 +375,9 @@ expressed in the short form.
 
 - `restart`: When set to `true` Compose restarts this service after it updates the dependency service.
   This applies to an explicit restart controlled by a Compose operation, and excludes automated restart by the container runtime
-  after the container dies.
+  after the container dies. [![Compose v2.17.0](https://img.shields.io/badge/compose-v2.17.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.17.0)
+
+
 
 - `condition`: Sets the condition under which dependency is considered satisfied
   - `service_started`: An equivalent of the short syntax described above
@@ -380,7 +387,8 @@ expressed in the short form.
   - `service_completed_successfully`: Specifies that a dependency is expected to run
     to successful completion before starting a dependent service.
 - `required`: When set to `false` Compose only warns you when the dependency service isn't started or available. If it's not defined
-    the default value of `required` is `true`.
+    the default value of `required` is `true`. [![Compose v2.20.0](https://img.shields.io/badge/compose-v2.20.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.20.0)
+
 
 Service dependencies cause the following behaviors:
 
@@ -420,6 +428,9 @@ Compose guarantees dependency services marked with
 `deploy` specifies the configuration for the deployment and lifecycle of services, as defined [in the Compose Deploy Specification](deploy.md).
 
 ## develop
+
+[![Compose v2.22.0](https://img.shields.io/badge/compose-v2.22.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.22.0)
+
 
 `develop` specifies the development configuration for maintaining a container in sync with source, as defined in the [Development Section](develop.md).
 
@@ -883,7 +894,8 @@ extra_hosts:
   - "myhostv6=[::1]"
 ```
 
-The separator `=` is preferred, but `:` can also be used. For example:
+The separator `=` is preferred [![Compose v2.24.1](https://img.shields.io/badge/compose-v2.24.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.24.1)
+ but `:` can also be used. For example:
 
 ```yml
 extra_hosts:
@@ -945,7 +957,7 @@ healthcheck:
   start_interval: 5s
 ```
 
-`interval`, `timeout`, `start_period`, and `start_interval` are [specified as durations](11-extension.md#specifying-durations).
+`interval`, `timeout`, `start_period`, and `start_interval` [![Compose v2.20.2](https://img.shields.io/badge/compose-v2.20.2-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.20.2) are [specified as durations](11-extension.md#specifying-durations).
 
 `test` defines the command Compose runs to check container health. It can be
 either a string or a list. If it's a list, the first item must be either `NONE`, `CMD` or `CMD-SHELL`.
@@ -1031,6 +1043,9 @@ which must be implemented as described if supported:
 ```
 
 ## uts
+
+[![Compose v2.15.1](https://img.shields.io/badge/compose-v2.15.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.15.1)
+
 
 `uts` configures the UTS namespace mode set for the service container. When unspecified
 it is the runtime's decision to assign a UTS namespace, if supported. Available values are:
@@ -1282,6 +1297,8 @@ networks:
 
 ## mac_address
 
+[![Compose v2.23.2](https://img.shields.io/badge/compose-v2.23.2-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.23.2)
+
 `mac_address` sets a MAC address for the service container.
 
 > **Note**
@@ -1423,6 +1440,7 @@ expressed in the short form.
 - `host_ip`: The Host IP mapping, unspecified means all network interfaces (`0.0.0.0`).
 - `protocol`: The port protocol (`tcp` or `udp`). Defaults to `tcp`.
 - `app_protocol`: The application procotol (TCP/IP level 4 / OSI level 7) this port is used for. This is optional and can be used as a hint for Compose to offer richer behavior for protocols that it understands.
+[![Compose v2.26.0](https://img.shields.io/badge/compose-v2.26.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.26.0)
 - `mode`: `host`: For publishing a host port on each node, or `ingress` for a port to be load balanced. Defaults to `ingress`.
 - `name`: A human-readable name for the port, used to document it's usage within the service
 
@@ -1786,7 +1804,7 @@ expressed in the short form.
   - `subpath`: Path inside a volume to mount instead of the volume root.
 - `tmpfs`: Configures additional tmpfs options:
   - `size`: The size for the tmpfs mount in bytes (either numeric or as bytes unit).
-  - `mode`: The file mode for the tmpfs mount as Unix permission bits as an octal number.
+  - `mode`: The file mode for the tmpfs mount as Unix permission bits as an octal number. [![Compose v2.14.0](https://img.shields.io/badge/compose-v2.14.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.14.0)
 - `consistency`: The consistency requirements of the mount. Available values are platform specific.
 
 ## volumes_from
