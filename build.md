@@ -280,6 +280,16 @@ the unused contexts.
 Illustrative examples of how this is used in Buildx can be found
 [here](https://github.com/docker/buildx/blob/master/docs/reference/buildx_build.md#-additional-build-contexts---build-context).
 
+## entitlements
+
+ `entitlements` defines extra privileged entitlements to be allowed during the build
+ 
+ ```yaml
+ entitlements:
+   - network.host
+   - security.insecure
+ ```
+
 ### extra_hosts
 
 `extra_hosts` adds hostname mappings at build-time. Use the same syntax as [extra_hosts](05-services.md#extra_hosts).
