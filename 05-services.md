@@ -388,6 +388,8 @@ expressed in the short form.
     to successful completion before starting a dependent service.
 - `required`: When set to `false` Compose only warns you when the dependency service isn't started or available. If it's not defined
     the default value of `required` is `true`. [![Compose v2.20.0](https://img.shields.io/badge/compose-v2.20.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.20.0)
+- `profiles`: Sets the profiles that will be activated when checking dependency services. Services in specified profiles are selected
+    for condition checking, and will be started when not running. Stop of compose project will not select these services.
 
 
 Service dependencies cause the following behaviors:

@@ -201,7 +201,8 @@
                     "condition": {
                       "type": "string",
                       "enum": ["service_started", "service_healthy", "service_completed_successfully"]
-                    }
+                    },
+                    "profiles": {"$ref": "#/definitions/list_of_strings"}
                   },
                   "required": ["condition"]
                 }
