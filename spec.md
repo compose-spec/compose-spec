@@ -184,9 +184,9 @@ the expanded form.
 If you want to reuse other Compose files, or factor out parts of you application model into separate Compose files, you can also use [`include`](14-include.md). This is useful if your Compose application is dependent on another application which is managed by a different team, or needs to be shared with others.
 # Version and name top-level elements
 
-## Version top-level element
+## Version top-level element (obsolete)
 
-The top-level `version` property is defined by the Compose Specification for backward compatibility. It is only informative.
+The top-level `version` property is defined by the Compose Specification for backward compatibility. It is only informative you'll receive a warning message that it is obsolete if used. 
 
 Compose doesn't use `version` to select an exact schema to validate the Compose file, but
 prefers the most recent schema when it's implemented.

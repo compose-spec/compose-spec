@@ -1,8 +1,8 @@
 # Version and name top-level elements
 
-## Version top-level element
+## Version top-level element (obsolete)
 
-The top-level `version` property is defined by the Compose Specification for backward compatibility. It is only informative.
+The top-level `version` property is defined by the Compose Specification for backward compatibility. It is only informative you'll receive a warning message that it is obsolete if used. 
 
 Compose doesn't use `version` to select an exact schema to validate the Compose file, but
 prefers the most recent schema when it's implemented.
