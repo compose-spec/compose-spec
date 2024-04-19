@@ -1620,9 +1620,6 @@ value or a range. Host and container must use equivalent ranges.
 Either specify both ports (`HOST:CONTAINER`), or just the container port. In the latter case,
 the container runtime automatically allocates any unassigned port of the host.
 
-`HOST:CONTAINER` should always be specified as a (quoted) string, to avoid conflicts
-with [yaml base-60 float](https://yaml.org/type/float.html).
-
 Examples:
 
 ```yml
