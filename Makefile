@@ -18,3 +18,9 @@ validate-spec: ## validate the spec.md does not change
 	@docker buildx build . \
 	-f ./Dockerfile \
 	--target spec-validate
+
+.PHONY: test-spec
+test-spec: ## Run tests against compose-spec.json schema
+	@docker buildx build . \
+	-f ./Dockerfile \
+	--target spec-test

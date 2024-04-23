@@ -1,5 +1,12 @@
 # syntax=docker/dockerfile:1
 
+FROM golang:1.22-alpine3.18 AS spec-test
+COPY /schema /schema
+COPY /tests /tests
+WORKDIR /tests
+RUN go mod download
+RUN go test ./compose-spec_test.go
+
 FROM node:16.1 as generator
 RUN npm install -g @adobe/jsonschema2md
 COPY schema /schema
