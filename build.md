@@ -207,7 +207,7 @@ build:
     - myproject=~/.ssh/myproject.pem
 ```
 The image builder can then rely on this to mount the SSH key during build.
-For illustration, [BuildKit extended syntax](https://github.com/compose-spec/compose-spec/pull/234/%5Bmoby/buildkit@master/frontend/dockerfile/docs/syntax.md#run---mounttypessh%5D(https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md#run---mounttypessh)) can be used to mount the SSH key set by ID and access a secured resource:
+For illustration, [BuildKit extended syntax](https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/reference.md#run---mounttypessh) can be used to mount the SSH key set by ID and access a secured resource:
 
 `RUN --mount=type=ssh,id=myproject git clone ...`
 
