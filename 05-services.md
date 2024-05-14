@@ -1270,6 +1270,23 @@ networks:
 
 `mac_address` sets the MAC address used by the service container when connecting to this particular network.
 
+### driver_opts
+
+[![unreleased](https://img.shields.io/badge/compose-unreleased-blue?style=flat-square)](https://github.com/docker/compose)
+
+`driver_opts` specifies a list of options as key-value pairs to pass to the driver. These options are
+driver-dependent. Consult the driver's documentation for more information.
+
+```yml
+services:
+  app:
+    networks:
+      app_net:
+        driver_opts:
+          foo: "bar"
+          baz: 1
+```
+
 ### priority
 
 `priority` indicates in which order Compose connects the service’s containers to its
