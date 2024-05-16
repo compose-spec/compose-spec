@@ -1,6 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "compose_spec.json",
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "id": "compose_spec.json",
   "type": "object",
   "title": "Compose Specification",
   "description": "The Compose file is a YAML file defining a multi-containers based application.",
@@ -20,13 +20,14 @@
     "include": {
       "type": "array",
       "items": {
+        "type": "object",
         "$ref": "#/definitions/include"
       },
       "description": "compose sub-projects to be included."
     },
 
     "services": {
-      "$id": "#/properties/services",
+      "id": "#/properties/services",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -37,7 +38,7 @@
     },
 
     "networks": {
-      "$id": "#/properties/networks",
+      "id": "#/properties/networks",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -47,7 +48,7 @@
     },
 
     "volumes": {
-      "$id": "#/properties/volumes",
+      "id": "#/properties/volumes",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -58,7 +59,7 @@
     },
 
     "secrets": {
-      "$id": "#/properties/secrets",
+      "id": "#/properties/secrets",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -69,7 +70,7 @@
     },
 
     "configs": {
-      "$id": "#/properties/configs",
+      "id": "#/properties/configs",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -86,7 +87,7 @@
   "definitions": {
 
     "service": {
-      "$id": "#/definitions/service",
+      "id": "#/definitions/service",
       "type": "object",
 
       "properties": {
@@ -221,13 +222,8 @@
         "expose": {
           "type": "array",
           "items": {
-            "oneOf": [
-              { "type": "number" },
-              { 
-                "type": "string", 
-                "pattern": "^\\d{1,5}(-\\d{1,5})?(\/(tcp|udp))?$"
-              }
-            ]
+            "type": ["string", "number"],
+            "format": "expose"
           },
           "uniqueItems": true
         },
@@ -296,8 +292,8 @@
                       "type": "object",
                       "properties": {
                         "aliases": {"$ref": "#/definitions/list_of_strings"},
-                        "ipv4_address": {"type": "string", "format": "ipv4"},
-                        "ipv6_address": {"type": "string", "format": "ipv6"},
+                        "ipv4_address": {"type": "string"},
+                        "ipv6_address": {"type": "string"},
                         "link_local_ips": {"$ref": "#/definitions/list_of_strings"},
                         "mac_address": {"type": "string"},
                         "driver_opts": {
@@ -328,48 +324,18 @@
           "type": "array",
           "items": {
             "oneOf": [
-              {"type": "number"},
-              {
-                "type": "string", 
-                "pattern": "^((\\d+((\\.\\d+)+|(-\\d+))*):?){1,3}(\/(tcp|udp))?$"
-              },
+              {"type": "number", "format": "ports"},
+              {"type": "string", "format": "ports"},
               {
                 "type": "object",
                 "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "A human-readable name for the port, used to document it's usage within the service"
-                  },
-                  "mode": {
-                    "type": "string", 
-                    "pattern": "^ingress|host$",
-                    "description": "host: For publishing a host port on each node, or ingress: for a port to be load balanced. Defaults to ingress."
-                  },
-                  "host_ip": {
-                    "type": "string", 
-                    "format": "ipv4",
-                    "description": "The Host IP mapping, unspecified means all network interfaces (0.0.0.0)"
-                  },
-                  "target": {
-                    "$ref": "#/definitions/port_format",
-                    "description": "The container port"      
-                  },
-                  "published": {
-                    "anyOf":[
-                      { "$ref": "#/definitions/port_format" },
-                      { "$ref": "#/definitions/port_published_format" }
-                    ],
-                    "description": "The publicly exposed port. It is defined as a string and can be set as a range using syntax start-end. It means the actual port is assigned a remaining available port, within the set range."
-                  },
-                  "protocol": {
-                    "type": "string", 
-                    "pattern": "^tcp|udp$",
-                    "description": "The port protocol (tcp or udp). Defaults to tcp"
-                  },
-                  "app_protocol": {
-                    "type": "string",
-                    "description": "The application protocol (TCP/IP level 4 / OSI level 7) this port is used for. This is optional and can be used as a hint for Compose to offer richer behavior for protocols that it understands"
-                  }
+                  "name": {"type": "string"},
+                  "mode": {"type": "string"},
+                  "host_ip": {"type": "string"},
+                  "target": {"type": "integer"},
+                  "published": {"type": ["string", "integer"]},
+                  "protocol": {"type": "string"},
+                  "app_protocol": {"type": "string"}
                 },
                 "additionalProperties": false,
                 "patternProperties": {"^x-": {}}
@@ -396,7 +362,7 @@
         "secrets": {"$ref": "#/definitions/service_config_or_secret"},
         "sysctls": {"$ref": "#/definitions/list_or_dict"},
         "stdin_open": {"type": "boolean"},
-        "stop_grace_period": {"$ref": "#/definitions/duration_format"},
+        "stop_grace_period": {"type": "string", "format": "duration"},
         "stop_signal": {"type": "string"},
         "storage_opt": {"type": "object"},
         "tmpfs": {"$ref": "#/definitions/string_or_list"},
@@ -409,6 +375,7 @@
           "type": "array",
           "items": {
             "oneOf": [
+              {"type": "string"},
               {
                 "type": "object",
                 "required": ["type"],
@@ -454,8 +421,7 @@
                 },
                 "additionalProperties": false,
                 "patternProperties": {"^x-": {}}
-              },
-              {"type": "string"}
+              }
             ]
           },
           "uniqueItems": true
@@ -472,11 +438,11 @@
     },
 
     "healthcheck": {
-      "$id": "#/definitions/healthcheck",
+      "id": "#/definitions/healthcheck",
       "type": "object",
       "properties": {
         "disable": {"type": "boolean"},
-        "interval": {"$ref": "#/definitions/duration_format"},
+        "interval": {"type": "string", "format": "duration"},
         "retries": {"type": "number"},
         "test": {
           "oneOf": [
@@ -484,39 +450,36 @@
             {"type": "array", "items": {"type": "string"}}
           ]
         },
-        "timeout": {"$ref": "#/definitions/duration_format"},
-        "start_period": {"$ref": "#/definitions/duration_format"},
-        "start_interval": {"$ref": "#/definitions/duration_format"}
+        "timeout": {"type": "string", "format": "duration"},
+        "start_period": {"type": "string", "format": "duration"},
+        "start_interval": {"type": "string", "format": "duration"}
       },
       "additionalProperties": false,
       "patternProperties": {"^x-": {}}
     },
     "development": {
-      "$id": "#/definitions/development",
+      "id": "#/definitions/development",
       "type": ["object", "null"],
-      "additionalProperties": false,
-      "patternProperties": {"^x-": {}},
       "properties": {
         "watch": {
           "type": "array",
-          "minItems": 1,
           "items": {
             "type": "object",
             "required": ["path", "action"],
-            "additionalProperties": false,
-            "patternProperties": {"^x-": {}},
             "properties": {
+              "ignore": {"type": "array", "items": {"type": "string"}},
               "path": {"type": "string"},
               "action": {"type": "string", "enum": ["rebuild", "sync", "sync+restart"]},
-              "ignore": {"type": "array", "items": {"type": "string"}},
               "target": {"type": "string"}
             }
-          }
+          },
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}
         }
       }
     },
     "deployment": {
-      "$id": "#/definitions/deployment",
+      "id": "#/definitions/deployment",
       "type": ["object", "null"],
       "properties": {
         "mode": {"type": "string"},
@@ -527,9 +490,9 @@
           "type": "object",
           "properties": {
             "parallelism": {"type": "integer"},
-            "delay": {"$ref": "#/definitions/duration_format"},
+            "delay": {"type": "string", "format": "duration"},
             "failure_action": {"type": "string"},
-            "monitor": {"$ref": "#/definitions/duration_format"},
+            "monitor": {"type": "string", "format": "duration"},
             "max_failure_ratio": {"type": "number"},
             "order": {"type": "string", "enum": [
               "start-first", "stop-first"
@@ -542,9 +505,9 @@
           "type": "object",
           "properties": {
             "parallelism": {"type": "integer"},
-            "delay": {"$ref": "#/definitions/duration_format"},
+            "delay": {"type": "string", "format": "duration"},
             "failure_action": {"type": "string"},
-            "monitor": {"$ref": "#/definitions/duration_format"},
+            "monitor": {"type": "string", "format": "duration"},
             "max_failure_ratio": {"type": "number"},
             "order": {"type": "string", "enum": [
               "start-first", "stop-first"
@@ -585,9 +548,9 @@
           "type": "object",
           "properties": {
             "condition": {"type": "string"},
-            "delay": {"$ref": "#/definitions/duration_format"},
+            "delay": {"type": "string", "format": "duration"},
             "max_attempts": {"type": "integer"},
-            "window": {"$ref": "#/definitions/duration_format"}
+            "window": {"type": "string", "format": "duration"}
           },
           "additionalProperties": false,
           "patternProperties": {"^x-": {}}
@@ -613,12 +576,12 @@
           "patternProperties": {"^x-": {}}
         }
       },
-      "patternProperties": {"^x-": {}},
-      "additionalProperties": false
+      "additionalProperties": false,
+      "patternProperties": {"^x-": {}}
     },
 
     "generic_resources": {
-      "$id": "#/definitions/generic_resources",
+      "id": "#/definitions/generic_resources",
       "type": "array",
       "items": {
         "type": "object",
@@ -639,18 +602,13 @@
     },
 
     "devices": {
-      "$id": "#/definitions/devices",
+      "id": "#/definitions/devices",
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
           "capabilities": {"$ref": "#/definitions/list_of_strings"},
-          "count": { 
-            "anyOf": [
-              {"type": "string"},
-              {"type": "integer"}
-            ]
-          },
+          "count": {"type": ["string", "integer"]},
           "device_ids": {"$ref": "#/definitions/list_of_strings"},
           "driver":{"type": "string"},
           "options":{"$ref": "#/definitions/list_or_dict"}
@@ -661,7 +619,7 @@
     },
 
     "include": {
-      "$id": "#/definitions/include",
+      "id": "#/definitions/include",
       "oneOf": [
         {"type": "string"},
         {
@@ -677,7 +635,7 @@
     },
 
     "network": {
-      "$id": "#/definitions/network",
+      "id": "#/definitions/network",
       "type": ["object", "null"],
       "properties": {
         "name": {"type": "string"},
@@ -697,11 +655,7 @@
               "items": {
                 "type": "object",
                 "properties": {
-                  "subnet": {"anyOf":[
-                    {"$ref": "#/definitions/ipv4_subnet_format"},
-                    {"$ref": "#/definitions/ipv6_subnet_format"}
-                  ]
-                  },
+                  "subnet": {"type": "string", "format": "subnet_ip_address"},
                   "ip_range": {"type": "string"},
                   "gateway": {"type": "string"},
                   "aux_addresses": {
@@ -744,7 +698,7 @@
     },
 
     "volume": {
-      "$id": "#/definitions/volume",
+      "id": "#/definitions/volume",
       "type": ["object", "null"],
       "properties": {
         "name": {"type": "string"},
@@ -773,7 +727,7 @@
     },
 
     "secret": {
-      "$id": "#/definitions/secret",
+      "id": "#/definitions/secret",
       "type": "object",
       "properties": {
         "name": {"type": "string"},
@@ -800,7 +754,7 @@
     },
 
     "config": {
-      "$id": "#/definitions/config",
+      "id": "#/definitions/config",
       "type": "object",
       "properties": {
         "name": {"type": "string"},
@@ -860,6 +814,7 @@
         }
       ]
     },
+
     "string_or_list": {
       "oneOf": [
         {"type": "string"},
@@ -872,31 +827,7 @@
       "items": {"type": "string"},
       "uniqueItems": true
     },
-    "duration_format": {
-      "type": "string",
-      "pattern": "^([0-9]+h)?([0-9]+m)?([0-9]+s)?([0-9]+ms)?([0-9]+us)?([0-9]+ns)?$"
-    },
-    "expose_format": {
-      "type": "string",
-      "pattern": "^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0][0-9]{1,4})|([0-9]{1,4}))(-((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0][0-9]{1,4})|([0-9]{1,4})))?(/tcp|udp)?$"
-    },
-    "port_published_format": {
-      "type": "string",
-      "pattern": "^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0][0-9]{1,4})|([0-9]{1,4}))(-((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0][0-9]{1,4})|([0-9]{1,4})))?$"
-    },
-    "port_format": {
-      "type": "integer",
-      "minimum": 0,
-      "maximum": 65535
-    },
-    "ipv6_subnet_format": {
-      "type": "string",
-      "pattern": "(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\/(?:\\d|[12]\\d|3[01])"
-    },
-    "ipv4_subnet_format": {
-      "type": "string",
-      "pattern": "((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}\/(?:\\d|[12]\\d|3[01])"
-    },
+
     "list_or_dict": {
       "oneOf": [
         {
@@ -970,7 +901,7 @@
     },
     "constraints": {
       "service": {
-        "$id": "#/definitions/constraints/service",
+        "id": "#/definitions/constraints/service",
         "anyOf": [
           {"required": ["build"]},
           {"required": ["image"]}
