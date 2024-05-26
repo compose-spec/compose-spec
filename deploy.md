@@ -65,40 +65,48 @@ services:
 
 #### constraints
 
-`constraints` defines a required property the platform's node must fulfill to run the service container. It can be set either
-by a list or a map with string values.
+`constraints` defines a required property the platform's node must fulfill to run the service container.
+It must be set by a list with string values.
+
+Values are checked against node properties using an equality operator (`==` or `!=`).
+
+In the following example, the service can only runs on nodes that:
+- have the worker role
+- have the `region` label set to `east`
+- do not have a `disktype` of `hdd`
+
 
 ```yml
-deploy:
-  placement:
-    constraints:
-      - disktype=ssd
-```
-
-```yml
-deploy:
-  placement:
-    constraints:
-      disktype: ssd
+services:
+  frontend:
+    image: example/backend
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.region == east
+          - node.labels.disktype != hdd
 ```
 
 #### preferences
 
-`preferences` defines a property the platform's node should fulfill to run service container. It can be set either
-by a list or a map with string values.
+`preferences` defines an algorithm and property the platform's node should fulfill to run the service container.
+It must be set by a list of objects with the `spread` key, and a string value.
+
+In the following example, the replicated service will prefer to be evenly spread:
+- over nodes with varying `datacenter` label values (e.g. `us-west`, `us-east` nodes will have replicas spread evenly among them)
+- over nodes with varying `rack` label values
+  - only applies after each unique `datacenter` node has one replicated service
 
 ```yml
-deploy:
-  placement:
-    preferences:
-      - datacenter=us-east
-```
-
-```yml
-deploy:
-  placement:
-    preferences:
-      datacenter: us-east
+services:
+  frontend:
+    image: example/backend
+    deploy:
+      placement:
+        preferences:
+          - spread: node.labels.datacenter
+          - spread: node.labels.rack
 ```
 
 ### replicas
