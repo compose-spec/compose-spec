@@ -20,7 +20,6 @@
     "include": {
       "type": "array",
       "items": {
-        "type": "object",
         "$ref": "#/definitions/include"
       },
       "description": "compose sub-projects to be included."
