@@ -197,6 +197,7 @@
                 "^[a-zA-Z0-9._-]+$": {
                   "type": "object",
                   "additionalProperties": false,
+                  "patternProperties": {"^x-": {}},
                   "properties": {
                     "restart": {"type": ["boolean", "string"]},
                     "required": {
