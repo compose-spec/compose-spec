@@ -1,0 +1,25 @@
+name: Detect change on compose-spec
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  changed_files:
+    runs-on: ubuntu-latest 
+    name: Test changed-files
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get compose-spec.json has changed
+        id: changed-compose-spec-file
+        uses: tj-actions/changed-files@v44
+        with:
+          files: schema/compose-spec.json
+
+      - name: Validate compose-spec has not changed
+        if: ${{ steps.changed-compose-spec-file.outputs.any_changed == 'true' && contains(github.actor, '[bot]') == 'false' }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('Please do not change compose-spec.json in this repo. Please make the desired changes in https://github.com/compose-spec/compose-go and validate the changes by adding an e2e test.')
