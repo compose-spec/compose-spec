@@ -1272,7 +1272,7 @@ networks:
 
 ### driver_opts
 
-[![unreleased](https://img.shields.io/badge/compose-unreleased-blue?style=flat-square)](https://github.com/docker/compose)
+[![Compose v2.27.1](https://img.shields.io/badge/compose-v2.27.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.27.1)
 
 `driver_opts` specifies a list of options as key-value pairs to pass to the driver. These options are
 driver-dependent. Consult the driver's documentation for more information.
