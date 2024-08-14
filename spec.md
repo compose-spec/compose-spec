@@ -860,7 +860,7 @@ When not explicitly set, `tcp` protocol is used.
 expose:
   - "3000"
   - "8000"
-  - "8080-8085/tcp
+  - "8080-8085/tcp"
 ```
 
 > **Note**
