@@ -291,7 +291,7 @@ Illustrative examples of how this is used in Buildx can be found
 
 ## entitlements
 
-[![unreleased](https://img.shields.io/badge/compose-unreleased-blue?style=flat-square)](https://github.com/docker/compose)
+[![Compose v2.27.0](https://img.shields.io/badge/compose-v2.27.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.27.0)
 
  `entitlements` defines extra privileged entitlements to be allowed during the build
  
