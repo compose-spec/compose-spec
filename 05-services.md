@@ -1418,6 +1418,8 @@ in the form:
 - `PROTOCOL` to restrict port to specified protocol. `tcp` and `udp` values are defined by the Specification,
   Compose offers support for platform-specific protocol names.
 
+IPv6 addresses can optionally be enclosed in square brackets.
+
 If host IP is not set, it binds to all network interfaces. Ports can be either a single
 value or a range. Host and container must use equivalent ranges.
 
@@ -1439,6 +1441,8 @@ ports:
   - "8000-9000:80"
   - "127.0.0.1:8001:8001"
   - "127.0.0.1:5000-5010:5000-5010"
+  - "::1:6000:6000"
+  - "[::1]:6001:6001"
   - "6060:6060/udp"
 ```
 
