@@ -762,8 +762,18 @@ env_file:
   - ./b.env
 ```
 
+Relative path are resolved from the Compose file's parent folder. As absolute paths prevent the Compose
+file from being portable, Compose warns you when such a path is used to set `env_file`.
+
+Environment variables declared in the [environment](#environment) section override these values. This holds true even if those values are
+empty or undefined.
+
 List elements can also be declared as a mapping, which then lets you set an additional
-attribute `required`. This defaults to `true`. When `required` is set to `false` and the `.env` file is missing,
+attributes
+
+### required
+
+`required` attribute defaults to `true`. When `required` is set to `false` and the `.env` file is missing,
 Compose silently ignores the entry.
 
 ```yml
@@ -774,11 +784,20 @@ env_file:
     required: false
 ```
 
-Relative path are resolved from the Compose file's parent folder. As absolute paths prevent the Compose
-file from being portable, Compose warns you when such a path is used to set `env_file`.
+### format
 
-Environment variables declared in the [environment](#environment) section override these values. This holds true even if those values are
-empty or undefined.
+`format` attribute lets you to use an alternative file formats for `env_file`. When not set, `env_file` is parsed according to 
+Compose rules as described in next section.
+
+`raw` format lets you use an `env_file` with key=value items, but without any attempt from Compose to parse the value for interpolation. 
+This let you pass values as-is including quotes and `$` signs.
+
+```yml
+env_file:
+  - path: ./default.env
+    format: raw
+```
+
 
 ### Env_file format
 
@@ -1693,6 +1712,34 @@ ports:
     app_protocol: https
     mode: host
 ```
+
+## post_start
+
+`post_start` defines a sequence of lifecycle hooks to run after a container has started. The exact timing of when the command is run is not guaranteed.
+
+- `command`: The command to run after the container has started. This attribute is required.
+- `user`: The user to run the command. If not set, the command is run with the same user as the main service command.
+- `privileged`: Lets the post_start command run with privileged access.
+- `working_dir`: The working directory in which to run the command. If not set, it is run in the same working directory as the main service command.
+- `environment`: Sets the environment variables to run the post_start command. The command inherits the `environment` set for the service's main command, 
+  and this section lets you to append or override values.
+
+```yaml
+services:
+  test:
+    post_start:
+      - command: ./do_something_on_startup.sh
+        user: root
+        privileged: true
+        environment:
+          - FOO=BAR
+```
+
+## pre_stop
+
+`pre_stop` defines a sequence of lifecycle hooks to run before service termination.
+
+Configuration is equivalent to [`post_start](#post_start).
 
 ## privileged
 
