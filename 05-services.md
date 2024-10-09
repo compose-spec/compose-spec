@@ -1137,7 +1137,8 @@ are platform specific. Driver specific options can be set with `options` as key-
 
 - `none`: Turns off all container networking.
 - `host`: Gives the container raw access to the host's network interface.
-- `service:{name}`: Gives the containers access to the specified service only.
+- `service:{name}`: Gives the service container access to the specified service only.
+- `container:{name}`: Gives the service container access to the specified container ().
 
 ```yml
     network_mode: "host"
