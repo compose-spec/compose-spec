@@ -370,6 +370,8 @@
           },
           "uniqueItems": true
         },
+        "post_start": {"type": "array", "items": {"$ref": "#/definitions/service_hook"}},
+        "pre_stop": {"type": "array", "items": {"$ref": "#/definitions/service_hook"}},
         "privileged": {"type": ["boolean", "string"]},
         "profiles": {"$ref": "#/definitions/list_of_strings"},
         "pull_policy": {"type": "string", "enum": [
@@ -642,7 +644,10 @@
           "options":{"$ref": "#/definitions/list_or_dict"}
         },
         "additionalProperties": false,
-        "patternProperties": {"^x-": {}}
+        "patternProperties": {"^x-": {}},
+        "required": [
+          "capabilities"
+        ]
       }
     },
 
@@ -813,6 +818,20 @@
       ]
     },
 
+    "service_hook": {
+      "id": "#/definitions/service_hook",
+      "type": "object",
+      "properties": {
+        "command": {"$ref": "#/definitions/command"},
+        "user": {"type": "string"},
+        "privileged": {"type": ["boolean", "string"]},
+        "working_dir": {"type": "string"},
+        "environment": {"$ref": "#/definitions/list_or_dict"}
+      },
+      "additionalProperties": false,
+      "patternProperties": {"^x-": {}}
+    },
+
     "env_file": {
       "oneOf": [
         {"type": "string"},
@@ -826,6 +845,9 @@
                 "additionalProperties": false,
                 "properties": {
                   "path": {
+                    "type": "string"
+                  },
+                  "format": {
                     "type": "string"
                   },
                   "required": {
@@ -878,7 +900,8 @@
           "patternProperties": {
             ".+": {
               "type": ["string", "array"]
-            }
+            },
+            "uniqueItems": false
           },
           "additionalProperties": false
         },

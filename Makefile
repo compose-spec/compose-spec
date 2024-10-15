@@ -18,3 +18,7 @@ validate-spec: ## validate the spec.md does not change
 	@docker buildx build . \
 	-f ./Dockerfile \
 	--target spec-validate
+
+.PHONY: sync-spec
+sync-spec:
+	curl -L https://raw.githubusercontent.com/compose-spec/compose-go/refs/heads/main/schema/compose-spec.json -o schema/compose-spec.json
