@@ -1968,6 +1968,7 @@ parameters (sysctls) at runtime](https://docs.docker.com/engine/reference/comman
 
 ```yml
 tmpfs: 
+ - <path>
  - <path>:<options>
 ```
 
@@ -1984,6 +1985,7 @@ services:
   app:
     tmpfs:
       - /data:mode=755,uid=1009,gid=1009
+      - /run
 ```
 
 ## tty
