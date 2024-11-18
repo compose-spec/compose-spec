@@ -1754,13 +1754,23 @@ parameters (sysctls) at runtime](https://docs.docker.com/engine/reference/comman
 `tmpfs` mounts a temporary file system inside the container. It can be a single value or a list.
 
 ```yml
-tmpfs: /run
+tmpfs: 
+ - <path>:<options>
 ```
 
+- <path>: The path inside the container where the tmpfs will be mounted.
+- <options>: Comma-separated list of options for the tmpfs mount.
+
+Available options:
+ - `mode`: Sets the file system permissions.
+ - `uid`: Sets the user ID that owns the mounted tmpfs.
+ - `gid`: Sets the group ID that owns the mounted tmpfs.
+
 ```yml
-tmpfs:
-  - /run
-  - /tmp
+services:
+  app:
+    tmpfs:
+      - /data:mode=755,uid=1009,gid=1009
 ```
 
 ## tty
