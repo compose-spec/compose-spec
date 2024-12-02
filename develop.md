@@ -53,7 +53,32 @@ Compose to monitor source code for changes. For more information, see [Use Compo
 - `rebuild`, Compose rebuilds the service image based on the `build` section and recreates the service with the updated image.
 - `sync`, Compose keeps the existing service container(s) running, but synchronizes source files with container content according to the `target` attribute.
 - `sync+restart`, Compose synchronizes source files with container content according to the `target` attribute, and then restarts the container.
+- `sync+exec`, Compose synchronizes source files with container content according to the `target` attribute, and then executes a command inside the container.
 
+
+#### exec
+
+`exec` is only relevant when `action` is set to `sync+exec`. Comparable to [service hooks](05-services.md#post_start), `exec` is used to defined command to be ran inside container:
+
+- `command`: The command to run after the container has started. This attribute is required.
+- `user`: The user to run the command. If not set, the command is run with the same user as the main service command.
+- `privileged`: Lets the command run with privileged access.
+- `working_dir`: The working directory in which to run the command. If not set, it is run in the same working directory as the main service command.
+- `environment`: Sets the environment variables to run the command. The command inherits the `environment` set for the service, this section lets you to append or override values.
+
+```yaml
+services:
+  frontend:
+    image: ...
+    develop:
+      watch: 
+        # sync content then run command to reload service without interruption
+        - path: ./etc/config
+          action: sync+exec
+          target: /etc/config/
+          exec:
+            command: app reload
+```
 
 #### ignore
 
