@@ -1321,6 +1321,27 @@ Compose creates containers with canonical labels:
 The `com.docker.compose` label prefix is reserved. Specifying labels with this prefix in the Compose file
 results in a runtime error.
 
+## label_file
+
+`label_file` can be used to load multiple labels from a file. Label file format uses a key=value syntax, comparable
+to `env_file`. 
+
+`label_file` can also be a list. The files in the list are processed in top-down order. Last value set by a file
+overrides value from a previous file in the list.
+
+When same label is set both by `label_file` and `labels`, the latter is apllied to container
+
+```yaml
+services:
+  one:
+    label_file: ./app.labels
+
+  two:
+    label_file: 
+      - ./app.labels
+      - ./additional.labels
+```
+
 ## links
 
 > **Note**
