@@ -51,10 +51,10 @@ Compose to monitor source code for changes. For more information, see [Use Compo
 `action` defines the action to take when changes are detected. If `action` is set to:
 
 - `rebuild`, Compose rebuilds the service image based on the `build` section and recreates the service with the updated image.
-- `restart`, Compose restarts the service container. [![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+- `restart`, Compose restarts the service container. [![Compose v2.32.0](https://img.shields.io/badge/compose-v2.32.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.32.0)
 - `sync`, Compose keeps the existing service container(s) running, but synchronizes source files with container content according to the `target` attribute.
 - `sync+restart`, Compose synchronizes source files with container content according to the `target` attribute, and then restarts the container.
-- `sync+exec`, Compose synchronizes source files with container content according to the `target` attribute, and then executes a command inside the container. [![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+- `sync+exec`, Compose synchronizes source files with container content according to the `target` attribute, and then executes a command inside the container. [![Compose v2.32.0](https://img.shields.io/badge/compose-v2.32.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.32.0)
 
 
 #### exec
