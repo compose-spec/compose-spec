@@ -240,6 +240,7 @@
         "domainname": {"type": "string"},
         "entrypoint": {"$ref": "#/definitions/command"},
         "env_file": {"$ref": "#/definitions/env_file"},
+        "label_file": {"$ref": "#/definitions/label_file"},
         "environment": {"$ref": "#/definitions/list_or_dict"},
 
         "expose": {
@@ -267,6 +268,7 @@
         },
         "external_links": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "extra_hosts": {"$ref": "#/definitions/extra_hosts"},
+        "gpus": {"$ref": "#/definitions/gpus"},
         "group_add": {
           "type": "array",
           "items": {
@@ -418,6 +420,7 @@
                     "properties": {
                       "propagation": {"type": "string"},
                       "create_host_path": {"type": ["boolean", "string"]},
+                      "recursive": {"type": "string", "enum": ["enabled", "disabled", "writable", "readonly"]},
                       "selinux": {"type": "string", "enum": ["z", "Z"]}
                     },
                     "additionalProperties": false,
@@ -497,8 +500,9 @@
             "properties": {
               "ignore": {"type": "array", "items": {"type": "string"}},
               "path": {"type": "string"},
-              "action": {"type": "string", "enum": ["rebuild", "sync", "sync+restart"]},
-              "target": {"type": "string"}
+              "action": {"type": "string", "enum": ["rebuild", "sync", "restart", "sync+restart", "sync+exec"]},
+              "target": {"type": "string"},
+              "exec": {"$ref": "#/definitions/service_hook"}
             },
             "additionalProperties": false,
             "patternProperties": {"^x-": {}}
@@ -648,6 +652,23 @@
         "required": [
           "capabilities"
         ]
+      }
+    },
+
+    "gpus": {
+      "id": "#/definitions/gpus",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "capabilities": {"$ref": "#/definitions/list_of_strings"},
+          "count": {"type": ["string", "integer"]},
+          "device_ids": {"$ref": "#/definitions/list_of_strings"},
+          "driver":{"type": "string"},
+          "options":{"$ref": "#/definitions/list_or_dict"}
+        },
+        "additionalProperties": false,
+        "patternProperties": {"^x-": {}}
       }
     },
 
@@ -865,6 +886,16 @@
       ]
     },
 
+    "label_file": {
+      "oneOf": [
+        {"type": "string"},
+        {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      ]
+    },
+
     "string_or_list": {
       "oneOf": [
         {"type": "string"},
@@ -899,9 +930,19 @@
           "type": "object",
           "patternProperties": {
             ".+": {
-              "type": ["string", "array"]
-            },
-            "uniqueItems": false
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": false
+                }
+              ]
+            }
           },
           "additionalProperties": false
         },
