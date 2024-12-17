@@ -1541,6 +1541,31 @@ services:
           baz: 1
 ```
 
+### gw_priority
+
+[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+
+The network with the highest `gw_priority` is selected as the default gateway for the service container.
+If unspecified, the default value is 0.
+
+In the following example, `app_net_2` will be selected as the default gateway.
+
+```yaml
+services:
+  app:
+    image: busybox
+    command: top
+    networks:
+      app_net_1:
+      app_net_2:
+        gw_priority: 1
+      app_net_3:
+networks:
+  app_net_1:
+  app_net_2:
+  app_net_3:
+```
+
 ### priority
 
 `priority` indicates in which order Compose connects the service’s containers to its
