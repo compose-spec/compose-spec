@@ -97,7 +97,13 @@ networks:
 
 ### enable_ipv6
 
-`enable_ipv6` enables IPv6 networking. For an example, see step four of [Create an IPv6 network](https://docs.docker.com/config/daemon/ipv6/).
+`enable_ipv6` enables IPv6 address assignment.
+
+```yml
+  networks:
+    ip6net:
+      enable_ipv6: true
+```
 
 ## external
 
