@@ -1571,7 +1571,16 @@ networks:
 `priority` indicates in which order Compose connects the service’s containers to its
 networks. If unspecified, the default value is 0.
 
-In the following example, the app service connects to `app_net_1` first as it has the highest priority. It then connects to `app_net_3`, then `app_net_2`, which uses the default priority value of 0.
+_If the container runtime accepts a `mac_address` attribute at service level, it is
+applied to the network with the highest `priority`. In other cases, use attribute
+`networks.mac_address`._
+
+_`priority` does not affect which network is selected as the default gateway. Use the
+[`gw_priority`](#gw_priority) field for that._
+
+_`priority` does not control the order in which networks connections are added to
+the container, it cannot be used to determine the device name (`eth0` etc.) in the
+container._
 
 ```yaml
 services:
