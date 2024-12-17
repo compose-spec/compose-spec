@@ -95,6 +95,19 @@ networks:
     attachable: true
 ```
 
+### enable_ipv4
+
+[![unreleased](https://img.shields.io/badge/compose-unreleased-blue?style=flat-square)](https://github.com/docker/compose)
+
+`enable_ipv4` can be used to disable IPv4 address assignment.
+
+```yml
+  networks:
+    ip6net:
+      enable_ipv4: false
+      enable_ipv6: true
+```
+
 ### enable_ipv6
 
 `enable_ipv6` enables IPv6 address assignment.
