@@ -1328,6 +1328,13 @@ services:
           baz: 1
 ```
 
+### gw_priority
+
+[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+
+The network with the highest `gw_priority` is selected as the default gateway for the service container.
+If unspecified, the default value is 0.
+
 ### priority
 
 `priority` indicates in which order Compose connects the service’s containers to its
