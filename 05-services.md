@@ -691,13 +691,13 @@ extends:
 
 ### Restrictions
 
-Service being referenced by `extends` can have dependency declared on other resources. Typically it can have an explicit `volumes` declaration.
-`extends` then will not import the target volume definition in the extending compose model, it is Compose file author responsibility to define
-an equivalent resource for the extended service to be consistent. Compose will check a resource with referenced ID exists in the Compose model
+When a service is referenced using `extends`, it can declare dependencies on other resources. These dependencies 
+may be explicitly defined through attributes like `volumes`, `networks`, `configs`, `secrets`, `links`, `volumes_from`,
+or `depends_on`. Alternatively, dependencies can reference another service using the `service:{name}` syntax in 
+namespace declarations such as `ipc`, `pid`, or `network_mode`.
 
-Dependencies on other resources in an `extends` target can be:
-- An explicit references by `volumes`, `networks`, `configs`, `secrets`, `links`, `volumes_from` or `depends_on`
-- A reference to another service using the `service:{name}` syntax in namespace declaration (`ipc`, `pid`, `network_mode`)
+Compose does not automatically import these referenced resources into the extended model. It is the responsibility 
+of the Compose file author to ensure all required resources are explicitly declared in the model that relies on `extends`.
 
 Circular references with `extends` are not supported, Compose returns an error when one is detected.
 
