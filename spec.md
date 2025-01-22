@@ -403,7 +403,19 @@ cgroup_parent: m-executor-abcd
 command: bundle exec thin -p 3000
 ```
 
-The value can also be a list, in a manner similar to [Dockerfile](https://docs.docker.com/engine/reference/builder/#cmd):
+> **Note**
+> 
+> Unlike the `CMD` instruction of an image, the [shell-form syntax](https://docs.docker.com/reference/dockerfile/#shell-form) for `command` 
+> does not implicitly run in the context of the [`SHELL` instruction](https://docs.docker.com/reference/dockerfile/#shell).
+> 
+> If you expect the command to rely on features of a shell environment such as environment variables, then ensure the command is run within a shell:
+> 
+> ```yaml
+> command: /bin/sh -c 'echo "hello $$HOSTNAME"'
+> ```
+
+The value can also be a list, in a manner similar to the [exec-form syntax](https://docs.docker.com/reference/dockerfile/#exec-form) 
+used by [Dockerfile](https://docs.docker.com/engine/reference/#cmd).
 
 ```yaml
 command: [ "bundle", "exec", "thin", "-p", "3000" ]
