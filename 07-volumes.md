@@ -27,7 +27,7 @@ volumes:
 
 The `db-data` volume is mounted at the `/var/lib/backup/data` and `/etc/data` container paths for backup and backend respectively.
 
-Running `docker compose up` creates the volume if it doesn't already exist. Otherwise, the existing volume is used and is recreated if it's manually deleted outside of Compose.
+When the services are run, the volume is created if it doesn't already exist. Otherwise, the existing volume is used and is recreated if it's manually deleted outside of Compose.
 
 ## Attributes
 

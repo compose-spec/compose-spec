@@ -20,9 +20,21 @@ available resources. Deploy support is an optional aspect of the Compose Specifi
 described in detail in the [Compose Deploy Specification](deploy.md) documentation.
 If not implemented the `deploy` section is ignored and the Compose file is still considered valid.
 
-## attach
+## annotations
 
-[![Compose v2.20.0](https://img.shields.io/badge/compose-v2.20.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.20.0)
+`annotations` defines annotations for the container. `annotations` can use either an array or a map.
+
+```yml
+annotations:
+  com.example.foo: bar
+```
+
+```yml
+annotations:
+  - com.example.foo=bar
+```
+
+## attach
 
 When `attach` is defined and set to `false` Compose does not collect service logs,
 until you explicitly request it to.
@@ -164,9 +176,6 @@ cap_drop:
 ```
 
 ## cgroup
-
-[![Compose v2.15.0](https://img.shields.io/badge/compose-v2.15.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.15.0)
-
 
 `cgroup` specifies the cgroup namespace to join. When unset, it is the container runtime's decision to
 select which cgroup namespace to use, if supported.
@@ -389,7 +398,6 @@ expressed in the short form.
 - `required`: When set to `false` Compose only warns you when the dependency service isn't started or available. If it's not defined
     the default value of `required` is `true`. [![Compose v2.20.0](https://img.shields.io/badge/compose-v2.20.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.20.0)
 
-
 Service dependencies cause the following behaviors:
 
 - Compose creates services in dependency order. In the following
@@ -428,9 +436,6 @@ Compose guarantees dependency services marked with
 `deploy` specifies the configuration for the deployment and lifecycle of services, as defined [in the Compose Deploy Specification](deploy.md).
 
 ## develop
-
-[![Compose v2.22.0](https://img.shields.io/badge/compose-v2.22.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.22.0)
-
 
 `develop` specifies the development configuration for maintaining a container in sync with source, as defined in the [Development Section](develop.md).
 
@@ -584,7 +589,6 @@ env_file:
   - path: ./default.env
     format: raw
 ```
-
 
 ### Env_file format
 
@@ -865,20 +869,6 @@ duplicates resulting from the merge are not removed.
 
 Any other allowed keys in the service definition should be treated as scalars.
 
-## annotations
-
-`annotations` defines annotations for the container. `annotations` can use either an array or a map.
-
-```yml
-annotations:
-  com.example.foo: bar
-```
-
-```yml
-annotations:
-  - com.example.foo=bar
-```
-
 ## external_links
 
 `external_links` link service containers to services managed outside of your Compose application.
@@ -1061,20 +1051,6 @@ which must be implemented as described if supported:
     ipc: "service:[service name]"
 ```
 
-## uts
-
-[![Compose v2.15.1](https://img.shields.io/badge/compose-v2.15.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.15.1)
-
-
-`uts` configures the UTS namespace mode set for the service container. When unspecified
-it is the runtime's decision to assign a UTS namespace, if supported. Available values are:
-
-- `'host'`: Results in the container using the same UTS namespace as the host.
-
-```yml
-    uts: "host"
-```
-
 ## isolation
 
 `isolation` specifies a container’s isolation technology. Supported values are platform specific.
@@ -1110,13 +1086,9 @@ results in a runtime error.
 
 ## label_file
 
-[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+The `label_file` attribute lets you load labels for a service from an external file or a list of files. This provides a convenient way to manage multiple labels without cluttering the Compose file.
 
-`label_file` can be used to load multiple labels from a file. The file uses a key-value frmat, comparable
-to `env_file`. 
-
-You can specify multiple files as a List. The files in the list are processed in top-down order. If the same 
-label is defined in multiple files, the value from the last file in the list overrides earlier ones.
+The file uses a key-value format, similar to `env_file`. You can specify multiple files as a list. When using multiple files, they are processed in the order they appear in the list. If the same label is defined in multiple files, the value from the last file in the list overrides earlier ones.
 
 ```yaml
 services:
@@ -1128,6 +1100,8 @@ services:
       - ./app.labels
       - ./additional.labels
 ```
+
+If a label is defined in both the `label_file` and the `labels` attribute, the value in [labels](#labels) takes precedence.
 
 ## links
 
@@ -1170,6 +1144,50 @@ logging:
 
 The `driver` name specifies a logging driver for the service's containers. The default and available values
 are platform specific. Driver specific options can be set with `options` as key-value pairs.
+
+## mac_address
+
+`mac_address` sets a MAC address for the service container.
+
+> **Note**
+>
+> Container runtimes might reject this value (ie. Docker Engine >= v25.0). Instead, you should use [networks.mac_address](#mac_address).
+
+## mem_limit
+
+`mem_limit` configures a limit on the amount of memory a container can allocate, set as a string expressing a [byte value](11-extension.md#specifying-byte-values).
+
+
+When both are set, `mem_limit` must be consistent with the `limits.memory` attribute in the [Deploy Specification](deploy.md#memory)
+
+## mem_reservation
+
+`mem_reservation` configures a reservation on the amount of memory a container can allocate, set as a string expressing a [byte value](11-extension.md#specifying-byte-values).
+
+When both are set, `mem_reservation` must be consistent with the `reservations.memory` attribute in the [Deploy Specification](deploy.md#memory)
+
+## mem_swappiness
+
+`mem_swappiness` defines as a percentage, a value between 0 and 100, for the host kernel to swap out
+anonymous memory pages used by a container.
+
+- `0`: Turns off anonymous page swapping.
+- `100`: Sets all anonymous pages as swappable.
+
+The default value is platform specific.
+
+## memswap_limit
+
+`memswap_limit` defines the amount of memory the container is allowed to swap to disk. This is a modifier
+attribute that only has meaning if [`memory`](deploy.md#memory) is also set. Using swap lets the container write excess
+memory requirements to disk when the container has exhausted all the memory that is available to it.
+There is a performance penalty for applications that swap memory to disk often.
+
+- If `memswap_limit` is set to a positive integer, then both `memory` and `memswap_limit` must be set. `memswap_limit` represents the total amount of memory and swap that can be used, and `memory` controls the amount used by non-swap memory. So if `memory`="300m" and `memswap_limit`="1g", the container can use 300m of memory and 700m (1g - 300m) swap.
+- If `memswap_limit` is set to 0, the setting is ignored, and the value is treated as unset.
+- If `memswap_limit` is set to the same value as `memory`, and `memory` is set to a positive integer, the container does not have access to swap.
+- If `memswap_limit` is unset, and `memory` is set, the container can use as much swap as the `memory` setting, if the host container has swap memory configured. For instance, if `memory`="300m" and `memswap_limit` is not set, the container can use 600m in total of memory and swap.
+- If `memswap_limit` is explicitly set to -1, the container is allowed to use unlimited swap, up to the amount available on the host system.
 
 ## network_mode
 
@@ -1259,6 +1277,21 @@ networks:
   admin:
 ```
 
+### driver_opts
+
+`driver_opts` specifies a list of options as key-value pairs to pass to the driver. These options are
+driver-dependent. Consult the driver's documentation for more information.
+
+```yml
+services:
+  app:
+    networks:
+      app_net:
+        driver_opts:
+          foo: "bar"
+          baz: 1
+```
+
 ### ipv4_address, ipv6_address
 
 Specify a static IP address for a service container when joining the network.
@@ -1311,23 +1344,6 @@ networks:
 
 `mac_address` sets the MAC address used by the service container when connecting to this particular network.
 
-### driver_opts
-
-[![Compose v2.27.1](https://img.shields.io/badge/compose-v2.27.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.27.1)
-
-`driver_opts` specifies a list of options as key-value pairs to pass to the driver. These options are
-driver-dependent. Consult the driver's documentation for more information.
-
-```yml
-services:
-  app:
-    networks:
-      app_net:
-        driver_opts:
-          foo: "bar"
-          baz: 1
-```
-
 ### priority
 
 `priority` indicates in which order Compose connects the service’s containers to its
@@ -1352,52 +1368,6 @@ networks:
   app_net_2:
   app_net_3:
 ```
-
-## mac_address
-
-[![Compose v2.23.2](https://img.shields.io/badge/compose-v2.23.2-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.23.2)
-
-`mac_address` sets a MAC address for the service container.
-
-> **Note**
-> Container runtimes might reject this value (ie. Docker Engine >= v25.0). In that case, you should use [networks.mac_address](#mac_address) instead.
-
-## mem_limit
-
-`mem_limit` configures a limit on the amount of memory a container can allocate, set as a string expressing a [byte value](11-extension.md#specifying-byte-values).
-
-
-When both are set, `mem_limit` must be consistent with the `limits.memory` attribute in the [Deploy Specification](deploy.md#memory)
-
-
-## mem_reservation
-
-`mem_reservation` configures a reservation on the amount of memory a container can allocate, set as a string expressing a [byte value](11-extension.md#specifying-byte-values).
-
-When both are set, `mem_reservation` must be consistent with the `reservations.memory` attribute in the [Deploy Specification](deploy.md#memory)
-
-## mem_swappiness
-
-`mem_swappiness` defines as a percentage, a value between 0 and 100, for the host kernel to swap out
-anonymous memory pages used by a container.
-
-- `0`: Turns off anonymous page swapping.
-- `100`: Sets all anonymous pages as swappable.
-
-The default value is platform specific.
-
-## memswap_limit
-
-`memswap_limit` defines the amount of memory the container is allowed to swap to disk. This is a modifier
-attribute that only has meaning if [`memory`](deploy.md#memory) is also set. Using swap lets the container write excess
-memory requirements to disk when the container has exhausted all the memory that is available to it.
-There is a performance penalty for applications that swap memory to disk often.
-
-- If `memswap_limit` is set to a positive integer, then both `memory` and `memswap_limit` must be set. `memswap_limit` represents the total amount of memory and swap that can be used, and `memory` controls the amount used by non-swap memory. So if `memory`="300m" and `memswap_limit`="1g", the container can use 300m of memory and 700m (1g - 300m) swap.
-- If `memswap_limit` is set to 0, the setting is ignored, and the value is treated as unset.
-- If `memswap_limit` is set to the same value as `memory`, and `memory` is set to a positive integer, the container does not have access to swap.
-- If `memswap_limit` is unset, and `memory` is set, the container can use as much swap as the `memory` setting, if the host container has swap memory configured. For instance, if `memory`="300m" and `memswap_limit` is not set, the container can use 600m in total of memory and swap.
-- If `memswap_limit` is explicitly set to -1, the container is allowed to use unlimited swap, up to the amount available on the host system.
 
 ## oom_kill_disable
 
@@ -1445,28 +1415,26 @@ Exposes container ports.
 
 > **Note**
 >
-> Port mapping must not be used with `network_mode: host` otherwise a runtime error occurs.
+> Port mapping must not be used with `network_mode: host`. Doing so causes a runtime error because `network_mode: host` already exposes container ports directly to the host network, so port mapping isn’t needed.
 
 ### Short syntax
 
 The short syntax is a colon-separated string to set the host IP, host port, and container port
 in the form:
 
-`[HOST:]CONTAINER[/PROTOCOL]` where:
+- `HOST` is `[IP:](port | range)` (optional). If it is not set, it binds to all network interfaces (`0.0.0.0`). 
+- `CONTAINER` is `port | range`.
+- `PROTOCOL` restricts ports to a specified protocol either `tcp` or `upd`(optional). Default is `tcp`.
 
-- `HOST` is `[IP:](port | range)`
-- `CONTAINER` is `port | range`
-- `PROTOCOL` to restrict port to specified protocol. `tcp` and `udp` values are defined by the Specification,
-  Compose offers support for platform-specific protocol names.
+Ports can be either a single value or a range. `HOST` and `CONTAINER` must use equivalent ranges. 
 
-If host IP is not set, it binds to all network interfaces. Ports can be either a single
-value or a range. Host and container must use equivalent ranges.
-
-Either specify both ports (`HOST:CONTAINER`), or just the container port. In the latter case,
+You can either specify both ports (`HOST:CONTAINER`), or just the container port. In the latter case,
 the container runtime automatically allocates any unassigned port of the host.
 
 `HOST:CONTAINER` should always be specified as a (quoted) string, to avoid conflicts
-with [yaml base-60 float](https://yaml.org/type/float.html).
+with [YAML base-60 float](https://yaml.org/type/float.html).
+
+IPv6 addresses can be enclosed in square brackets.
 
 Examples:
 
@@ -1480,12 +1448,14 @@ ports:
   - "8000-9000:80"
   - "127.0.0.1:8001:8001"
   - "127.0.0.1:5000-5010:5000-5010"
+  - "::1:6000:6000"   
+  - "[::1]:6001:6001" 
   - "6060:6060/udp"
 ```
 
 > **Note**
 >
-> If Host IP mapping is not supported by a container engine, Compose rejects
+> If host IP mapping is not supported by a container engine, Compose rejects
 > the Compose file and ignores the specified host IP.
 
 ### Long syntax
@@ -1493,14 +1463,13 @@ ports:
 The long form syntax allows the configuration of additional fields that can't be
 expressed in the short form.
 
-- `target`: The container port
+- `target`: The container port.
 - `published`: The publicly exposed port. It is defined as a string and can be set as a range using syntax `start-end`. It means the actual port is assigned a remaining available port, within the set range.
-- `host_ip`: The Host IP mapping, unspecified means all network interfaces (`0.0.0.0`).
+- `host_ip`: The host IP mapping. If it is not set, it binds to all network interfaces (`0.0.0.0`).
 - `protocol`: The port protocol (`tcp` or `udp`). Defaults to `tcp`.
-- `app_protocol`: The application procotol (TCP/IP level 4 / OSI level 7) this port is used for. This is optional and can be used as a hint for Compose to offer richer behavior for protocols that it understands.
-[![Compose v2.26.0](https://img.shields.io/badge/compose-v2.26.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.26.0)
-- `mode`: `host`: For publishing a host port on each node, or `ingress` for a port to be load balanced. Defaults to `ingress`.
-- `name`: A human-readable name for the port, used to document its usage within the service
+- `app_protocol`: The application protocol (TCP/IP level 4 / OSI level 7) this port is used for. This is optional and can be used as a hint for Compose to offer richer behavior for protocols that it understands.
+- `mode`: Specifies how the port is published in a Swarm setup. If set to `host`, it publishes the port on every node in Swarm. If set to `ingress`, it allows load balancing across the nodes in Swarm. Defaults to `ingress`.
+- `name`: A human-readable name for the port, used to document it's usage within the service.
 
 ```yml
 ports:
@@ -1824,6 +1793,17 @@ on platform configuration.
 
 ```yml
 userns_mode: "host"
+```
+
+## uts
+
+`uts` configures the UTS namespace mode set for the service container. When unspecified
+it is the runtime's decision to assign a UTS namespace, if supported. Available values are:
+
+- `'host'`: Results in the container using the same UTS namespace as the host.
+
+```yml
+    uts: "host"
 ```
 
 ## volumes
