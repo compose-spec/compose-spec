@@ -327,6 +327,7 @@
                             "^.+$": {"type": ["string", "number"]}
                           }
                         },
+                        "gw_priority": {"type": "number"},
                         "priority": {"type": "number"}
                       },
                       "additionalProperties": false,
