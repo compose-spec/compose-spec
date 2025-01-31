@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema#",
-  "id": "compose_spec.json",
+  "$id": "https://raw.githubusercontent.com/compose-spec/compose-spec/HEAD/schema/compose-spec.json",
   "type": "object",
   "title": "Compose Specification",
   "description": "The Compose file is a YAML file defining a multi-containers based application.",
@@ -25,7 +25,6 @@
     },
 
     "services": {
-      "id": "#/properties/services",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -36,7 +35,6 @@
     },
 
     "networks": {
-      "id": "#/properties/networks",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -46,7 +44,6 @@
     },
 
     "volumes": {
-      "id": "#/properties/volumes",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -57,7 +54,6 @@
     },
 
     "secrets": {
-      "id": "#/properties/secrets",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -68,7 +64,6 @@
     },
 
     "configs": {
-      "id": "#/properties/configs",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -85,7 +80,6 @@
   "definitions": {
 
     "service": {
-      "id": "#/definitions/service",
       "type": "object",
 
       "properties": {
@@ -246,8 +240,7 @@
         "expose": {
           "type": "array",
           "items": {
-            "type": ["string", "number"],
-            "format": "expose"
+            "type": ["string", "number"]
           },
           "uniqueItems": true
         },
@@ -469,7 +462,6 @@
     },
 
     "healthcheck": {
-      "id": "#/definitions/healthcheck",
       "type": "object",
       "properties": {
         "disable": {"type": ["boolean", "string"]},
@@ -489,7 +481,6 @@
       "patternProperties": {"^x-": {}}
     },
     "development": {
-      "id": "#/definitions/development",
       "type": ["object", "null"],
       "properties": {
         "watch": {
@@ -513,7 +504,6 @@
       "patternProperties": {"^x-": {}}
     },
     "deployment": {
-      "id": "#/definitions/deployment",
       "type": ["object", "null"],
       "properties": {
         "mode": {"type": "string"},
@@ -615,7 +605,6 @@
     },
 
     "generic_resources": {
-      "id": "#/definitions/generic_resources",
       "type": "array",
       "items": {
         "type": "object",
@@ -636,7 +625,6 @@
     },
 
     "devices": {
-      "id": "#/definitions/devices",
       "type": "array",
       "items": {
         "type": "object",
@@ -656,7 +644,6 @@
     },
 
     "gpus": {
-      "id": "#/definitions/gpus",
       "oneOf": [
         {"type": "string", "enum": ["all"]},
         {"type": "array",
@@ -677,7 +664,6 @@
     },
 
     "include": {
-      "id": "#/definitions/include",
       "oneOf": [
         {"type": "string"},
         {
@@ -693,7 +679,6 @@
     },
 
     "network": {
-      "id": "#/definitions/network",
       "type": ["object", "null"],
       "properties": {
         "name": {"type": "string"},
@@ -757,7 +742,6 @@
     },
 
     "volume": {
-      "id": "#/definitions/volume",
       "type": ["object", "null"],
       "properties": {
         "name": {"type": "string"},
@@ -786,7 +770,6 @@
     },
 
     "secret": {
-      "id": "#/definitions/secret",
       "type": "object",
       "properties": {
         "name": {"type": "string"},
@@ -813,7 +796,6 @@
     },
 
     "config": {
-      "id": "#/definitions/config",
       "type": "object",
       "properties": {
         "name": {"type": "string"},
@@ -845,7 +827,6 @@
     },
 
     "service_hook": {
-      "id": "#/definitions/service_hook",
       "type": "object",
       "properties": {
         "command": {"$ref": "#/definitions/command"},
@@ -1008,20 +989,6 @@
               "patternProperties": {"^x-": {}}
             }
           ]
-        }
-      }
-    },
-    "constraints": {
-      "service": {
-        "id": "#/definitions/constraints/service",
-        "anyOf": [
-          {"required": ["build"]},
-          {"required": ["image"]}
-        ],
-        "properties": {
-          "build": {
-            "required": ["context"]
-          }
         }
       }
     }
