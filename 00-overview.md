@@ -14,5 +14,8 @@ The Compose file specification has been broken up into the following easy-to-nav
 - [Fragments](10-fragments.md)
 - [Extension](11-extension.md)
 - [Interpolation](12-interpolation.md)
+- [Merge](13-merge.md)
+- [Include](14-include.md)
+- [Profiles](15-profiles.md)
 
 You can check the one file version of the specification [here](spec.md)

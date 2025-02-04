@@ -50,22 +50,22 @@ Compose to monitor source code for changes. For more information, see [Use Compo
 
 `action` defines the action to take when changes are detected. If `action` is set to:
 
-- `rebuild`, Compose rebuilds the service image based on the `build` section and recreates the service with the updated image.
-- `restart`, Compose restarts the service container. [![Compose v2.32.0](https://img.shields.io/badge/compose-v2.32.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.32.0)
-- `sync`, Compose keeps the existing service container(s) running, but synchronizes source files with container content according to the `target` attribute.
-- `sync+restart`, Compose synchronizes source files with container content according to the `target` attribute, and then restarts the container.
-- `sync+exec`, Compose synchronizes source files with container content according to the `target` attribute, and then executes a command inside the container. [![Compose v2.32.0](https://img.shields.io/badge/compose-v2.32.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.32.0)
+- `rebuild`: Compose rebuilds the service image based on the `build` section and recreates the service with the updated image.
+- `restart`: Compose restarts the service container. 
+- `sync`: Compose keeps the existing service container(s) running, but synchronizes source files with container content according to the `target` attribute.
+- `sync+restart`: Compose synchronizes source files with container content according to the `target` attribute, and then restarts the container.
+- `sync+exec`: Compose synchronizes source files with container content according to the `target` attribute, and then executes a command inside the container.
 
 
 #### exec
 
 `exec` is only relevant when `action` is set to `sync+exec`. Comparable to [service hooks](05-services.md#post_start), `exec` is used to defined command to be ran inside container:
 
-- `command`: The command to run after the container has started. This attribute is required.
+- `command`: Specifies the command to run once the container starts. This attribute is required, and you can choose to use either the shell form or the exec form.
 - `user`: The user to run the command. If not set, the command is run with the same user as the main service command.
 - `privileged`: Lets the command run with privileged access.
 - `working_dir`: The working directory in which to run the command. If not set, it is run in the same working directory as the main service command.
-- `environment`: Sets the environment variables to run the command. The command inherits the `environment` set for the service, this section lets you to append or override values.
+- `environment`: Sets the environment variables to run the command. While the command inherits the environment variables defined for the service’s main command, this section lets you add new variables or override existing ones.
 
 ```yaml
 services:
