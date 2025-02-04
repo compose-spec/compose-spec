@@ -657,19 +657,23 @@
 
     "gpus": {
       "id": "#/definitions/gpus",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "capabilities": {"$ref": "#/definitions/list_of_strings"},
-          "count": {"type": ["string", "integer"]},
-          "device_ids": {"$ref": "#/definitions/list_of_strings"},
-          "driver":{"type": "string"},
-          "options":{"$ref": "#/definitions/list_or_dict"}
-        },
-        "additionalProperties": false,
-        "patternProperties": {"^x-": {}}
-      }
+      "oneOf": [
+        {"type": "string", "enum": ["all"]},
+        {"type": "array",
+         "items": {
+          "type": "object",
+            "properties": {
+              "capabilities": {"$ref": "#/definitions/list_of_strings"},
+              "count": {"type": ["string", "integer"]},
+              "device_ids": {"$ref": "#/definitions/list_of_strings"},
+              "driver":{"type": "string"},
+              "options":{"$ref": "#/definitions/list_or_dict"}
+            }
+          },
+          "additionalProperties": false,
+          "patternProperties": {"^x-": {}}
+        }
+      ]
     },
 
     "include": {
@@ -743,6 +747,7 @@
           "patternProperties": {"^x-": {}}
         },
         "internal": {"type": ["boolean", "string"]},
+        "enable_ipv4": {"type": ["boolean", "string"]},
         "enable_ipv6": {"type": ["boolean", "string"]},
         "attachable": {"type": ["boolean", "string"]},
         "labels": {"$ref": "#/definitions/list_or_dict"}

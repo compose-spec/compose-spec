@@ -937,6 +937,29 @@ configuration, which means for Linux `/etc/hosts` get extra lines:
 ::1             myhostv6
 ```
 
+## gpus
+
+[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+
+`gpus` specifies GPU devices to be allocated for container usage. This is equivalent to a [device request](deploy.md#devices) with
+an implicit `gpu` capability.
+
+```yaml
+services:
+  model:
+    gpus: 
+      - driver: 3dfx
+        count: 2
+```
+
+`gpus` also can ge set as string `all` to allocate all aviable GPU devices to container.
+
+```yaml
+services:
+  model:
+    gpus: all
+```
+
 ## group_add
 
 `group_add` specifies additional groups, by name or number, which the user inside the container must be a member of.
@@ -1356,12 +1379,46 @@ networks:
 
 `mac_address` sets the MAC address used by the service container when connecting to this particular network.
 
+### gw_priority
+
+[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+
+The network with the highest `gw_priority` is selected as the default gateway for the service container.
+If unspecified, the default value is 0.
+
+In the following example, `app_net_2` will be selected as the default gateway.
+
+```yaml
+services:
+  app:
+    image: busybox
+    command: top
+    networks:
+      app_net_1:
+      app_net_2:
+        gw_priority: 1
+      app_net_3:
+networks:
+  app_net_1:
+  app_net_2:
+  app_net_3:
+```
+
 ### priority
 
 `priority` indicates in which order Compose connects the service’s containers to its
 networks. If unspecified, the default value is 0.
 
-In the following example, the app service connects to `app_net_1` first as it has the highest priority. It then connects to `app_net_3`, then `app_net_2`, which uses the default priority value of 0.
+_If the container runtime accepts a `mac_address` attribute at service level, it is
+applied to the network with the highest `priority`. In other cases, use attribute
+`networks.mac_address`._
+
+_`priority` does not affect which network is selected as the default gateway. Use the
+[`gw_priority`](#gw_priority) field for that._
+
+_`priority` does not control the order in which networks connections are added to
+the container, it cannot be used to determine the device name (`eth0` etc.) in the
+container._
 
 ```yaml
 services:
