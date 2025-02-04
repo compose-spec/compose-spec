@@ -235,6 +235,8 @@ If not implemented the `deploy` section is ignored and the Compose file is still
 
 ## annotations
 
+[![Compose v2.20.0](https://img.shields.io/badge/compose-v2.20.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.20.0)
+
 `annotations` defines annotations for the container. `annotations` can use either an array or a map.
 
 ```yml
@@ -389,6 +391,8 @@ cap_drop:
 ```
 
 ## cgroup
+
+[![Compose v2.15.0](https://img.shields.io/badge/compose-v2.15.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.15.0)
 
 `cgroup` specifies the cgroup namespace to join. When unset, it is the container runtime's decision to
 select which cgroup namespace to use, if supported.
@@ -649,6 +653,8 @@ Compose guarantees dependency services marked with
 `deploy` specifies the configuration for the deployment and lifecycle of services, as defined [in the Compose Deploy Specification](deploy.md).
 
 ## develop
+
+[![Compose v2.22.0](https://img.shields.io/badge/compose-v2.22.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.22.0)
 
 `develop` specifies the development configuration for maintaining a container in sync with source, as defined in the [Development Section](develop.md).
 
@@ -1299,6 +1305,8 @@ results in a runtime error.
 
 ## label_file
 
+[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+
 The `label_file` attribute lets you load labels for a service from an external file or a list of files. This provides a convenient way to manage multiple labels without cluttering the Compose file.
 
 The file uses a key-value format, similar to `env_file`. You can specify multiple files as a list. When using multiple files, they are processed in the order they appear in the list. If the same label is defined in multiple files, the value from the last file in the list overrides earlier ones.
@@ -1492,6 +1500,8 @@ networks:
 
 ### driver_opts
 
+[![Compose v2.27.1](https://img.shields.io/badge/compose-v2.27.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.27.1)
+
 `driver_opts` specifies a list of options as key-value pairs to pass to the driver. These options are
 driver-dependent. Consult the driver's documentation for more information.
 
@@ -1554,6 +1564,8 @@ networks:
 ```
 
 ### mac_address
+
+[![Compose v2.23.2](https://img.shields.io/badge/compose-v2.23.2-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.23.2)
 
 `mac_address` sets the MAC address used by the service container when connecting to this particular network.
 
@@ -2009,6 +2021,8 @@ userns_mode: "host"
 ```
 
 ## uts
+
+[![Compose v2.15.1](https://img.shields.io/badge/compose-v2.15.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.15.1)
 
 `uts` configures the UTS namespace mode set for the service container. When unspecified
 it is the runtime's decision to assign a UTS namespace, if supported. Available values are:
@@ -3080,6 +3094,8 @@ services:
 
 ### Replace value
 
+[![Compose v2.24.4](https://img.shields.io/badge/compose-v2.24.4-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.24.4)
+
 While `!reset` can be used to remove a declaration from a Compose file using an override file, `!override` allows
 you to fully replace an attribute, bypassing the standard merge rules. A typical example is to fully replace a 
 resource definition, to rely on a distinct model but using the same name.
@@ -3115,6 +3131,8 @@ services:
 
 If `!override` had not been used, both `8080:80` and `8443:443` would be exposed as per the [merging rules outlined above](#sequence). 
 # Include
+
+[![Compose v2.20.0](https://img.shields.io/badge/compose-v2.20.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.20.0)
 
 A Compose application can declare dependency on another Compose application. This is useful if:
 - You want to reuse other Compose files.
