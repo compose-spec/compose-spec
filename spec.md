@@ -1852,6 +1852,16 @@ services:
    This is the default option if you are not also using the [Compose Build Specification](build.md).
   `if_not_present` is considered an alias for this value for backward compatibility.
 * `build`: Compose builds the image. Compose rebuilds the image if it's already present.
+* `daily`: Compose checks the registry for image updates if the last pull took place more than 24 hours ago.
+* `weekly`: Compose checks the registry for image updates if the last pull took place more than 7 days ago.
+* `every_<duration>`: Compose checks the registry for image updates if the last pull took place before `<duration>`. Duration can be expressed in weeks (`w`), days (`d`), hours (`h`), minutes (`m`), seconds (`s`) or a combination of these.
+```yaml
+services:
+  test:
+    image: nginx
+    pull_policy: every_12h
+```
+
 
 ## read_only
 
