@@ -84,25 +84,23 @@ Both services communicate with each other on an isolated back-tier network, whil
             bs["`**database**`"]
         end
         style B2 fill:#ccd6e8, stroke-width:0px
-        
     end
     style TOP fill:transparent, stroke-width:2px, stroke:#62affb, stroke-dasharray: 5 5
-        key[ro= read only\nr+w = read write]
-        style key fill:transparent, stroke-width:0px,text-align: left, size: 94px
-        
+        key[ro= read only<br>r+w = read write]
+        style key fill:transparent, stroke-width:0px, text-align: left, size: 94px
         direction TB
-        id2(Server\nCertificate)
-        id1(HTTP\nConfiguration)
+        id2(Server Certificate)
+        id1(HTTP Configuration)
         id1 & id2 -.-|ro| B1
         style id1 stroke:#000,stroke-width:1px,stroke-dasharray: 10
         style id2 stroke:#000,stroke-width:1px,stroke-dasharray: 10
-        B2 ==r+w==> id3[(Persistent\nVolume)]
+        B2 ==r+w==> id3[(Persistent<br>Volume)]
     end
     style A fill:#eeeeee, stroke-width:0px
     direction LR
-    id4[External\nUser] ---id5(((443)))--->|Frontend\nNetwork| B1
+    id4[External User] ---id5(((443)))--->|Frontend<br>Network| B1
     style id4 stroke:#000,stroke-width:2px
-    B1 --Backend\nNetwork--> B2
+    B1 --Backend<br>Network--> B2
 ```
 
 The example application is composed of the following parts:
