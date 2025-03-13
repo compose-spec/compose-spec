@@ -1274,6 +1274,28 @@ services:
       - other-network
 ```
 
+### implicit default network
+
+If `networks` is empty or absent from the Compose file, Compose considers an implicit definition for the service to be
+connected to the `default` network: 
+
+```yml
+services:
+  some-service:
+    image: foo
+```
+This example is actually equivalent to:
+
+```yml
+services:
+  some-service:
+    image: foo  
+    networks:
+      default: {}  
+```
+
+If you want the service to be connected to none of the networks, you must set [`network_mode: none`](#network_mode)
+
 ### aliases
 
 `aliases` declares alternative hostnames for the service on the network. Other containers on the same
