@@ -1487,6 +1487,28 @@ services:
       - other-network
 ```
 
+### implicit default network
+
+If `networks` is empty or absent from the Compose file, Compose considers an implicit definition for the service to be
+connected to the `default` network: 
+
+```yml
+services:
+  some-service:
+    image: foo
+```
+This example is actually equivalent to:
+
+```yml
+services:
+  some-service:
+    image: foo  
+    networks:
+      default: {}  
+```
+
+If you want the service to be connected to none of the networks, you must set [`network_mode: none`](#network_mode)
+
 ### aliases
 
 `aliases` declares alternative hostnames for the service on the network. Other containers on the same
@@ -2279,6 +2301,41 @@ networks:
 ```
 
 The advanced example shows a Compose file which defines two custom networks. The `proxy` service is isolated from the `db` service, because they do not share a network in common. Only `app` can talk to both.
+
+
+### `default` network
+
+When a Compose file doesn't declare explicit networks, Compose uses an implicit `default` network. Services without an explicit
+[`networks`](05-services.md#networks) declaration are connected by Compose to this `default` network:
+
+
+```yml
+services:
+  some-service:
+    image: foo
+```
+This example is actually equivalent to:
+
+```yml
+services:
+  some-service:
+    image: foo
+    networks:
+      default: {}  
+
+networks:
+  default: {}      
+```
+
+You can customize the `default` network with an explicit declaration:
+```yml
+networks:
+  default: 
+    name: a_network # Use a custom name
+    driver_opts:    # pass [options](https://docs.docker.com/engine/network/drivers/bridge/#options) to driver for network creation
+      com.docker.network.bridge.host_binding_ipv4: 127.0.0.1
+```
+
 
 ## Attributes
 
