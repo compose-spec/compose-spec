@@ -1,6 +1,6 @@
 {
-  "$schema": "https://json-schema.org/draft/2019-09/schema#",
-  "id": "compose_spec.json",
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "compose_spec.json",
   "type": "object",
   "title": "Compose Specification",
   "description": "The Compose file is a YAML file defining a multi-containers based application.",
@@ -25,7 +25,6 @@
     },
 
     "services": {
-      "id": "#/properties/services",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -36,7 +35,6 @@
     },
 
     "networks": {
-      "id": "#/properties/networks",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -46,7 +44,6 @@
     },
 
     "volumes": {
-      "id": "#/properties/volumes",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -57,7 +54,6 @@
     },
 
     "secrets": {
-      "id": "#/properties/secrets",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -68,7 +64,6 @@
     },
 
     "configs": {
-      "id": "#/properties/configs",
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z0-9._-]+$": {
@@ -85,7 +80,6 @@
   "definitions": {
 
     "service": {
-      "id": "#/definitions/service",
       "type": "object",
 
       "properties": {
@@ -246,8 +240,7 @@
         "expose": {
           "type": "array",
           "items": {
-            "type": ["string", "number"],
-            "format": "expose"
+            "type": ["string", "number"]
           },
           "uniqueItems": true
         },
@@ -327,7 +320,8 @@
                             "^.+$": {"type": ["string", "number"]}
                           }
                         },
-                        "priority": {"type": "number"}
+                        "priority": {"type": "number"},
+                        "gw_priority": {"type": "number"}
                       },
                       "additionalProperties": false,
                       "patternProperties": {"^x-": {}}
@@ -376,9 +370,10 @@
         "pre_stop": {"type": "array", "items": {"$ref": "#/definitions/service_hook"}},
         "privileged": {"type": ["boolean", "string"]},
         "profiles": {"$ref": "#/definitions/list_of_strings"},
-        "pull_policy": {"type": "string", "enum": [
-          "always", "never", "if_not_present", "build", "missing"
-        ]},
+        "pull_policy": {"type": "string",
+          "pattern": "always|never|build|if_not_present|missing|refresh|daily|weekly|every_([0-9]+[wdhms])+"
+        },
+        "pull_refresh_after": {"type": "string"},
         "read_only": {"type": ["boolean", "string"]},
         "restart": {"type": "string"},
         "runtime": {
@@ -469,7 +464,6 @@
     },
 
     "healthcheck": {
-      "id": "#/definitions/healthcheck",
       "type": "object",
       "properties": {
         "disable": {"type": ["boolean", "string"]},
@@ -489,7 +483,6 @@
       "patternProperties": {"^x-": {}}
     },
     "development": {
-      "id": "#/definitions/development",
       "type": ["object", "null"],
       "properties": {
         "watch": {
@@ -498,7 +491,8 @@
             "type": "object",
             "required": ["path", "action"],
             "properties": {
-              "ignore": {"type": "array", "items": {"type": "string"}},
+              "ignore": {"$ref": "#/definitions/string_or_list"},
+              "include": {"$ref": "#/definitions/string_or_list"},
               "path": {"type": "string"},
               "action": {"type": "string", "enum": ["rebuild", "sync", "restart", "sync+restart", "sync+exec"]},
               "target": {"type": "string"},
@@ -513,7 +507,6 @@
       "patternProperties": {"^x-": {}}
     },
     "deployment": {
-      "id": "#/definitions/deployment",
       "type": ["object", "null"],
       "properties": {
         "mode": {"type": "string"},
@@ -615,7 +608,6 @@
     },
 
     "generic_resources": {
-      "id": "#/definitions/generic_resources",
       "type": "array",
       "items": {
         "type": "object",
@@ -636,7 +628,6 @@
     },
 
     "devices": {
-      "id": "#/definitions/devices",
       "type": "array",
       "items": {
         "type": "object",
@@ -656,7 +647,6 @@
     },
 
     "gpus": {
-      "id": "#/definitions/gpus",
       "oneOf": [
         {"type": "string", "enum": ["all"]},
         {"type": "array",
@@ -677,7 +667,6 @@
     },
 
     "include": {
-      "id": "#/definitions/include",
       "oneOf": [
         {"type": "string"},
         {
@@ -693,7 +682,6 @@
     },
 
     "network": {
-      "id": "#/definitions/network",
       "type": ["object", "null"],
       "properties": {
         "name": {"type": "string"},
@@ -757,7 +745,6 @@
     },
 
     "volume": {
-      "id": "#/definitions/volume",
       "type": ["object", "null"],
       "properties": {
         "name": {"type": "string"},
@@ -786,7 +773,6 @@
     },
 
     "secret": {
-      "id": "#/definitions/secret",
       "type": "object",
       "properties": {
         "name": {"type": "string"},
@@ -813,7 +799,6 @@
     },
 
     "config": {
-      "id": "#/definitions/config",
       "type": "object",
       "properties": {
         "name": {"type": "string"},
@@ -845,7 +830,6 @@
     },
 
     "service_hook": {
-      "id": "#/definitions/service_hook",
       "type": "object",
       "properties": {
         "command": {"$ref": "#/definitions/command"},
@@ -855,7 +839,8 @@
         "environment": {"$ref": "#/definitions/list_or_dict"}
       },
       "additionalProperties": false,
-      "patternProperties": {"^x-": {}}
+      "patternProperties": {"^x-": {}},
+      "required": ["command"]
     },
 
     "env_file": {
@@ -1008,20 +993,6 @@
               "patternProperties": {"^x-": {}}
             }
           ]
-        }
-      }
-    },
-    "constraints": {
-      "service": {
-        "id": "#/definitions/constraints/service",
-        "anyOf": [
-          {"required": ["build"]},
-          {"required": ["image"]}
-        ],
-        "properties": {
-          "build": {
-            "required": ["context"]
-          }
         }
       }
     }
