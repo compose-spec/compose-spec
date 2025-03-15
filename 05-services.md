@@ -1768,7 +1768,8 @@ the service's containers.
   The default value is world-readable permissions (mode `0444`).
   The writable bit must be ignored if set. The executable bit may be set.
 
-Note that the `uid`, `gid`, and `mode` attributes are implementation specific. 
+Note that support for the `uid`, `gid`, and `mode` attributes is not implemented in Docker Compose when the secret source 
+is a [`file`](09-secrets.md), as bind-mount used under the hood doesn't allow uid remapping.
 
 The following example sets the name of the `server-certificate` secret file to `server.crt`
 within the container, sets the mode to `0440` (group-readable), and sets the user and group
