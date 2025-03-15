@@ -278,6 +278,12 @@ The long syntax provides more granularity in how the config is created within th
   task containers, in octal notation. Default value is world-readable (`0444`).
   Writable bit must be ignored. The executable bit can be set.
 
+> **Note** 
+> 
+> The `uid`, `gid`, and `mode` attributes are not implemented in Docker Compose when the source 
+> of the config is a [`file`](08-configs.md), as bind-mount used under the hood doesn't allow uid remapping.
+
+
 The following example sets the name of `my_config` to `redis_config` within the
 container, sets the mode to `0440` (group-readable) and sets the user and group
 to `103`. The `redis` service does not have access to the `my_other_config`
@@ -1768,7 +1774,10 @@ the service's containers.
   The default value is world-readable permissions (mode `0444`).
   The writable bit must be ignored if set. The executable bit may be set.
 
-Note that the `uid`, `gid`, and `mode` attributes are implementation specific. 
+> **Note** 
+> 
+> The `uid`, `gid`, and `mode` attributes are not implemented in Docker Compose when the secret source 
+> of the secret is a [`file`](09-secrets.md), as bind-mount used under the hood doesn't allow uid remapping.
 
 The following example sets the name of the `server-certificate` secret file to `server.crt`
 within the container, sets the mode to `0440` (group-readable), and sets the user and group
