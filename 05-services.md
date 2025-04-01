@@ -902,6 +902,40 @@ duplicates resulting from the merge are not removed.
 
 Any other allowed keys in the service definition should be treated as scalars.
 
+## external
+
+[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+
+A service can be declared with `external` attribute. Such a service is not directly managed by Compose. Compose delegates lifecycle
+to a third-party component identified by the `type` attribute. Comparable to a volume/plugin driver, `options` can be set to pass
+arguments to this third-party component, prefixed with uppercase service name.
+
+```yaml
+services:
+  database:
+     external: 
+       type: cloud-db
+       options:
+         credentials: ${API_TOKEN}
+```
+
+The services which declare a dependency to an `external` service get additional environment variables set, produced by the
+external service component. In this illustration example, `app` service will get `DATABASE_URL` and `DATABASE_PASSWORD` 
+environment variables injected, based on values produced by third-party `cloud-db` component. 
+
+```yaml
+services:
+  app:
+     image: my_app
+     depends_on:
+       - database     # recieves variable DATABASE_URL and DATABASE_PASSWORD
+
+  database:
+     external: 
+       type: cloud-db # produces variables "URL" and "PASSWORD"
+```
+
+
 ## external_links
 
 `external_links` link service containers to services managed outside of your Compose application.
@@ -1205,12 +1239,10 @@ are platform specific. Driver specific options can be set with `options` as key-
 
 ## mac_address
 
-[![Compose v2.23.2](https://img.shields.io/badge/compose-v2.23.2-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.23.2)
-
 `mac_address` sets a MAC address for the service container.
 
 > **Note**
-> Container runtimes might reject this value (ie. Docker Engine >= v25.0). In that case, you should use [networks.mac_address](#mac_address) instead.
+> Container runtimes might reject this value (ie. Docker Engine >= v25.0). In that case, you should use [networks.mac_address](#mac_address-1) instead.
 
 ## mem_limit
 
@@ -1408,6 +1440,8 @@ networks:
 ```
 
 ### mac_address
+
+[![Compose v2.23.2](https://img.shields.io/badge/compose-v2.23.2-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.23.2)
 
 `mac_address` sets the MAC address used by the service container when connecting to this particular network.
 
