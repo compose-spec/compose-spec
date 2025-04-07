@@ -8,7 +8,7 @@
   "properties": {
     "version": {
       "type": "string",
-      "description": "The version of the Docker Compose document"
+      "description": "declared for backward compatibility, ignored."
     },
 
     "name": {
