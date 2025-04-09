@@ -418,7 +418,9 @@
                 "type": "object",
                 "required": ["type"],
                 "properties": {
-                  "type": {"type": "string"},
+                  "type": {"type": "string",
+                    "enum": ["bind", "volume", "tmpfs", "cluster", "image"]
+                  },
                   "source": {"type": "string"},
                   "target": {"type": "string"},
                   "read_only": {"type": ["boolean", "string"]},
@@ -437,6 +439,7 @@
                   "volume": {
                     "type": "object",
                     "properties": {
+                      "labels": {"$ref": "#/definitions/list_or_dict"},
                       "nocopy": {"type": ["boolean", "string"]},
                       "subpath": {"type": "string"}
                     },
@@ -453,6 +456,14 @@
                         ]
                       },
                       "mode": {"type": ["number", "string"]}
+                    },
+                    "additionalProperties": false,
+                    "patternProperties": {"^x-": {}}
+                  },
+                  "image": {
+                    "type": "object",
+                    "properties": {
+                      "subpath": {"type": "string"}
                     },
                     "additionalProperties": false,
                     "patternProperties": {"^x-": {}}
