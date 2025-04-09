@@ -1177,7 +1177,7 @@ configuration, which means for Linux `/etc/hosts` get extra lines:
 
 ## gpus
 
-[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+[![Compose v2.30.0](https://img.shields.io/badge/compose-v2.30.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.30.0)
 
 `gpus` specifies GPU devices to be allocated for container usage. This is equivalent to a [device request](deploy.md#devices) with
 an implicit `gpu` capability.
@@ -1353,7 +1353,7 @@ results in a runtime error.
 
 ## label_file
 
-[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+[![Compose v2.32.0](https://img.shields.io/badge/compose-v2.32.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.32.0)
 
 The `label_file` attribute lets you load labels for a service from an external file or a list of files. This provides a convenient way to manage multiple labels without cluttering the Compose file.
 
@@ -1641,7 +1641,7 @@ services:
 
 ### gw_priority
 
-[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+[![Compose v2.33.0](https://img.shields.io/badge/compose-v2.33.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.33.0)
 
 The network with the highest `gw_priority` is selected as the default gateway for the service container.
 If unspecified, the default value is 0.
@@ -2156,7 +2156,7 @@ it is the runtime's decision to assign a UTS namespace, if supported. Available 
 
 ## volumes
 
-`volumes` define mount host paths or named volumes that are accessible by service containers. You can use `volumes` to define multiple types of mounts; `volume`, `bind`, `tmpfs`, or `npipe`. 
+`volumes` define mount host paths or named volumes that are accessible by service containers. You can use `volumes` to define multiple types of mounts; `volume`, `bind`, `tmpfs`, `image` or `npipe`. 
 
 If the mount is a host path and is only used by a single service, it can be declared as part of the service
 definition. To reuse a volume across multiple services, a named
@@ -2213,9 +2213,9 @@ The short syntax uses a single string with colon-separated values to specify a v
 The long form syntax allows the configuration of additional fields that can't be
 expressed in the short form.
 
-- `type`: The mount type. Either `volume`, `bind`, `tmpfs`, `npipe`, or `cluster`
-- `source`: The source of the mount, a path on the host for a bind mount, or the
-  name of a volume defined in the
+- `type`: The mount type. Either `volume`, `bind`, `tmpfs`, `image`, `npipe`, or `cluster`
+- `source`: The source of the mount, a path on the host for a bind mount, a docker image reference for an 
+  image mount, or the name of a volume defined in the
   [top-level `volumes` key](07-volumes.md). Not applicable for a tmpfs mount.
 - `target`: The path in the container where the volume is mounted.
 - `read_only`: Flag to set the volume as read-only.
@@ -2231,6 +2231,8 @@ expressed in the short form.
 - `tmpfs`: Configures additional tmpfs options:
   - `size`: The size for the tmpfs mount in bytes (either numeric or as bytes unit).
   - `mode`: The file mode for the tmpfs mount as Unix permission bits as an octal number. [![Compose v2.14.0](https://img.shields.io/badge/compose-v2.14.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.14.0)
+- `image`: Configures additional image options:  
+  - `subpath`: Path inside the source image to mount instead of the image root. [![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
 - `consistency`: The consistency requirements of the mount. Available values are platform specific.
 
 ## volumes_from
