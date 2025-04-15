@@ -2156,7 +2156,7 @@ it is the runtime's decision to assign a UTS namespace, if supported. Available 
 
 ## volumes
 
-`volumes` define mount host paths or named volumes that are accessible by service containers. You can use `volumes` to define multiple types of mounts; `volume`, `bind`, `tmpfs`, `image` or `npipe`. 
+`volumes` define mount host paths or named volumes that are accessible by service containers. You can use `volumes` to define multiple types of mounts; `volume`, `bind`, `tmpfs`, `image`, `npipe`, `cluster` or `api-socket`.
 
 If the mount is a host path and is only used by a single service, it can be declared as part of the service
 definition. To reuse a volume across multiple services, a named
@@ -2213,7 +2213,7 @@ The short syntax uses a single string with colon-separated values to specify a v
 The long form syntax allows the configuration of additional fields that can't be
 expressed in the short form.
 
-- `type`: The mount type. Either `volume`, `bind`, `tmpfs`, `image`, `npipe`, or `cluster`
+- `type`: The mount type. Either `volume`, `bind`, `tmpfs`, `image`, `npipe`, `cluster` or `api-socket`
 - `source`: The source of the mount, a path on the host for a bind mount, a docker image reference for an 
   image mount, or the name of a volume defined in the
   [top-level `volumes` key](07-volumes.md). Not applicable for a tmpfs mount.
