@@ -419,7 +419,7 @@
                 "required": ["type"],
                 "properties": {
                   "type": {"type": "string",
-                    "enum": ["bind", "volume", "tmpfs", "cluster", "image"]
+                    "enum": ["bind", "volume", "tmpfs", "cluster", "npipe", "image"]
                   },
                   "source": {"type": "string"},
                   "target": {"type": "string"},
