@@ -13,7 +13,7 @@ jobs:
 
       - name: Get compose-spec.json has changed
         id: changed-compose-spec-file
-        uses: tj-actions/changed-files@v44
+        uses: tj-actions/changed-files@v46
         with:
           files: schema/compose-spec.json
 
