@@ -323,6 +323,7 @@
                       "type": "object",
                       "properties": {
                         "aliases": {"$ref": "#/definitions/list_of_strings"},
+                        "interface_name": {"type": "string"},
                         "ipv4_address": {"type": "string"},
                         "ipv6_address": {"type": "string"},
                         "link_local_ips": {"$ref": "#/definitions/list_of_strings"},

@@ -1565,10 +1565,35 @@ services:
           - mysql
 
 networks:
-  front-tier:
-  back-tier:
-  admin:
+  front-tier: {}
+  back-tier: {}
+  admin: {}
 ```
+
+### interface_name
+
+[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+`interface_name` can be used to declare the network interface name used to connect to a target network. This
+allows you to enforce a deterministic assignment of network interface names for configured networks.
+
+
+```yaml
+services:
+  backend:
+    image: alpine
+    command: ip link show
+    networks:
+      back-tier:
+        interface_name: eth0
+```
+
+Running this Compose application shows:
+
+```console
+backend-1  | 11: eth0@if64: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP 
+```
+
+
 
 ### ipv4_address, ipv6_address
 
