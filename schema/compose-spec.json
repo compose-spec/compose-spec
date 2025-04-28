@@ -31,7 +31,8 @@
           "$ref": "#/definitions/service"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "The services in your project"
     },
 
     "networks": {
@@ -40,7 +41,8 @@
         "^[a-zA-Z0-9._-]+$": {
           "$ref": "#/definitions/network"
         }
-      }
+      },
+      "description": "Networks that are shared among multiple services"
     },
 
     "volumes": {
@@ -50,7 +52,8 @@
           "$ref": "#/definitions/volume"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Named volumes that are shared among multiple services"
     },
 
     "secrets": {
@@ -60,7 +63,8 @@
           "$ref": "#/definitions/secret"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Secrets that are shared among multiple services"
     },
 
     "configs": {
@@ -70,7 +74,8 @@
           "$ref": "#/definitions/config"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Configurations for services in the project"
     }
   },
 
@@ -93,11 +98,11 @@
             {
               "type": "object",
               "properties": {
-                "context": {"type": "string"},
-                "dockerfile": {"type": "string"},
+                "context": {"type": "string", "description": "The context used for building the image"},
+                "dockerfile": {"type": "string", "description": "The Dockerfile used for building the image"},
                 "dockerfile_inline": {"type": "string"},
                 "entitlements": {"type": "array", "items": {"type": "string"}},
-                "args": {"$ref": "#/definitions/list_or_dict"},
+                "args": {"$ref": "#/definitions/list_or_dict", "description": "Arguments used during the image build process"},
                 "ssh": {"$ref": "#/definitions/list_or_dict"},
                 "labels": {"$ref": "#/definitions/list_or_dict"},
                 "cache_from": {"type": "array", "items": {"type": "string"}},
@@ -152,9 +157,9 @@
         "cap_drop": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "cgroup": {"type": "string", "enum": ["host", "private"]},
         "cgroup_parent": {"type": "string"},
-        "command": {"$ref": "#/definitions/command"},
+        "command": {"$ref": "#/definitions/command", "description": "The command that will be run in the container"},
         "configs": {"$ref": "#/definitions/service_config_or_secret"},
-        "container_name": {"type": "string"},
+        "container_name": {"type": "string", "description": "The name that will be given to the container"},
         "cpu_count": {"oneOf": [
           {"type": "string"},
           {"type": "integer", "minimum": 0}
@@ -206,7 +211,8 @@
                 }
               }
             }
-          ]
+          ],
+          "description": "Other services that this service depends on, which will be started before this one"
         },
         "device_cgroup_rules": {"$ref": "#/definitions/list_of_strings"},
         "devices": {
@@ -232,17 +238,18 @@
         "dns_opt": {"type": "array","items": {"type": "string"}, "uniqueItems": true},
         "dns_search": {"$ref": "#/definitions/string_or_list"},
         "domainname": {"type": "string"},
-        "entrypoint": {"$ref": "#/definitions/command"},
-        "env_file": {"$ref": "#/definitions/env_file"},
+        "entrypoint": {"$ref": "#/definitions/command", "description": "The entrypoint to the application in the container"},
+        "env_file": {"$ref": "#/definitions/env_file", "description": "Files containing environment variables that will be included"},
         "label_file": {"$ref": "#/definitions/label_file"},
-        "environment": {"$ref": "#/definitions/list_or_dict"},
+        "environment": {"$ref": "#/definitions/list_or_dict", "description": "Environment variables that will be included"},
 
         "expose": {
           "type": "array",
           "items": {
             "type": ["string", "number"]
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "description": "Ports exposed to the other services but not to the host machine"
         },
         "extends": {
           "oneOf": [
@@ -283,13 +290,13 @@
           },
           "uniqueItems": true
         },
-        "healthcheck": {"$ref": "#/definitions/healthcheck"},
+        "healthcheck": {"$ref": "#/definitions/healthcheck", "description": "A command for checking if the container is healthy"},
         "hostname": {"type": "string"},
-        "image": {"type": "string"},
+        "image": {"type": "string", "description": "The image that will be pulled for the service. If `build` is specified, the built image will be given this tag."},
         "init": {"type": ["boolean", "string"]},
         "ipc": {"type": "string"},
         "isolation": {"type": "string"},
-        "labels": {"$ref": "#/definitions/list_or_dict"},
+        "labels": {"$ref": "#/definitions/list_or_dict", "description": "Labels that will be given to the container"},
         "links": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "logging": {
           "type": "object",
@@ -303,7 +310,8 @@
             }
           },
           "additionalProperties": false,
-          "patternProperties": {"^x-": {}}
+          "patternProperties": {"^x-": {}},
+          "description": "Settings for logging for this service"
         },
         "mac_address": {"type": "string"},
         "mem_limit": {"type": ["number", "string"]},
@@ -346,7 +354,8 @@
               },
               "additionalProperties": false
             }
-          ]
+          ],
+          "description": "The service will be included in these networks, allowing it to reach other containers on the same network"
         },
         "oom_kill_disable": {"type": ["boolean", "string"]},
         "oom_score_adj": {"oneOf": [
@@ -378,12 +387,13 @@
               }
             ]
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "description": "Ports that will be exposed to the host"
         },
         "post_start": {"type": "array", "items": {"$ref": "#/definitions/service_hook"}},
         "pre_stop": {"type": "array", "items": {"$ref": "#/definitions/service_hook"}},
         "privileged": {"type": ["boolean", "string"]},
-        "profiles": {"$ref": "#/definitions/list_of_strings"},
+        "profiles": {"$ref": "#/definitions/list_of_strings", "description": "Profiles that this service is a part of. When the profile is started, this service will be started."},
         "pull_policy": {"type": "string",
           "pattern": "always|never|build|if_not_present|missing|refresh|daily|weekly|every_([0-9]+[wdhms])+"
         },
@@ -398,7 +408,7 @@
         },
         "security_opt": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "shm_size": {"type": ["number", "string"]},
-        "secrets": {"$ref": "#/definitions/service_config_or_secret"},
+        "secrets": {"$ref": "#/definitions/service_config_or_secret", "description": "Secrets the service will have access to"},
         "sysctls": {"$ref": "#/definitions/list_or_dict"},
         "stdin_open": {"type": ["boolean", "string"]},
         "stop_grace_period": {"type": "string"},
@@ -407,7 +417,7 @@
         "tmpfs": {"$ref": "#/definitions/string_or_list"},
         "tty": {"type": ["boolean", "string"]},
         "ulimits": {"$ref": "#/definitions/ulimits"},
-        "user": {"type": "string"},
+        "user": {"type": "string", "description": "The username under which the app in the container will be started"},
         "uts": {"type": "string"},
         "userns_mode": {"type": "string"},
         "volumes": {
@@ -475,14 +485,15 @@
               }
             ]
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "description": "Named volumes and paths on the host mapped to paths in the container"
         },
         "volumes_from": {
           "type": "array",
           "items": {"type": "string"},
           "uniqueItems": true
         },
-        "working_dir": {"type": "string"}
+        "working_dir": {"type": "string", "description": "The working directory in which the entrypoint or command will be run"}
       },
       "patternProperties": {"^x-": {}},
       "additionalProperties": false
@@ -710,7 +721,7 @@
       "type": ["object", "null"],
       "properties": {
         "name": {"type": "string"},
-        "driver": {"type": "string"},
+        "driver": {"type": "string", "description": "The driver used for this network"},
         "driver_opts": {
           "type": "object",
           "patternProperties": {
@@ -773,7 +784,7 @@
       "type": ["object", "null"],
       "properties": {
         "name": {"type": "string"},
-        "driver": {"type": "string"},
+        "driver": {"type": "string", "description": "The driver used for this volume"},
         "driver_opts": {
           "type": "object",
           "patternProperties": {
