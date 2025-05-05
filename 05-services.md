@@ -1688,6 +1688,45 @@ services:
       - debug
 ```
 
+## provider
+
+[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+
+`provider` can be used to define a service that Compose won't manage directly. Compose will delegate the service lifecycle to a dedicated or third-party component.
+
+```yaml
+  database:
+    provider:
+      type: awesomecloud
+      options:
+        type: mysql
+        foo: bar  
+
+  app:
+    image: myapp 
+    depends_on:
+       - database
+```
+
+As Compose runs the application, the `awesomecloud` binary is used to manage the `database` service setup. 
+Dependent service `app` receives additional environment variables prefixed by service name, so it can access the resource. 
+
+For illustration, assuming `awesomecloud` execution produced variables `URL` and `API_KEY`, the `app` service will 
+run with environment variables `DATABASE_URL` and `DATABASE_API_KEY`.
+
+As Compose stops the application, the `awesomecloud` binary is used to manage the `database` service teardown.
+
+The mechanism used by Compose to delegate service lifecycle to an external binary is described [here](https://github.com/docker/compose/tree/main/docs/extension.md).
+
+
+### type 
+`type` attribute is required. It defines the external component used by Compose to manage setup and teardown lifecycle
+events.
+
+### options
+`options` are specific to the selected provider and not validated by the compose specification
+
+
 ## pull_policy
 
 `pull_policy` defines the decisions Compose makes when it starts to pull images. Possible values are:
