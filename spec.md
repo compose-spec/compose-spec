@@ -2272,6 +2272,12 @@ The short syntax uses a single string with colon-separated values to specify a v
 > platform it rejects Compose files which use relative host paths with an error. To avoid ambiguities
 > with named volumes, relative paths should always begin with `.` or `..`.
 
+> **Note**
+>
+> For bind mounts, short syntax creates a directory at the source path on the host if it doesn't exist. 
+> This is for backward compatibility with `docker-compose` legacy. 
+> It can be prevented by using long syntax and setting `create_host_path` to `false`.
+
 ### Long syntax
 
 The long form syntax allows the configuration of additional fields that can't be
@@ -2285,9 +2291,7 @@ expressed in the short form.
 - `read_only`: Flag to set the volume as read-only.
 - `bind`: Used to configure additional bind options:
   - `propagation`: The propagation mode used for the bind.
-  - `create_host_path`: Creates a directory at the source path on host if there is nothing present.
-    Compose does nothing if there is something present at the path. This is automatically implied by short syntax
-    for backward compatibility with `docker-compose` legacy.
+  - `create_host_path`: Creates a directory at the source path on the host if it doesn't exist. Defaults to `true`.
   - `selinux`: The SELinux re-labeling option `z` (shared) or `Z` (private)
 - `volume`: Configures additional volume options:
   - `nocopy`: Flag to disable copying of data from a container when a volume is created.
