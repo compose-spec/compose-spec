@@ -1823,7 +1823,7 @@ expressed in the short form.
 - `published`: The publicly exposed port. It is defined as a string and can be set as a range using syntax `start-end`. It means the actual port is assigned a remaining available port, within the set range.
 - `host_ip`: The host IP mapping. If it is not set, it binds to all network interfaces (`0.0.0.0`).
 - `protocol`: The port protocol (`tcp` or `udp`). Defaults to `tcp`.
-- `app_protocol`: The application procotol (TCP/IP level 4 / OSI level 7) this port is used for. This is optional and can be used as a hint for Compose to offer richer behavior for protocols that it understands.
+- `app_protocol`: The application protocol (TCP/IP level 4 / OSI level 7) this port is used for. This is optional and can be used as a hint for Compose to offer richer behavior for protocols that it understands.
 [![Compose v2.26.0](https://img.shields.io/badge/compose-v2.26.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.26.0)
 - `mode`: `host`: For publishing a host port on each node, or `ingress` for a port to be load balanced. Defaults to `ingress`.
 - `name`: A human-readable name for the port, used to document its usage within the service
@@ -2868,7 +2868,7 @@ If `external` is set to `true`, all other attributes apart from `name` are irrel
 Your Compose file needs to explicitly grant access to the secrets to relevant services in your application.
 # Fragments
 
-With Compose, you can use built-in [YAML](https://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create re-usable blocks. This is useful if you start to find common configurations that span multiple services. Having re-usable blocks minimizes potential mistakes.
+With Compose, you can use built-in [YAML](https://www.yaml.org/spec/1.2/spec.html#id2765878) features to make your Compose file neater and more efficient. Anchors and aliases let you create reusable blocks. This is useful if you start to find common configurations that span multiple services. Having reusable blocks minimizes potential mistakes.
 
 Anchors are created using the `&` sign. The sign is followed by an alias name. You can use this alias with the `*` sign later to reference the value following the anchor. Make sure there is no space between the `&` and the `*` characters and the following alias name. 
 
@@ -3299,7 +3299,7 @@ services:
 
 In addition to the previously described mechanism, an override Compose file can also be used to remove elements from your application model.
 For this purpose, the custom [YAML tag](https://yaml.org/spec/1.2.2/#24-tags) `!reset` can be set to
-override a value set by the overriden Compose file. A valid value for attribute must be provided,
+override a value set by the overridden Compose file. A valid value for attribute must be provided,
 but will be ignored and target attribute will be set with type's default value or `null`. 
 
 For readability, it is recommended to explicitly set the attribute value to the null (`null`) or empty
