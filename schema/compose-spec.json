@@ -392,6 +392,7 @@
         "provider": {
           "type": "object",
           "description": "Specify a service which will not be manage by Compose directly, and delegate its management to an external provider.",
+          "required": ["type"],
           "properties": {
             "type": {
               "type": "string",
@@ -401,7 +402,17 @@
               "type": "object",
               "description": "Provider-specific options.",
               "patternProperties": {
-                "^.+$": {"type": ["string", "number", "null"]}
+                "^.+$": {"oneOf": [
+                  { "type": ["string", "number", "boolean"] },
+                  { "type": "array", "items": {"type": ["string", "number", "boolean"]}}
+                ]}
+              }
+            },
+            "configs": {
+              "type": "object",
+              "description": "Config files to pass to the provider.",
+              "patternProperties": {
+                "^.+$": {"type": ["string"]}
               }
             }
           },
