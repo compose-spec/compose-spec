@@ -1190,7 +1190,7 @@ services:
         count: 2
 ```
 
-`gpus` also can ge set as string `all` to allocate all aviable GPU devices to container.
+`gpus` also can ge set as string `all` to allocate all available GPU devices to container.
 
 ```yaml
 services:
