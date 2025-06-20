@@ -2191,6 +2191,12 @@ ulimits:
     hard: 40000
 ```
 
+## use_api_socket
+
+When `use_api_socket` is set, the container is able to interact with the underlying container engine through the API socket.
+User's credentials are mounted inside container, so container acts as a pure delegate for user's command regarding container engine.
+Typically, commands ran by container can `pull` and `push` on user's registry.
+
 ## user
 
 `user` overrides the user used to run the container process. The default is set by the image (i.e. Dockerfile `USER`). If it's not set, then `root`.
