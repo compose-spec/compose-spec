@@ -1982,6 +1982,8 @@ ulimits:
 
 ## use_api_socket
 
+[![Compose v2.37.1](https://img.shields.io/badge/compose-v2.37.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.37.1)
+
 When `use_api_socket` is set, the container is able to interact with the underlying container engine through the API socket.
 User's credentials are mounted inside container, so container acts as a pure delegate for user's command regarding container engine.
 Typically, commands ran by container can `pull` and `push` on user's registry.
