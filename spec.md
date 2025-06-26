@@ -1460,6 +1460,35 @@ There is a performance penalty for applications that swap memory to disk often.
 - If `memswap_limit` is unset, and `memory` is set, the container can use as much swap as the `memory` setting, if the host container has swap memory configured. For instance, if `memory`="300m" and `memswap_limit` is not set, the container can use 600m in total of memory and swap.
 - If `memswap_limit` is explicitly set to -1, the container is allowed to use unlimited swap, up to the amount available on the host system.
 
+## models
+
+`models` defines the AI models that the service containers use at runtime, referencing entries under the
+[top-level `models` key](models.md)
+
+```yaml
+services:
+  short_syntax:
+    image: app
+    models:
+      - my_model
+
+  long_syntax:
+    image: app
+    models:
+      my_model:
+        endpoint_var: MODEL_URL
+        model_var: MODEL
+
+```
+
+When using the long syntax,
+- `endpoint_var` can be set to define the environment variable set in container for the model runner URL. 
+If not explicitly declared, variable name is compoted from model key (*) with a `_URL` suffix. In previous example, `short_syntax` service
+will run with the `MY_MODEL_URL` environment variable set.
+- `model_var` can be set to define the environment variable set in container for the model identifier. If not explicitly declared, variable name is compoted from model key (*)
+
+(*) variable name is generated from model key by making string uppercase and replacing `-` characters by `_` to conform to POSIX environment variable conventions.
+
 ## network_mode
 
 `network_mode` sets a service container's network mode. Available values are platform specific, but Compose defines specific values which must be implemented as described if supported:
