@@ -1483,9 +1483,9 @@ services:
 
 When using the long syntax,
 - `endpoint_var` can be set to define the environment variable set in container for the model runner URL. 
-If not explicitly declared, variable name is compoted from model key (*) with a `_URL` suffix. In previous example, `short_syntax` service
+If not explicitly declared, variable name is computed from model key (*) with a `_URL` suffix. In previous example, `short_syntax` service
 will run with the `MY_MODEL_URL` environment variable set.
-- `model_var` can be set to define the environment variable set in container for the model identifier. If not explicitly declared, variable name is compoted from model key (*)
+- `model_var` can be set to define the environment variable set in container for the model identifier. If not explicitly declared, variable name is computed from model key (*)
 
 (*) variable name is generated from model key by making string uppercase and replacing `-` characters by `_` to conform to POSIX environment variable conventions.
 
