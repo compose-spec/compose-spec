@@ -439,6 +439,46 @@ build:
   privileged: true
 ```
 
+### provenance
+
+[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+
+`provenance` configures the builder to add a [provenance attestation](https://slsa.dev/provenance/v0.2#schema) in the published image. 
+Value can be either a boolean to enable/disable provenance attestation, or a key=value string to set provenance configuration. You can
+use this to select the level of detail to be included in the provenance attestation by setting the `mode` parameter.
+
+```yaml
+build:
+  context: .
+  provenance: true
+```
+
+```yaml
+build:
+  context: .
+  provenance: mode=max
+```
+
+### sbom
+
+[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+
+`sbom` configures the builder to add a [provenance attestation](https://slsa.dev/provenance/v0.2#schema) in the published image. 
+Value can be either a boolean to enable/disable sbom attestation, or a key=value string to set sbom generator configuration. This let you
+select an alternative SBOM generator image (see https://github.com/moby/buildkit/blob/master/docs/attestations/sbom-protocol.md)
+
+```yaml
+build:
+  context: .
+  sbom: true
+```
+
+```yaml
+build:
+  context: .
+  sbom: generator=docker/scout-sbom-indexer:latest # Use an alternative SBOM generator
+```
+
 ### pull
 
 [![Compose v2.4.0](https://img.shields.io/badge/compose-v2.4.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.4.0)
