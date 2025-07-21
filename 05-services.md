@@ -1390,7 +1390,7 @@ networks:
 
 ### interface_name
 
-[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+[![Compose v2.36.0](https://img.shields.io/badge/compose-v2.36.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.36.0)
 `interface_name` can be used to declare the network interface name used to connect to a target network. This
 allows you to enforce a deterministic assignment of network interface names for configured networks.
 
@@ -1719,7 +1719,7 @@ services:
 
 ## provider
 
-[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+[![Compose v2.36.0](https://img.shields.io/badge/compose-v2.36.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.36.0)
 
 `provider` can be used to define a service that Compose won't manage directly. Compose will delegate the service lifecycle to a dedicated or third-party component.
 
@@ -2126,7 +2126,7 @@ expressed in the short form.
   - `size`: The size for the tmpfs mount in bytes (either numeric or as bytes unit).
   - `mode`: The file mode for the tmpfs mount as Unix permission bits as an octal number. [![Compose v2.14.0](https://img.shields.io/badge/compose-v2.14.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.14.0)
 - `image`: Configures additional image options:  
-  - `subpath`: Path inside the source image to mount instead of the image root. [![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+  - `subpath`: Path inside the source image to mount instead of the image root. [![Compose v2.35.0](https://img.shields.io/badge/compose-v2.35.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.35.0)
 - `consistency`: The consistency requirements of the mount. Available values are platform specific.
 
 ## volumes_from
