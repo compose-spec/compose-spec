@@ -1462,6 +1462,8 @@ There is a performance penalty for applications that swap memory to disk often.
 
 ## models
 
+![Compose v2.38.0](https://img.shields.io/badge/compose-v2.38.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.38.0)
+
 `models` defines the AI models that the service containers use at runtime, referencing entries under the
 [top-level `models` key](models.md)
 
@@ -1483,9 +1485,9 @@ services:
 
 When using the long syntax,
 - `endpoint_var` can be set to define the environment variable set in container for the model runner URL. 
-If not explicitly declared, variable name is compoted from model key (*) with a `_URL` suffix. In previous example, `short_syntax` service
+If not explicitly declared, variable name is computed from model key (*) with a `_URL` suffix. In previous example, `short_syntax` service
 will run with the `MY_MODEL_URL` environment variable set.
-- `model_var` can be set to define the environment variable set in container for the model identifier. If not explicitly declared, variable name is compoted from model key (*)
+- `model_var` can be set to define the environment variable set in container for the model identifier. If not explicitly declared, variable name is computed from model key (*)
 
 (*) variable name is generated from model key by making string uppercase and replacing `-` characters by `_` to conform to POSIX environment variable conventions.
 
@@ -1601,10 +1603,10 @@ networks:
 
 ### interface_name
 
-[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+![Compose v2.36.0](https://img.shields.io/badge/compose-v2.36.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.36.0)
+
 `interface_name` can be used to declare the network interface name used to connect to a target network. This
 allows you to enforce a deterministic assignment of network interface names for configured networks.
-
 
 ```yaml
 services:
@@ -1621,8 +1623,6 @@ Running this Compose application shows:
 ```console
 backend-1  | 11: eth0@if64: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP 
 ```
-
-
 
 ### ipv4_address, ipv6_address
 
@@ -1930,7 +1930,7 @@ services:
 
 ## provider
 
-[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+[![Compose v2.36.0](https://img.shields.io/badge/compose-v2.36.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.36.0)
 
 `provider` can be used to define a service that Compose won't manage directly. Compose will delegate the service lifecycle to a dedicated or third-party component.
 
@@ -2453,6 +2453,19 @@ networks:
 
 ## Attributes
 
+### attachable
+
+If `attachable` is set to `true`, then standalone containers should be able to attach to this network, in addition to services.
+If a standalone container attaches to the network, it can communicate with services and other standalone containers
+that are also attached to the network.
+
+```yml
+networks:
+  mynet1:
+    driver: overlay
+    attachable: true
+```
+
 ### driver
 
 `driver` specifies which driver should be used for this network. Compose returns an error if the
@@ -2477,22 +2490,9 @@ networks:
       baz: 1
 ```
 
-### attachable
-
-If `attachable` is set to `true`, then standalone containers should be able to attach to this network, in addition to services.
-If a standalone container attaches to the network, it can communicate with services and other standalone containers
-that are also attached to the network.
-
-```yml
-networks:
-  mynet1:
-    driver: overlay
-    attachable: true
-```
-
 ### enable_ipv4
 
-[![unreleased](https://img.shields.io/badge/compose-unreleased-blue?style=flat-square)](https://github.com/docker/compose)
+[![Compose v2.33.1](https://img.shields.io/badge/compose-v2.33.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.33.1)
 
 `enable_ipv4` can be used to disable IPv4 address assignment.
 
@@ -3101,7 +3101,7 @@ services:
 >
 > In the example above, the environment variables are declared using the `FOO: BAR` mapping syntax, while the sequence syntax `- FOO=BAR` is only valid when no fragments are involved.
 
-## Informative Historical Notes
+## Informative historical notes
 
 This section is informative. At the time of writing, the following prefixes are known to exist:
 
@@ -3419,10 +3419,10 @@ If `!override` had not been used, both `8080:80` and `8443:443` would be exposed
 A Compose application can declare dependency on another Compose application. This is useful if:
 - You want to reuse other Compose files.
 - You need to factor out parts of your application model into separate Compose files so they can be managed separately or shared with others.
-- Teams need to keep a Compose file reasonably complicated for the limited amount of resources it has to declare for it's own sub-domain, within a larger deployment.
+- Teams need to keep a Compose file reasonably complicated for the limited amount of resources it has to declare for its own sub-domain, within a larger deployment.
 
 The `include` top-level section is used to define the dependency on another Compose application, or sub-domain.
-Each path listed in the `include` section is loaded as an individual Compose application model, with it's own project directory, in order to resolve relative paths. 
+Each path listed in the `include` section is loaded as an individual Compose application model, with its own project directory, in order to resolve relative paths. 
 
 Once the included Compose application is loaded, all resources definitions are copied into the 
 current Compose application model. Compose displays a warning if resource names conflict and doesn't 

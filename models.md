@@ -1,5 +1,7 @@
 # Models top-level element
 
+[![Compose v2.38.0](https://img.shields.io/badge/compose-v2.38.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.38.0)
+
 The top-level `models` section defines AI models used by the Compose application.
 
 ## Example 1
@@ -35,6 +37,8 @@ models:
       - "--a-flag"
       - "--another-flag=42"
 ```
+
+## Attributes
 
 - `model` (required) is the OCI artifact identifier for model to be pulled and ran by a model runner, which exposes API to application services
 - `context_size` defines the context size for the model (tokens)

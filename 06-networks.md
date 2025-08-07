@@ -93,6 +93,19 @@ networks:
 
 ## Attributes
 
+### attachable
+
+If `attachable` is set to `true`, then standalone containers should be able to attach to this network, in addition to services.
+If a standalone container attaches to the network, it can communicate with services and other standalone containers
+that are also attached to the network.
+
+```yml
+networks:
+  mynet1:
+    driver: overlay
+    attachable: true
+```
+
 ### driver
 
 `driver` specifies which driver should be used for this network. Compose returns an error if the
@@ -117,22 +130,9 @@ networks:
       baz: 1
 ```
 
-### attachable
-
-If `attachable` is set to `true`, then standalone containers should be able to attach to this network, in addition to services.
-If a standalone container attaches to the network, it can communicate with services and other standalone containers
-that are also attached to the network.
-
-```yml
-networks:
-  mynet1:
-    driver: overlay
-    attachable: true
-```
-
 ### enable_ipv4
 
-[![unreleased](https://img.shields.io/badge/compose-unreleased-blue?style=flat-square)](https://github.com/docker/compose)
+[![Compose v2.33.1](https://img.shields.io/badge/compose-v2.33.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.33.1)
 
 `enable_ipv4` can be used to disable IPv4 address assignment.
 
