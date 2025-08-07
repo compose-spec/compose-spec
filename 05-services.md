@@ -1251,6 +1251,8 @@ There is a performance penalty for applications that swap memory to disk often.
 
 ## models
 
+![Compose v2.38.0](https://img.shields.io/badge/compose-v2.38.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.38.0)
+
 `models` defines the AI models that the service containers use at runtime, referencing entries under the
 [top-level `models` key](models.md)
 
@@ -1390,10 +1392,10 @@ networks:
 
 ### interface_name
 
-[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+![Compose v2.36.0](https://img.shields.io/badge/compose-v2.36.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.36.0)
+
 `interface_name` can be used to declare the network interface name used to connect to a target network. This
 allows you to enforce a deterministic assignment of network interface names for configured networks.
-
 
 ```yaml
 services:
@@ -1410,8 +1412,6 @@ Running this Compose application shows:
 ```console
 backend-1  | 11: eth0@if64: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP 
 ```
-
-
 
 ### ipv4_address, ipv6_address
 
@@ -1719,7 +1719,7 @@ services:
 
 ## provider
 
-[![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+[![Compose v2.36.0](https://img.shields.io/badge/compose-v2.36.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.36.0)
 
 `provider` can be used to define a service that Compose won't manage directly. Compose will delegate the service lifecycle to a dedicated or third-party component.
 

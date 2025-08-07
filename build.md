@@ -439,6 +439,26 @@ build:
   privileged: true
 ```
 
+### provenance
+
+[![Compose v2.39.0](https://img.shields.io/badge/compose-v2.39.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.39.0)
+
+`provenance` configures the builder to add a [provenance attestation](https://slsa.dev/provenance/v0.2#schema) to the published image.
+
+The value can be either a boolean to enable/disable provenance attestation, or a key=value string to set provenance configuration. You can use this to select the level of detail to be included in the provenance attestation by setting the mode parameter.
+
+```yml
+build:
+  context: .
+  provenance: true
+```
+
+```yml
+build:
+  context: .
+  provenance: mode=max
+```
+
 ### pull
 
 [![Compose v2.4.0](https://img.shields.io/badge/compose-v2.4.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.4.0)
@@ -446,56 +466,24 @@ build:
 `pull` requires the image builder to pull referenced images (`FROM` Dockerfile directive), even if those are already
 available in the local image store.
 
-### ssh
+### sbom
 
-[![Compose v2.4.0](https://img.shields.io/badge/compose-v2.4.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.4.0)
+[![Compose v2.39.0](https://img.shields.io/badge/compose-v2.39.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.39.0)
 
-`ssh` defines SSH authentications that the image builder should use during image build (e.g., cloning private repository).
+`sbom` configures the builder to add a [provenance attestation](https://slsa.dev/provenance/v0.2#schema) to the published image. 
 
-`ssh` property syntax can be either:
-* `default`: Let the builder connect to the ssh-agent.
-* `ID=path`: A key/value definition of an ID and the associated path. It can be either a [PEM](https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail) file, or path to ssh-agent socket.
-
-```yaml
-build:
-  context: .
-  ssh:
-    - default   # mount the default ssh agent
-```
-or
-```yaml
-build:
-  context: .
-  ssh: ["default"]   # mount the default ssh agent
-```
-
-Using a custom id `myproject` with path to a local SSH key:
-```yaml
-build:
-  context: .
-  ssh:
-    - myproject=~/.ssh/myproject.pem
-```
-The image builder can then rely on this to mount the SSH key during build.
-For illustration, [BuildKit extended syntax](https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/reference.md#run---mounttypessh) can be used to mount the SSH key set by ID and access a secured resource:
-
-`RUN --mount=type=ssh,id=myproject git clone ...`
-
-### shm_size
-
-`shm_size` sets the size of the shared memory (`/dev/shm` partition on Linux) allocated for building Docker images. Specify
-as an integer value representing the number of bytes or as a string expressing a [byte value](11-extension.md#specifying-byte-values).
+The value can be either a boolean to enable/disable sbom attestation, or a key=value string to set SBOM generator configuration. This let you select an alternative SBOM generator image (see https://github.com/moby/buildkit/blob/master/docs/attestations/sbom-protocol.md)
 
 ```yml
 build:
   context: .
-  shm_size: '2gb'
+  sbom: true
 ```
 
-```yaml
+```yml
 build:
   context: .
-  shm_size: 10000000
+  sbom: generator=docker/scout-sbom-indexer:latest # Use an alternative SBOM generator
 ```
 
 ### secrets
@@ -576,6 +564,59 @@ RUN --mount=type=secret,id=cert,required=true,target=/root/cert ...
 Service builds may be granted access to multiple secrets. Long and short syntax for secrets may be used in the
 same Compose file. Defining a secret in the top-level `secrets` must not imply granting any service build access to it.
 Such grant must be explicit within service specification as [secrets](05-services.md#secrets) service element.
+
+
+### ssh
+
+[![Compose v2.4.0](https://img.shields.io/badge/compose-v2.4.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.4.0)
+
+`ssh` defines SSH authentications that the image builder should use during image build (e.g., cloning private repository).
+
+`ssh` property syntax can be either:
+* `default`: Let the builder connect to the ssh-agent.
+* `ID=path`: A key/value definition of an ID and the associated path. It can be either a [PEM](https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail) file, or path to ssh-agent socket.
+
+```yaml
+build:
+  context: .
+  ssh:
+    - default   # mount the default ssh agent
+```
+or
+```yaml
+build:
+  context: .
+  ssh: ["default"]   # mount the default ssh agent
+```
+
+Using a custom id `myproject` with path to a local SSH key:
+```yaml
+build:
+  context: .
+  ssh:
+    - myproject=~/.ssh/myproject.pem
+```
+The image builder can then rely on this to mount the SSH key during build.
+For illustration, [BuildKit extended syntax](https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/reference.md#run---mounttypessh) can be used to mount the SSH key set by ID and access a secured resource:
+
+`RUN --mount=type=ssh,id=myproject git clone ...`
+
+### shm_size
+
+`shm_size` sets the size of the shared memory (`/dev/shm` partition on Linux) allocated for building Docker images. Specify
+as an integer value representing the number of bytes or as a string expressing a [byte value](11-extension.md#specifying-byte-values).
+
+```yml
+build:
+  context: .
+  shm_size: '2gb'
+```
+
+```yaml
+build:
+  context: .
+  shm_size: 10000000
+```
 
 ### tags
 
