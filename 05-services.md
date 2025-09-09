@@ -2127,7 +2127,7 @@ expressed in the short form.
   - `size`: The size for the tmpfs mount in bytes (either numeric or as bytes unit).
   - `mode`: The file mode for the tmpfs mount as Unix permission bits as an octal number. [![Compose v2.14.0](https://img.shields.io/badge/compose-v2.14.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.14.0)
 - `image`: Configures additional image options:  
-  - `subpath`: Path inside the source image to mount instead of the image root. [![Compose NEXT RELEASE](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases/NEXT)
+  - `subpath`: Path inside the source image to mount instead of the image root. [![Compose v2.35.0](https://img.shields.io/badge/compose-v2.35.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.35.0)
 - `consistency`: The consistency requirements of the mount. Available values are platform specific.
 
 ## volumes_from
