@@ -23,6 +23,7 @@ services:
         # sync static content
         - path: ./webapp/html
           action: sync
+          initial_sync: true
           target: /var/www
           ignore:
             - node_modules/
@@ -117,6 +118,12 @@ services:
 > 
 > In many cases `include` pattern will start with a wildcard (`*`) character. This has special meaning in YAML syntax
 > to define an [alias node](https://yaml.org/spec/1.2.2/#alias-nodes) so you'll have to wrap pattern expression with quotes.
+
+#### initial_sync
+
+When using `sync+x` actions, it can be useful to ensure that files inside containers are up to date at the start of a new watch session.
+
+The `initial_sync` attribute instructs the Compose runtime, if containers for the service already exist, to check that the files from the path attribute are in sync within the service containers.
 
 #### path
 
