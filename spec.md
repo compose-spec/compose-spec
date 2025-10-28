@@ -1809,7 +1809,7 @@ in the form:
 
 - `HOST` is `[IP:](port | range)` (optional). If it is not set, it binds to all network interfaces (`0.0.0.0`). 
 - `CONTAINER` is `port | range`.
-- `PROTOCOL` restricts ports to a specified protocol either `tcp` or `upd`(optional). Default is `tcp`.
+- `PROTOCOL` restricts ports to a specified protocol either `tcp` or `udp`(optional). Default is `tcp`.
   Compose offers support for platform-specific protocol names.
 
 Ports can be either a single value or a range. `HOST` and `CONTAINER` must use equivalent ranges.
