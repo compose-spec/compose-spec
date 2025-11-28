@@ -32,16 +32,10 @@ services:
 models:
   my_model:
     model: ai/model
-    context_size: 1024
-    runtime_flags: 
-      - "--a-flag"
-      - "--another-flag=42"
+    context_size: 1024    
 ```
 
 ## Attributes
 
 - `model` (required) is the OCI artifact identifier for model to be pulled and ran by a model runner, which exposes API to application services
 - `context_size` defines the context size for the model (tokens)
-- `runtime_flags` defines some raw runtime flags to pass to the inference engine
-
-
