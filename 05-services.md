@@ -102,60 +102,6 @@ Fine-tune bandwidth allocation by device. Each item in the list must have two ke
 - `path`: Defines the symbolic path to the affected device.
 - `weight`: An integer value between 10 and 1000.
 
-## cpu_count
-
-`cpu_count` defines the number of usable CPUs for service container.
-
-## cpu_percent
-
-`cpu_percent` defines the usable percentage of the available CPUs.
-
-## cpu_shares
-
-`cpu_shares` defines, as integer value, a service container's relative CPU weight versus other containers.
-
-## cpu_period
-
-`cpu_period` configures CPU CFS (Completely Fair Scheduler) period when a platform is based
-on Linux kernel.
-
-## cpu_quota
-
-`cpu_quota` configures CPU CFS (Completely Fair Scheduler) quota when a platform is based
-on Linux kernel.
-
-## cpu_rt_runtime
-
-`cpu_rt_runtime` configures CPU allocation parameters for platforms with support for realtime scheduler. It can be either
-an integer value using microseconds as unit or a [duration](11-extension.md#specifying-durations).
-
-```yml
- cpu_rt_runtime: '400ms'
- cpu_rt_runtime: 95000`
-```
-
-## cpu_rt_period
-
-`cpu_rt_period` configures CPU allocation parameters for platforms with support for realtime scheduler. It can be either
-an integer value using microseconds as unit or a [duration](11-extension.md#specifying-durations).
-
-```yml
- cpu_rt_period: '1400us'
- cpu_rt_period: 11000`
-```
-
-## cpus
-
-`cpus` define the number of (potentially virtual) CPUs to allocate to service containers. This is a fractional number.
-`0.000` means no limit.
-
-When both are set, `cpus` must be consistent with the `cpus` attribute in the
-[Deploy Specification](deploy.md#cpus)
-
-## cpuset
-
-`cpuset` defines the explicit CPUs in which to allow execution. Can be a range `0-3` or a list `0,1`
-
 ## cap_add
 
 `cap_add` specifies additional container [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html)
@@ -318,6 +264,60 @@ Compose does not scale a service beyond one container if the Compose file specif
 `container_name`. Attempting to do so results in an error.
 
 `container_name` follows the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`
+
+## cpu_count
+
+`cpu_count` defines the number of usable CPUs for service container.
+
+## cpu_percent
+
+`cpu_percent` defines the usable percentage of the available CPUs.
+
+## cpu_shares
+
+`cpu_shares` defines, as integer value, a service container's relative CPU weight versus other containers.
+
+## cpu_period
+
+`cpu_period` configures CPU CFS (Completely Fair Scheduler) period when a platform is based
+on Linux kernel.
+
+## cpu_quota
+
+`cpu_quota` configures CPU CFS (Completely Fair Scheduler) quota when a platform is based
+on Linux kernel.
+
+## cpu_rt_runtime
+
+`cpu_rt_runtime` configures CPU allocation parameters for platforms with support for realtime scheduler. It can be either
+an integer value using microseconds as unit or a [duration](11-extension.md#specifying-durations).
+
+```yml
+ cpu_rt_runtime: '400ms'
+ cpu_rt_runtime: 95000`
+```
+
+## cpu_rt_period
+
+`cpu_rt_period` configures CPU allocation parameters for platforms with support for realtime scheduler. It can be either
+an integer value using microseconds as unit or a [duration](11-extension.md#specifying-durations).
+
+```yml
+ cpu_rt_period: '1400us'
+ cpu_rt_period: 11000`
+```
+
+## cpus
+
+`cpus` define the number of (potentially virtual) CPUs to allocate to service containers. This is a fractional number.
+`0.000` means no limit.
+
+When both are set, `cpus` must be consistent with the `cpus` attribute in the
+[Deploy Specification](deploy.md#cpus)
+
+## cpuset
+
+`cpuset` defines the explicit CPUs in which to allow execution. Can be a range `0-3` or a list `0,1`
 
 ## credential_spec
 
