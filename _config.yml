@@ -4,6 +4,7 @@ description: >
   A specification for developer-centric application definition used in Cloud
   Native Applications.
 markdown: kramdown
+baseurl: /compose-spec
 defaults:
   - scope:
       path: ""
