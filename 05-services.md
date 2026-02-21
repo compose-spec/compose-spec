@@ -1789,7 +1789,8 @@ services:
 
 - `no`: The default restart policy. It does not restart the container under any circumstances.
 - `always`: The policy always restarts the container until its removal.
-- `on-failure`: The policy restarts the container if the exit code indicates an error.
+- `on-failure[:max-retries]`: The policy restarts the container if the exit code indicates an error.
+  Optionally, limit the number of restart retries the container runtime attempts.
 - `unless-stopped`: The policy restarts the container irrespective of the exit code but stops
   restarting when the service is stopped or removed.
 
@@ -1797,6 +1798,7 @@ services:
     restart: "no"
     restart: always
     restart: on-failure
+    restart: on-failure:3
     restart: unless-stopped
 ```
 
