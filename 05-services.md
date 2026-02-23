@@ -2089,6 +2089,7 @@ The short syntax uses a single string with colon-separated values to specify a v
   - `ro`: Read-only access.
   - `z`: SELinux option indicating that the bind mount host content is shared among multiple containers.
   - `Z`: SELinux option indicating that the bind mount host content is private and unshared for other containers.
+  - `U`: Recursively chown the source volume using the UID and GID of the container.
 
 > **Note**
 >
@@ -2122,9 +2123,11 @@ expressed in the short form.
   - `propagation`: The propagation mode used for the bind.
   - `create_host_path`: Creates a directory at the source path on the host if it doesn't exist. Defaults to `true`.
   - `selinux`: The SELinux re-labeling option `z` (shared) or `Z` (private)
+  - `chown`: Flag to recursively chown the source using the UID and GID of the container.
 - `volume`: Configures additional volume options:
   - `nocopy`: Flag to disable copying of data from a container when a volume is created.
   - `subpath`: Path inside a volume to mount instead of the volume root.
+  - `chown`: Flag to recursively chown the source volume using the UID and GID of the container.
 - `tmpfs`: Configures additional tmpfs options:
   - `size`: The size for the tmpfs mount in bytes (either numeric or as bytes unit).
   - `mode`: The file mode for the tmpfs mount as Unix permission bits as an octal number. [![Compose v2.14.0](https://img.shields.io/badge/compose-v2.14.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.14.0)
