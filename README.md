@@ -64,6 +64,7 @@ Compose Specification is also implemented by:
 * [Okteto Stacks](https://okteto.com/docs/reference/stacks)
 * [Docker Cloud Integrations](https://github.com/docker/compose-cli)
 * [Podman Compose](https://github.com/containers/podman-compose)
+* [Kappal](https://github.com/sandys/kappal)
 
 | Metadata |                  |
 | -------- | ---------------: |
