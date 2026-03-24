@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Download schema
         run: curl -fSL -o schema/compose-spec.json https://raw.githubusercontent.com/compose-spec/compose-go/main/schema/compose-spec.json
@@ -21,7 +21,7 @@ jobs:
         run: git diff schema/compose-spec.json
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
         with:
           title: Update compose-spec.json
           commit-message: Update compose-spec.json
