@@ -61,7 +61,7 @@ Compose Specification is also implemented by:
 
 * [Kompose](https://github.com/kubernetes/kompose)
 * [Nerdctl](https://github.com/containerd/nerdctl)
-* [Okteto Stacks](https://okteto.com/docs/reference/stacks)
+* [Okteto Compose](https://www.okteto.com/docs/tutorials/compose-getting-started/)
 * [Docker Cloud Integrations](https://github.com/docker/compose-cli)
 * [Podman Compose](https://github.com/containers/podman-compose)
 * [Google Cloud Run Compose](https://docs.cloud.google.com/run/docs/deploy-run-compose)
