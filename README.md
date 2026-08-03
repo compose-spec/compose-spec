@@ -65,6 +65,7 @@ Compose Specification is also implemented by:
 * [Docker Cloud Integrations](https://github.com/docker/compose-cli)
 * [Podman Compose](https://github.com/containers/podman-compose)
 * [Google Cloud Run Compose](https://docs.cloud.google.com/run/docs/deploy-run-compose)
+* [Compose Bridge for the Unified Defense Stack](https://github.com/defenseunicorns-labs/compose-bridge-uds)
 
 | Metadata |                  |
 | -------- | ---------------: |
