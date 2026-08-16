@@ -19,6 +19,8 @@ RUN <<EOT
   cat 03-compose-file.md >> spec.md
   cat 04-version-and-name.md >> spec.md
   cat 05-services.md >> spec.md
+  cat jobs.md >> spec.md
+  cat container_spec.md >> spec.md
   cat 06-networks.md >> spec.md
   cat 07-volumes.md >> spec.md
   cat 08-configs.md >> spec.md
