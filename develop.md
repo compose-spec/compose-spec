@@ -44,6 +44,8 @@ The `develop` subsection defines configuration options that are applied by Compo
 
 ### watch
 
+[![Compose v2.22.0](https://img.shields.io/badge/compose-v2.22.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.22.0)
+
 The `watch` attribute defines a list of rules that control automatic service updates based on local file changes. `watch` is a sequence, each individual item in the sequence defines a rule to be applied by 
 Compose to monitor source code for changes. For more information, see [Use Compose Watch](https://docs.docker.com/compose/file-watch/).
 
@@ -59,6 +61,8 @@ Compose to monitor source code for changes. For more information, see [Use Compo
 
 
 #### exec
+
+[![Compose v2.32.0](https://img.shields.io/badge/compose-v2.32.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.32.0)
 
 `exec` is only relevant when `action` is set to `sync+exec`. Comparable to [service hooks](05-services.md#post_start), `exec` is used to defined command to be ran inside container:
 
@@ -98,6 +102,8 @@ for the `ignores` file, and values set in the Compose model are appended.
 
 #### include
 
+[![Compose v2.34.0](https://img.shields.io/badge/compose-v2.34.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.34.0)
+
 It is sometimes easier to select files to be watched _vs_ declaring those **not** to be watched by `ignore`.
 The `include` attribute can be used to define a pattern or a list of patterns for paths to be considered for watching.
 Only files that matches these patterns will be considered when applying a watch rule. The syntax is the same as `ignore`.
@@ -120,6 +126,8 @@ services:
 > to define an [alias node](https://yaml.org/spec/1.2.2/#alias-nodes) so you'll have to wrap pattern expression with quotes.
 
 #### initial_sync
+
+[![Compose v2.39.4](https://img.shields.io/badge/compose-v2.39.4-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.39.4)
 
 When using `sync+x` actions, it can be useful to ensure that files inside containers are up to date at the start of a new watch session.
 
