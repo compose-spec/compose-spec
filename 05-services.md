@@ -1228,11 +1228,12 @@ When both are set, `mem_reservation` must be consistent with the `reservations.m
 
 ## mem_swappiness
 
-`mem_swappiness` defines as a percentage, a value between 0 and 100, for the host kernel to swap out
-anonymous memory pages used by a container.
+`mem_swappiness` defines as a percentage, a value between 0 and 200, for the host kernel to estimate swapping cost.
+See: [Kernel Docs](https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html#swappiness) for details.
 
-- `0`: Turns off anonymous page swapping.
-- `100`: Sets all anonymous pages as swappable.
+- `0`: Avoid anonymous page swapping.
+- `100`: Sets all anonymous pages to be equaly expensive to swap as file backed pages.
+- `200`: Prefer swapping of anonymous page over file backed pages.
 
 The default value is platform specific.
 
