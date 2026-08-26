@@ -333,7 +333,7 @@ jobs:
 ## triggers
 
 `triggers` defines the conditions under which a job is executed. A job must declare
-exactly one trigger.
+at least one trigger attribute.
 
 ```yaml
 jobs:
@@ -362,10 +362,12 @@ jobs:
 
 ### manual
 
-`manual` declares that the job has no automated trigger: it only runs when explicitly
-requested using a `run` command. As any job can be triggered manually regardless of its
-automated triggers, `manual: true` makes this intent explicit for jobs that are only
-run on demand.
+`manual` controls whether the job can be executed by an explicit `run` command.
+It defaults to true: any job can be triggered manually regardless of its automated
+triggers, and `manual: true` makes this intent explicit for jobs that are only run
+on demand. Setting `manual: false` explicitly forbids manual execution — a `run`
+command targeting the job MUST be rejected. This is meant for scheduled jobs whose
+out-of-schedule execution would be harmful.
 
 ```yaml
 jobs:
@@ -374,6 +376,13 @@ jobs:
     command: python manage.py migrate
     triggers:
       manual: true
+
+  certificate-rotation:
+    image: rotator
+    triggers:
+      manual: false
+      schedule:
+        - "0 3 1 * *"
 ```
 
 ### schedule
