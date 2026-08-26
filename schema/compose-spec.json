@@ -1050,14 +1050,14 @@
         },
         "triggers": {
           "type": "object",
-          "description": "Trigger conditions for the job. Exactly one trigger must be declared.",
+          "description": "Trigger conditions for the job. At least one trigger attribute must be declared. Setting manual to false forbids manual execution by an explicit run command.",
           "properties": {
             "manual": {
               "type": [
                 "boolean",
                 "string"
               ],
-              "description": "Whether the job is only triggered manually."
+              "description": "Whether the job can be triggered manually by an explicit run command. Defaults to true; an explicit false forbids manual execution."
             },
             "schedule": {
               "type": "array",
@@ -1075,7 +1075,7 @@
               }
             }
           },
-          "oneOf": [
+          "anyOf": [
             {
               "required": [
                 "manual"
