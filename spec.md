@@ -233,6 +233,8 @@ If not implemented the `deploy` section is ignored and the Compose file is still
 
 ## annotations
 
+[![Compose v2.18.0](https://img.shields.io/badge/compose-v2.18.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.18.0)
+
 `annotations` defines annotations for the container. `annotations` can use either an array or a map.
 
 ```yml
@@ -809,6 +811,8 @@ attributes
 
 ### required
 
+[![Compose v2.24.0](https://img.shields.io/badge/compose-v2.24.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.24.0)
+
 `required` attribute defaults to `true`. When `required` is set to `false` and the `.env` file is missing,
 Compose silently ignores the entry.
 
@@ -821,6 +825,8 @@ env_file:
 ```
 
 ### format
+
+[![Compose v2.30.0](https://img.shields.io/badge/compose-v2.30.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.30.0)
 
 `format` attribute lets you to use an alternative file formats for `env_file`. When not set, `env_file` is parsed according to 
 Compose rules as described in next section.
@@ -1674,6 +1680,8 @@ networks:
 
 ### mac_address
 
+[![Compose v2.24.0](https://img.shields.io/badge/compose-v2.24.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.24.0)
+
 `mac_address` sets the MAC address used by the service container when connecting to this particular network.
 
 ### driver_opts
@@ -1878,6 +1886,8 @@ ports:
 
 ## post_start
 
+[![Compose v2.30.0](https://img.shields.io/badge/compose-v2.30.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.30.0)
+
 `post_start` defines a sequence of lifecycle hooks to run after a container has started. The exact timing of when the command is run is not guaranteed.
 
 - `command`: The command to run after the container has started. This attribute is required.
@@ -1899,6 +1909,8 @@ services:
 ```
 
 ## pre_start
+
+[![Compose v5.3.0](https://img.shields.io/badge/compose-v5.3.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v5.3.0)
 
 `pre_start` defines a sequence of init containers to run before the service container is started. Each step runs to completion, in declared order, and the service container only starts once every step has exited 0. A non-zero exit fails the bring-up of the service and its dependents.
 
@@ -1942,6 +1954,8 @@ volumes:
 ```
 
 ## pre_stop
+
+[![Compose v2.30.0](https://img.shields.io/badge/compose-v2.30.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.30.0)
 
 `pre_stop` defines a sequence of lifecycle hooks to run before service termination.
 
