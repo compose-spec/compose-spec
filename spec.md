@@ -231,6 +231,220 @@ available resources. Deploy support is an optional aspect of the Compose Specifi
 described in detail in the [Compose Deploy Specification](deploy.md) documentation.
 If not implemented the `deploy` section is ignored and the Compose file is still considered valid.
 
+A service definition supports all attributes defined in the [Container Specification](container_spec.md)
+and the [Workload Specification](workload_spec.md),
+as well as the following service-specific attributes.
+
+## deploy
+
+`deploy` specifies the configuration for the deployment and lifecycle of services, as defined [in the Compose Deploy Specification](deploy.md).
+
+## develop
+
+[![Compose v2.22.0](https://img.shields.io/badge/compose-v2.22.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.22.0)
+
+
+`develop` specifies the development configuration for maintaining a container in sync with source, as defined in the [Development Section](develop.md).
+
+## profiles
+
+`profiles` defines a list of named profiles for the service to be enabled under. If unassigned, the service is always started but if assigned, it is only started if the profile is activated.
+
+If present, `profiles` follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`.
+
+```yaml
+services:
+  frontend:
+    image: frontend
+    profiles: ["frontend"]
+
+  phpmyadmin:
+    image: phpmyadmin
+    depends_on:
+      - db
+    profiles:
+      - debug
+```
+
+## restart
+
+`restart` defines the policy that the platform applies on container termination.
+
+- `no`: The default restart policy. It does not restart the container under any circumstances.
+- `always`: The policy always restarts the container until its removal.
+- `on-failure[:max-retries]`: The policy restarts the container if the exit code indicates an error.
+  Optionally, limit the number of restart retries the container runtime attempts.
+- `unless-stopped`: The policy restarts the container irrespective of the exit code but stops
+  restarting when the service is stopped or removed.
+
+```yml
+    restart: "no"
+    restart: always
+    restart: on-failure
+    restart: on-failure:3
+    restart: unless-stopped
+```
+
+## scale
+
+`scale` specifies the default number of containers to deploy for this service.
+When both are set, `scale` must be consistent with the `replicas` attribute in the [Deploy Specification](deploy.md#replicas).
+# Jobs top-level element
+
+A job is a container that runs to completion. Unlike [services](05-services.md) which are long-running
+processes that can be scaled and deployed, jobs execute a task and then exit. Jobs are useful for
+database migrations, batch processing, scheduled maintenance tasks, or any one-shot operation.
+
+A Compose file may declare a `jobs` top-level element as a map whose keys are string representations of job names,
+and whose values are job definitions. A job definition contains the configuration that is applied to each
+job container.
+
+A job can always be triggered manually using a `run` command, regardless of whether it also has
+automated triggers configured.
+
+A job definition supports all attributes defined in the [Container Specification](container_spec.md)
+and the [Workload Specification](workload_spec.md),
+as well as the following job-specific attributes.
+
+A job can depend on services or on other jobs using `depends_on`, but a service cannot
+depend on a job: the "run this job before my service starts" pattern is not what jobs
+are for.
+
+## profiles
+
+`profiles` defines a list of named profiles for the job to be active under, with the same
+semantics as for [services](15-profiles.md). If unassigned, the job is always active: its
+automated triggers are armed and it can be triggered manually. If assigned, the job is
+ignored — triggers are not armed — unless one of its profiles is activated, or the job is
+explicitly targeted by a `run` command. In that case its profile is added to the set of
+active profiles.
+
+```yaml
+jobs:
+  seed-fixtures:
+    image: myapp:latest
+    command: python manage.py seed
+    profiles:
+      - debug
+    triggers:
+      manual: true
+```
+
+## triggers
+
+`triggers` defines the conditions under which a job is executed. A job must declare
+at least one trigger attribute.
+
+```yaml
+jobs:
+  db-migration:
+    image: myapp:latest
+    command: python manage.py migrate
+    triggers:
+      manual: true
+
+  cleanup:
+    image: busybox
+    command: sh -c 'find /data -mtime +30 -delete'
+    volumes:
+      - data:/data
+    triggers:
+      schedule:
+        - "0 3 * * *"
+
+  backup:
+    image: backup-tool
+    command: /backup.sh
+    triggers:
+      schedule:
+        - "0 0 * * 0"
+```
+
+### manual
+
+`manual` controls whether the job can be executed by an explicit `run` command.
+It defaults to true: any job can be triggered manually regardless of its automated
+triggers, and `manual: true` makes this intent explicit for jobs that are only run
+on demand. Setting `manual: false` explicitly forbids manual execution — a `run`
+command targeting the job MUST be rejected. This is meant for scheduled jobs whose
+out-of-schedule execution would be harmful.
+
+```yaml
+jobs:
+  db-migration:
+    image: myapp:latest
+    command: python manage.py migrate
+    triggers:
+      manual: true
+
+  certificate-rotation:
+    image: rotator
+    triggers:
+      manual: false
+      schedule:
+        - "0 3 1 * *"
+```
+
+### schedule
+
+`schedule` defines when the job runs automatically, as a list of schedules. As with
+`volumes`, each entry uses either a short syntax — a plain crontab expression — or a
+long syntax — a schedule object.
+
+Crontab expressions follow the standard crontab syntax:
+
+```
+ ┌───────────── minute (0–59)
+ │ ┌───────────── hour (0–23)
+ │ │ ┌───────────── day of the month (1–31)
+ │ │ │ ┌───────────── month (1–12)
+ │ │ │ │ ┌───────────── day of the week (0–6, Sunday to Saturday)
+ │ │ │ │ │
+ * * * * *
+```
+
+```yaml
+jobs:
+  hourly-report:
+    image: reporter
+    command: ./generate-report.sh
+    triggers:
+      schedule:
+        - "0 * * * *"
+```
+
+A plain crontab entry is equivalent to a schedule object declaring only `cron`:
+Compose implementations MUST canonicalize it to the object form.
+
+A schedule object supports the following attributes:
+
+- `cron` (required): the crontab expression.
+- `timezone`: the timezone used to evaluate the cron expression (e.g. `Europe/Paris`).
+  When not set, the platform's local timezone is used.
+- `concurrency`: the policy applied when the schedule fires while a previous run is
+  still in progress — `forbid` (the default) prevents the new run, `queue` runs it
+  once the current one completes.
+- `missed_fires`: the policy applied to fires missed while the platform was
+  unavailable — `one` (the default) runs a single catch-up, `skip` ignores them.
+
+```yaml
+jobs:
+  backup:
+    image: backup-tool
+    command: /backup.sh
+    triggers:
+      schedule:
+        - cron: "0 3 * * *"
+          timezone: "Europe/Paris"
+          concurrency: forbid
+          missed_fires: one
+        # weekly full backup, plain crontab entry
+        - "0 1 * * 0"
+```
+# Container specification
+
+A container specification defines the runtime configuration for a container. It is the common set of attributes shared by [services](05-services.md), [jobs](jobs.md), and other container-based elements.
+
 ## annotations
 
 `annotations` defines annotations for the container. `annotations` can use either an array or a map.
@@ -579,6 +793,10 @@ configs:
 
 `depends_on` expresses startup and shutdown dependencies between services.
 
+Declared on a [service](05-services.md), `depends_on` can only reference other services:
+a service cannot depend on a [job](jobs.md). Declared on a job, `depends_on` can reference
+both services and other jobs.
+
 ### Short syntax
 
 The short syntax variant only specifies service names of the dependencies.
@@ -664,17 +882,6 @@ Compose guarantees dependency services are started before
 starting a dependent service.
 Compose guarantees dependency services marked with
 `service_healthy` are "healthy" before starting a dependent service.
-
-## deploy
-
-`deploy` specifies the configuration for the deployment and lifecycle of services, as defined [in the Compose Deploy Specification](deploy.md).
-
-## develop
-
-[![Compose v2.22.0](https://img.shields.io/badge/compose-v2.22.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.22.0)
-
-
-`develop` specifies the development configuration for maintaining a container in sync with source, as defined in the [Development Section](develop.md).
 
 ## device_cgroup_rules
 
@@ -1951,26 +2158,6 @@ Configuration is equivalent to [`post_start`](#post_start).
 
 `privileged` configures the service container to run with elevated privileges. Support and actual impacts are platform specific.
 
-## profiles
-
-`profiles` defines a list of named profiles for the service to be enabled under. If unassigned, the service is always started but if assigned, it is only started if the profile is activated.
-
-If present, `profiles` follow the regex format of `[a-zA-Z0-9][a-zA-Z0-9_.-]+`.
-
-```yaml
-services:
-  frontend:
-    image: frontend
-    profiles: ["frontend"]
-
-  phpmyadmin:
-    image: phpmyadmin
-    depends_on:
-      - db
-    profiles:
-      - debug
-```
-
 ## provider
 
 [![Compose v2.36.0](https://img.shields.io/badge/compose-v2.36.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.36.0)
@@ -2037,25 +2224,6 @@ services:
 
 `read_only` configures the service container to be created with a read-only filesystem.
 
-## restart
-
-`restart` defines the policy that the platform applies on container termination.
-
-- `no`: The default restart policy. It does not restart the container under any circumstances.
-- `always`: The policy always restarts the container until its removal.
-- `on-failure[:max-retries]`: The policy restarts the container if the exit code indicates an error.
-  Optionally, limit the number of restart retries the container runtime attempts.
-- `unless-stopped`: The policy restarts the container irrespective of the exit code but stops
-  restarting when the service is stopped or removed.
-
-```yml
-    restart: "no"
-    restart: always
-    restart: on-failure
-    restart: on-failure:3
-    restart: unless-stopped
-```
-
 ## runtime
 
 `runtime` specifies which runtime to use for the service’s containers.
@@ -2069,11 +2237,6 @@ web:
   command: true
   runtime: runc
 ```
-
-## scale
-
-`scale` specifies the default number of containers to deploy for this service.
-When both are set, `scale` must be consistent with the `replicas` attribute in the [Deploy Specification](deploy.md#replicas).
 
 ## secrets
 
@@ -3574,10 +3737,10 @@ override values for customization.
 With profiles you can define a set of active profiles so your Compose application model is adjusted for various usages and environments.
 The exact mechanism is implementation specific and may include command line flags, environment variables, etc.
 
-The [services](05-services.md) top-level element supports a `profiles` attribute to define a list of named profiles. 
-Services without a `profiles` attribute are always enabled. 
+The [services](05-services.md) and [jobs](jobs.md) top-level elements support a `profiles` attribute to define a list of named profiles. 
+Services and jobs without a `profiles` attribute are always enabled. 
 
-A service is ignored by Compose when none of the listed `profiles` match the active ones, unless the service is
+A service or a job is ignored by Compose when none of the listed `profiles` match the active ones, unless it is
 explicitly targeted by a command. In that case its profile is added to the set of active profiles.
 
 > **Note**
