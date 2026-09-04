@@ -2055,6 +2055,38 @@ ulimits:
     hard: 40000
 ```
 
+## umask
+
+`umask` sets the initial file mode creation mask (umask) of the process in the service container.
+It applies to the container's entrypoint, as well as to processes started with `docker exec` and to the
+container's healthcheck.
+
+The value is an integer, a string, or `null`. A numeric value is usually written in octal: YAML 1.1
+supports a leading `0` followed by octal digits (for example, `0777`), while YAML 1.2 further supports an
+explicit `0o` or `0O` prefix (for example, `0o777`). A string value is parsed the same way. When a value
+is set, Compose sends the integer to the container engine, which sets it as part of the configuration
+used to start the container's processes.
+
+If `umask` is omitted or `null`, Compose does not set a mask and the umask is left to the container
+runtime — and runtimes don't all behave the same. In runc, for example, the entrypoint falls back to
+`022`, while `exec` and healthcheck processes take the value from the process that launched them
+(e.g. containerd).
+
+Setting `umask` explicitly always configures a mask, applied consistently to the entrypoint, `exec`, and
+healthcheck processes. In particular, `umask: 0` masks no permission bits, so newly created files keep the
+permissions the process requests.
+
+```yaml
+services:
+  web:
+    image: example/web
+    umask: 077
+```
+
+> **Note:** keep the leading `0`. `umask: 077` is the octal umask `077` (decimal `63`), whereas `umask: 77`
+> is the decimal value `77`, i.e. the octal umask `0115`. Omitting the leading `0` silently changes the
+> umask; you can also use the `0o` prefix (e.g. `umask: 0o77`) to make the octal form explicit.
+
 ## use_api_socket
 
 [![Compose v2.37.1](https://img.shields.io/badge/compose-v2.37.1-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.37.1)
