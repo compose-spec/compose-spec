@@ -21,6 +21,7 @@ RUN <<EOT
   cat 05-services.md >> spec.md
   cat jobs.md >> spec.md
   cat container_spec.md >> spec.md
+  cat workload_spec.md >> spec.md
   cat 06-networks.md >> spec.md
   cat 07-volumes.md >> spec.md
   cat 08-configs.md >> spec.md
