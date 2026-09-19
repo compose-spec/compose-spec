@@ -38,6 +38,7 @@
           "$ref": "#/$defs/model"
         }
       },
+      "additionalProperties": false,
       "description": "Language models that will be used by your application."
     },
     "networks": {
@@ -47,6 +48,7 @@
           "$ref": "#/$defs/network"
         }
       },
+      "additionalProperties": false,
       "description": "Networks that are shared among multiple services."
     },
     "volumes": {
