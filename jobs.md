@@ -18,6 +18,11 @@ A job can depend on services or on other jobs using `depends_on`, but a service 
 depend on a job: the "run this job before my service starts" pattern is not what jobs
 are for.
 
+Jobs and services share the same namespace: a name MUST NOT be used by both a service and
+a job in the resulting model, so that a name always designates a single element, for example
+as the target of a `depends_on` entry or of a `run` command. Compose implementations MUST
+return an error when a service and a job are declared with the same name.
+
 ## profiles
 
 `profiles` defines a list of named profiles for the job to be active under, with the same
@@ -37,6 +42,41 @@ jobs:
     triggers:
       manual: true
 ```
+
+## extends
+
+[![Compose NEXT](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases)
+
+`extends` lets a job share a common configuration with another job, with the same syntax and
+the same merge rules as the [`extends` attribute of services](05-services.md#extends): the value is a
+mapping with a required `service` key and an optional `file` key, and the attributes declared by the
+extending job override or complete the ones of the base.
+
+Services and jobs are extended separately: a job can only extend another job, and a service can only
+extend another service. Within the `extends` mapping, `service` therefore holds the name of the
+**job** being referenced, and `file` identifies a Compose file declaring this job in its `jobs`
+top-level element. When `file` is not present, the referenced job is declared in the same Compose file.
+
+```yaml
+jobs:
+  base-task:
+    image: myapp:latest
+    environment:
+      LOG_LEVEL: info
+    triggers:
+      manual: true
+
+  nightly-report:
+    extends:
+      service: base-task
+    command: ./generate-report.sh
+    triggers:
+      schedule:
+        - "0 3 * * *"
+```
+
+The restrictions, the lookup of the referenced element and the handling of circular references described
+for [services](05-services.md#extends) apply to jobs as well.
 
 ## triggers
 
