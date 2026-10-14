@@ -958,6 +958,46 @@ networks:
   admin: {}
 ```
 
+### use_service_name_alias
+
+[![Compose NEXT](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases)
+
+`use_service_name_alias` controls whether the service name is registered as an alias of the service's containers
+on the network. It defaults to `true`. It requires the long syntax of `networks`.
+
+When set to `false`, the service name is not an alias on this network. The values listed in
+[`aliases`](#aliases) are not affected, and neither are the other networks of the service.
+
+Implementations must distinguish an unset value from `false`, so that a Compose file merged on top of another
+can set the attribute back to `true`.
+
+This is useful when a network is shared by several Compose applications that each define a service with the
+same name: the name would otherwise resolve to a container of any of them. Give each service a distinct
+alias instead:
+
+```yml
+networks:
+  shared:
+    external: true
+
+services:
+  database:
+    networks:
+      shared:
+        aliases:
+          - project1-database
+        use_service_name_alias: false
+```
+
+> **Note**
+> If the service is attached to no other network where its name is registered, other services can no longer
+> reach it by service name. Use `aliases` to give it a name on that network. [`links`](05-services.md#links)
+> are not affected.
+
+> **Note**
+> `use_service_name_alias` only affects name resolution. It does not isolate the network: containers attached
+> to it can still reach the service by IP address or by any of its aliases.
+
 ### interface_name
 
 ![Compose v2.36.0](https://img.shields.io/badge/compose-v2.36.0-blue?style=flat-square)](https://github.com/docker/compose/releases/v2.36.0)
