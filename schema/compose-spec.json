@@ -38,6 +38,7 @@
           "$ref": "#/$defs/model"
         }
       },
+      "additionalProperties": false,
       "description": "Language models that will be used by your application."
     },
     "networks": {
@@ -47,6 +48,7 @@
           "$ref": "#/$defs/network"
         }
       },
+      "additionalProperties": false,
       "description": "Networks that are shared among multiple services."
     },
     "volumes": {
@@ -557,6 +559,13 @@
                         "gw_priority": {
                           "type": "number",
                           "description": "Specify the gateway priority for the network connection."
+                        },
+                        "use_service_name_alias": {
+                          "type": [
+                            "boolean",
+                            "string"
+                          ],
+                          "description": "Register the service name as an alias on this network. Defaults to true."
                         }
                       },
                       "additionalProperties": false,
