@@ -2,8 +2,15 @@ name: Sync compose-spec json
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * *"
+  # sent by compose-go when a merge on main changes schema/compose-spec.json
+  repository_dispatch:
+    types: [compose-go-schema-updated]
+
+# runs are serialized so that the last merge in compose-go is also the last one
+# to update the pull request
+concurrency:
+  group: sync-compose-spec-json
+  cancel-in-progress: false
 
 jobs:
   schema:
@@ -15,7 +22,16 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Download schema
-        run: curl -fSL -o schema/compose-spec.json https://raw.githubusercontent.com/compose-spec/compose-go/main/schema/compose-spec.json
+        env:
+          # the exact compose-go commit that triggered the run, so that we never
+          # read a stale cached copy of main; a manual run takes main
+          REF: ${{ github.event.client_payload.sha || 'main' }}
+        run: |
+          if [ "$REF" != main ] && ! echo "$REF" | grep -qE '^[0-9a-f]{40}$'; then
+            echo "::error::unexpected compose-go ref: $REF"
+            exit 1
+          fi
+          curl -fSL -o schema/compose-spec.json "https://raw.githubusercontent.com/compose-spec/compose-go/${REF}/schema/compose-spec.json"
 
       - name: Show diff
         run: git diff schema/compose-spec.json
