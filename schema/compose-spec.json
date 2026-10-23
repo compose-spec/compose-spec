@@ -38,6 +38,7 @@
           "$ref": "#/$defs/model"
         }
       },
+      "additionalProperties": false,
       "description": "Language models that will be used by your application."
     },
     "networks": {
@@ -47,6 +48,7 @@
           "$ref": "#/$defs/network"
         }
       },
+      "additionalProperties": false,
       "description": "Networks that are shared among multiple services."
     },
     "volumes": {
@@ -434,7 +436,7 @@
         },
         "mem_limit": {
           "type": [
-            "number",
+            "integer",
             "string"
           ],
           "description": "Memory limit for the container. A string value can use suffix like '2g' for 2 gigabytes."
@@ -455,7 +457,7 @@
         },
         "memswap_limit": {
           "type": [
-            "number",
+            "integer",
             "string"
           ],
           "description": "Amount of memory the container is allowed to swap to disk. Set to -1 to enable unlimited swap."
@@ -557,6 +559,13 @@
                         "gw_priority": {
                           "type": "number",
                           "description": "Specify the gateway priority for the network connection."
+                        },
+                        "use_service_name_alias": {
+                          "type": [
+                            "boolean",
+                            "string"
+                          ],
+                          "description": "Register the service name as an alias on this network. Defaults to true."
                         }
                       },
                       "additionalProperties": false,
@@ -650,7 +659,7 @@
         },
         "shm_size": {
           "type": [
-            "number",
+            "integer",
             "string"
           ],
           "description": "Size of /dev/shm. A string value can use suffix like '2g' for 2 gigabytes."
@@ -682,6 +691,16 @@
         "ulimits": {
           "$ref": "#/$defs/ulimits",
           "description": "Override the default ulimits for a container."
+        },
+        "umask": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Set the initial umask for the container process. When omitted or null, no mask is set and the runtime's own behavior applies; an explicit 0 masks no permission bits."
         },
         "use_api_socket": {
           "type": "boolean",
@@ -1047,6 +1066,31 @@
         "profiles": {
           "$ref": "#/$defs/list_of_strings",
           "description": "List of profiles for this job. When profiles are specified, the job is only active when the profile is activated."
+        },
+        "extends": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "service": {
+                  "type": "string",
+                  "description": "The name of the job to extend."
+                },
+                "file": {
+                  "type": "string",
+                  "description": "The file path where the job to extend is defined."
+                }
+              },
+              "required": [
+                "service"
+              ],
+              "additionalProperties": false
+            }
+          ],
+          "description": "Extend another job, in the current file or another file."
         },
         "triggers": {
           "type": "object",
