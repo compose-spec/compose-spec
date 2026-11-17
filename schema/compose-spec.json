@@ -682,7 +682,16 @@
         },
         "storage_opt": {
           "type": "object",
-          "description": "Storage driver options for the container."
+          "description": "Storage driver options for the container.",
+          "patternProperties": {
+            "^.+$": {
+              "type": [
+                "string",
+                "number",
+                "null"
+              ]
+            }
+          }
         },
         "tmpfs": {
           "$ref": "#/$defs/string_or_list",
