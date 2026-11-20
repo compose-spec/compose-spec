@@ -151,7 +151,7 @@ image: busybox
 
 Items under `blkio_config.device_read_bps`, `blkio_config.device_read_iops`,
 `blkio_config.device_write_bps`, `blkio_config.device_write_iops`, `devices` and
-`volumes` are also treated as mappings where key is the target path inside the
+`volumes` and `mounts` are also treated as mappings where key is the target path inside the
 container.
 
 For example, the input below:
@@ -330,7 +330,7 @@ else the step declares — replaced. In particular:
 - `command`: optional when the chosen image's entrypoint already runs the intended command.
 - `environment`: the step inherits the environment of the service's main command; declared
   values are appended to or override the inherited ones.
-- `volumes`: if omitted, the step shares the service's declared volume mounts; re-declaring
+- `volumes` and `mounts`: if omitted, the step shares the service's declared mounts; re-declaring
   a mount overrides how the step mounts it (for example read-write where the service mounts
   read-only).
 

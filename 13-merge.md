@@ -93,12 +93,13 @@ services:
 
 ### Unique resources
 
-Applies to the [ports](05-services.md#ports), [volumes](05-services.md#volumes), [secrets](05-services.md#secrets) and [configs](05-services.md#configs) services attributes.
+Applies to the [ports](05-services.md#ports), [volumes](05-services.md#volumes), [mounts](container_spec.md#mounts), [secrets](05-services.md#secrets) and [configs](05-services.md#configs) services attributes.
 While these types are modeled in a Compose file as a sequence, they have special uniqueness requirements:
 
 | Attribute   | Unique key               |
 |-------------|--------------------------|
 | volumes     |  target                  |
+| mounts      |  target                  |
 | secrets     |  target                  |
 | configs     |  target                  |
 | ports       |  {ip, target, published, protocol}   |

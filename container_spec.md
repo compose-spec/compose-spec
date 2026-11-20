@@ -848,6 +848,82 @@ will run with the `MY_MODEL_URL` environment variable set.
 
 (*) variable name is generated from model key by making string uppercase and replacing `-` characters by `_` to conform to POSIX environment variable conventions.
 
+## mounts
+
+[![Compose NEXT](https://img.shields.io/badge/compose-NEXT-blue?style=flat-square)](https://github.com/docker/compose/releases)
+
+`mounts` defines mounts of the container, with the structure of the `--mount` flag of `docker run`. Unlike an entry of
+[`volumes`](#volumes), which leaves it to the implementation to choose how a mount is made, an entry of `mounts` is applied
+as it is declared: nothing it says is a default of a short syntax, and nothing it leaves out is guessed from the other
+attributes.
+
+`mounts` only has a structured form. A string syntax can't say what `mounts` is for without ambiguity: `:` separates
+the fields of the short syntax of `volumes`, and `,` separates the fields of the `--mount` flag, where
+`dst=/data,ro` silently means a read-only `/data`.
+
+```yml
+services:
+  backend:
+    image: example/backend
+    mounts:
+      - type: bind
+        source: ./config
+        target: /etc/app:v2
+        read_only: true
+      - type: volume
+        source: db-data
+        target: /data
+        volume:
+          subpath: sub
+          nocopy: true
+      - type: tmpfs
+        target: /scratch
+        tmpfs:
+          size: 64m
+
+volumes:
+  db-data:
+```
+
+An entry has the following attributes:
+
+- `type`: The mount type. Either `volume`, `bind`, `tmpfs`, `image`, `npipe`, or `cluster`. Required.
+- `source`: The source of the mount, a path on the host for a bind mount, a docker image reference for an
+  image mount, or the name of a volume defined in the [top-level `volumes` key](07-volumes.md). Not applicable for a tmpfs mount.
+  A relative path is resolved from the Compose file's parent directory, as for `volumes`.
+- `target`: The path in the container where the mount is made. It is a path and nothing else: it may contain `:`. Required.
+- `read_only`: Flag to set the mount as read-only.
+- `consistency`: The consistency requirements of the mount. Available values are platform specific.
+- `bind`: Configures additional bind options:
+  - `propagation`: The propagation mode used for the bind.
+  - `create_src`: Creates a directory at the source path on the host if it doesn't exist. Defaults to `false`.
+  - `recursive`: Whether the sub-mounts of the source are mounted too. One of `enabled`, `disabled`, `writable` or `readonly`.
+- `volume`: Configures additional volume options:
+  - `nocopy`: Flag to disable copying of data from a container when a volume is created.
+  - `subpath`: Path inside a volume to mount instead of the volume root.
+  - `labels`: Labels to set on the volume created for the mount.
+  - `driver`: The driver of the volume created for the mount.
+  - `driver_opts`: Options passed to the driver of the volume created for the mount.
+- `tmpfs`: Configures additional tmpfs options:
+  - `size`: The size for the tmpfs mount in bytes (either numeric or as bytes unit).
+  - `mode`: The file mode for the tmpfs mount as Unix permission bits as an octal number.
+- `image`: Configures additional image options:
+  - `subpath`: Path inside the source image to mount instead of the image root.
+
+The structure is the one of the long syntax of [`volumes`](#long-syntax), with the following differences:
+
+- `type` and `target` are required.
+- `bind.create_src` replaces `bind.create_host_path`. A bind mount created by the `volumes` short syntax creates its source
+  for backward compatibility with `docker-compose` legacy, and the `--mount` flag does not (`bind-create-src`):
+  `mounts` follows the flag, so `create_src` is `false` unless set.
+- `bind.selinux` doesn't exist: the SELinux relabeling is not an option of a mount. It is set by the
+  [short syntax](#short-syntax) of `volumes`.
+- `volume.driver` and `volume.driver_opts` are added, as `volume-driver` and `volume-opt` of the `--mount` flag.
+
+The `target` of a mount is unique in the container: an entry of `mounts` can't share its `target` with an entry of `volumes`
+or with another entry of `mounts`. When merging Compose files, entries of `mounts` that share a `target` are merged as
+the entries of `volumes` are, see [merging unique resources](13-merge.md#unique-resources).
+
 ## network_mode
 
 `network_mode` sets a service container's network mode. Available values are platform specific, but Compose defines specific values which must be implemented as described if supported:
@@ -1456,7 +1532,8 @@ it is the runtime's decision to assign a UTS namespace, if supported. Available 
 
 ## volumes
 
-`volumes` define mount host paths or named volumes that are accessible by service containers. You can use `volumes` to define multiple types of mounts; `volume`, `bind`, `tmpfs`, `image` or `npipe`. 
+`volumes` define mount host paths or named volumes that are accessible by service containers. You can use `volumes` to define multiple types of mounts; `volume`, `bind`, `tmpfs`, `image` or `npipe`.
+What the short syntax can't say, [`mounts`](#mounts) does.
 
 If the mount is a host path and is only used by a single service, it can be declared as part of the service
 definition. To reuse a volume across multiple services, a named
@@ -1470,15 +1547,14 @@ services:
   backend:
     image: example/backend
     volumes:
+      - db-data:/data:nocopy
+      - /var/run/postgres/postgres.sock:/var/run/postgres/postgres.sock
+    mounts:
       - type: volume
         source: db-data
-        target: /data
+        target: /logs
         volume:
-          nocopy: true
-          subpath: sub
-      - type: bind
-        source: /var/run/postgres/postgres.sock
-        target: /var/run/postgres/postgres.sock
+          subpath: logs
 
 volumes:
   db-data:
@@ -1512,9 +1588,27 @@ The short syntax uses a single string with colon-separated values to specify a v
 >
 > For bind mounts, short syntax creates a directory at the source path on the host if it doesn't exist. 
 > This is for backward compatibility with `docker-compose` legacy. 
-> It can be prevented by using long syntax and setting `create_host_path` to `false`.
+> It can be prevented by using [`mounts`](#mounts), where `create_src` is `false` unless set.
+
+The short syntax is the canonical form of an entry of `volumes`: an entry that can be written in the short syntax is the
+same entry whichever syntax declares it. An implementation that writes the model back, for example to show the effective
+configuration, writes such an entry in the short syntax. How the mount is made is left to the implementation.
+
+An entry can be written in the short syntax when a string of the short syntax reads back as the same entry. What the short
+syntax carries is the source, the target, the access mode, the SELinux relabeling, the `propagation` of a bind
+mount and the `nocopy` of a volume mount. It can't say a `consistency`, a `create_host_path` set to `false`, a `recursive`,
+`labels`, a `subpath`, a `tmpfs` or an `image` mount, a `:` in a path, or a bind source that the short syntax would read as the name of a volume.
+
+An entry that can't be written in the short syntax has no latitude left to the implementation: it is applied as the entry of
+[`mounts`](#mounts) with the same attributes, where `create_host_path` is `create_src`, and an implementation may write it
+as such. As `mounts` has no SELinux relabeling, such an entry that sets `selinux` is an error.
 
 ### Long syntax
+
+> **Deprecated**
+>
+> The long syntax of `volumes` is deprecated. The short syntax is the canonical form of what it can say, and
+> [`mounts`](#mounts) is the way to say the rest. The long syntax is still valid, and implementations keep accepting it.
 
 The long form syntax allows the configuration of additional fields that can't be
 expressed in the short form.
